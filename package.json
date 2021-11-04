@@ -1,0 +1,8 @@
+{
+  "name": "@centreon/drawio",
+  "version": "1.0.0",
+  "license": "Apache 2",
+  "dependencies": {
+    "drawio.io": "file:src/main/webapp"
+  }
+}
