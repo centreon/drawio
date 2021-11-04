@@ -12556,6 +12556,18 @@
 						this.handleRemoteInvokeResponse(data);
 						return;
 					}
+					else if (data.action === 'setDataProperties') {
+						var graph = this.editor.graph;
+
+						var cell = graph.getSelectionCell();
+						var value = graph.getModel().getValue(cell);
+
+						value = value.cloneNode(true);
+						value.setAttribute('resourceId', data.data.resourceId);
+
+						graph.getModel().setValue(cell, value);
+						return;
+					}
 					else
 					{
 						// Unknown message must stop execution
