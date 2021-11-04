@@ -643,7 +643,14 @@ Actions.prototype.init = function()
 	this.addAction('editData...', function()
 	{
 		var cell = graph.getSelectionCell() || graph.getModel().getRoot();
-		ui.showDataDialog(cell);
+		if (cell.getAttribute('resourceType') !== undefined) {
+			parent.postMessage(JSON.stringify({
+				event: 'selectResource',
+				resourceType: cell.getAttribute('resourceType')
+			}), '*');
+		} else {
+			ui.showDataDialog(cell);
+		}
 	}, null, null, Editor.ctrlKey + '+M');
 	this.addAction('editTooltip...', function()
 	{
