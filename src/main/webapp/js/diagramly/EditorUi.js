@@ -12560,12 +12560,16 @@
 						var graph = this.editor.graph;
 
 						var cell = graph.getSelectionCell();
-						var value = graph.getModel().getValue(cell);
+						var cellValue = graph.getModel().getValue(cell);
+						cellValue = cellValue.cloneNode(true);
 
-						value = value.cloneNode(true);
-						value.setAttribute('resourceId', data.data.resourceId);
+						if  (data !== undefined && data.data !== undefined) {
+							Object.entries(data.data).forEach(([attribute, value]) => {
+								cellValue.setAttribute(attribute, value);
+							})
+						}
 
-						graph.getModel().setValue(cell, value);
+						graph.getModel().setValue(cell, cellValue);
 						return;
 					}
 					else
