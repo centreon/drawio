@@ -823,10 +823,14 @@ BaseFormatPanel.prototype.installInputHandler = function(input, key, defaultValu
 /**
  * Adds the given option.
  */
-BaseFormatPanel.prototype.createPanel = function()
+BaseFormatPanel.prototype.createPanel = function(label = undefined)
 {
+	var cssClass = 'geFormatSection';
+	
+	if(label) cssClass += ('-' + label);
+	
 	var div = document.createElement('div');
-	div.className = 'geFormatSection';
+	div.className = cssClass;
 	div.style.padding = '12px 0px 12px 14px';
 	
 	return div;
@@ -978,7 +982,9 @@ BaseFormatPanel.prototype.createStepper = function(input, update, step, height, 
  */
 BaseFormatPanel.prototype.createOption = function(label, isCheckedFn, setCheckedFn, listener, fn)
 {
+	labelLowerAndDash = label.replace(/\s+/g, '-').toLowerCase();
 	var div = document.createElement('div');
+	div.className = 'format-option-' + labelLowerAndDash;
 	div.style.padding = '3px 0px 3px 0px';
 	div.style.whiteSpace = 'nowrap';
 	div.style.textOverflow = 'ellipsis';
@@ -1482,7 +1488,7 @@ BaseFormatPanel.prototype.createRelativeOption = function(label, key, width, han
 	width = (width != null) ? width : 52;
 	
 	var graph = this.editorUi.editor.graph;
-	var div = this.createPanel();
+	var div = this.createPanel('BaseFormatPanel-createRelativeOption');
 	div.style.paddingTop = '10px';
 	div.style.paddingBottom = '10px';
 	mxUtils.write(div, label);
@@ -1665,33 +1671,33 @@ ArrangePanel.prototype.init = function()
 
 	if (ss.cells.length > 0)
 	{
-		this.container.appendChild(this.addLayerOps(this.createPanel()));
+		this.container.appendChild(this.addLayerOps(this.createPanel('ArrangePanel-addLayerOps')));
 		// Special case that adds two panels
 		this.addGeometry(this.container);
 		this.addEdgeGeometry(this.container);
 	
 		if (!ss.containsLabel || ss.edges.length == 0)
 		{
-			this.container.appendChild(this.addAngle(this.createPanel()));
+			this.container.appendChild(this.addAngle(this.createPanel('ArrangePanel-addAngle')));
 		}
 		
 		if (!ss.containsLabel && ss.edges.length == 0 &&
 			ss.style.shape != 'rectangle' &&
 			ss.style.shape != 'label')
 		{
-			this.container.appendChild(this.addFlip(this.createPanel()));
+			this.container.appendChild(this.addFlip(this.createPanel('ArrangePanel-addFlip')));
 		}
 		
 		if (ss.vertices.length > 1)
 		{
-			this.container.appendChild(this.addAlign(this.createPanel()));
-			this.container.appendChild(this.addDistribute(this.createPanel()));
+			this.container.appendChild(this.addAlign(this.createPanel('ArrangePanel-addAlign')));
+			this.container.appendChild(this.addDistribute(this.createPanel('ArrangePanel-addDistribute')));
 		}
 
-		this.container.appendChild(this.addTable(this.createPanel()));
+		this.container.appendChild(this.addTable(this.createPanel('ArrangePanel-addTable')));
 	}
 	
-	this.container.appendChild(this.addGroupOps(this.createPanel()));
+	this.container.appendChild(this.addGroupOps(this.createPanel('ArrangePanel-addGroupOps')));
 	
 	if (ss.containsLabel)
 	{
@@ -2444,7 +2450,7 @@ ArrangePanel.prototype.addGeometry = function(container)
 	var model = graph.getModel();
 	var rect = this.format.getSelectionState();
 
-	var div = this.createPanel();
+	var div = this.createPanel('ArrangePanel-addGeometry');
 	div.style.paddingBottom = '8px';
 		
 	var span = document.createElement('div');
@@ -2581,7 +2587,7 @@ ArrangePanel.prototype.addGeometry = function(container)
 		container.appendChild(div);
 	}
 	
-	var div2 = this.createPanel();
+	var div2 = this.createPanel('ArrangePanel-addGeometry-2');
 	div2.style.paddingBottom = '30px';
 	
 	var span = document.createElement('div');
@@ -2870,7 +2876,7 @@ ArrangePanel.prototype.addEdgeGeometry = function(container)
 	var ui = this.editorUi;
 	var graph = ui.editor.graph;
 	var rect = this.format.getSelectionState();
-	var div = this.createPanel();
+	var div = this.createPanel('ArrangePanel-addEdgeGeometry');
 	
 	var span = document.createElement('div');
 	span.style.position = 'absolute';
@@ -2912,7 +2918,7 @@ ArrangePanel.prototype.addEdgeGeometry = function(container)
 
 	container.appendChild(div);
 
-	var divs = this.createPanel();
+	var divs = this.createPanel('ArrangePanel-addEdgeGeometry-2');
 	divs.style.paddingBottom = '30px';
 
 	var span = document.createElement('div');
@@ -2938,7 +2944,7 @@ ArrangePanel.prototype.addEdgeGeometry = function(container)
 	this.addKeyHandler(xs, listener);
 	this.addKeyHandler(ys, listener);
 
-	var divt = this.createPanel();
+	var divt = this.createPanel('ArrangePanel-addEdgeGeometry-3');
 	divt.style.paddingBottom = '30px';
 
 	var span = document.createElement('div');
@@ -3077,7 +3083,7 @@ TextFormatPanel.prototype.addFont = function(container)
 	title.style.paddingBottom = '6px';
 	container.appendChild(title);
 
-	var stylePanel = this.createPanel();
+	var stylePanel = this.createPanel('TextFormatPanel-addFont-stylePanel');
 	stylePanel.style.paddingTop = '2px';
 	stylePanel.style.paddingBottom = '2px';
 	stylePanel.style.position = 'relative';
@@ -3106,7 +3112,7 @@ TextFormatPanel.prototype.addFont = function(container)
 	
 	container.appendChild(stylePanel);
 	
-	var colorPanel = this.createPanel();
+	var colorPanel = this.createPanel('TextFormatPanel-addFont-colorPanel');
 	colorPanel.style.marginTop = '8px';
 	colorPanel.style.borderTop = '1px solid #c0c0c0';
 	colorPanel.style.paddingTop = '6px';
@@ -3724,7 +3730,7 @@ TextFormatPanel.prototype.addFont = function(container)
 	
 	container.appendChild(colorPanel);
 
-	var extraPanel = this.createPanel();
+	var extraPanel = this.createPanel('TextFormatPanel-addFont-extraPanel');
 	extraPanel.style.paddingTop = '2px';
 	extraPanel.style.paddingBottom = '4px';
 	
@@ -3756,7 +3762,7 @@ TextFormatPanel.prototype.addFont = function(container)
 	htmlOpt.style.fontWeight = 'bold';
 	extraPanel.appendChild(htmlOpt);
 	
-	var spacingPanel = this.createPanel();
+	var spacingPanel = this.createPanel('TextFormatPanel-addFont-spacingPanel');
 	spacingPanel.style.paddingTop = '10px';
 	spacingPanel.style.paddingBottom = '28px';
 	spacingPanel.style.fontWeight = 'normal';
@@ -3893,7 +3899,7 @@ TextFormatPanel.prototype.addFont = function(container)
 		this.styleButtons(insertBtns);
 		this.styleButtons(btns);
 		
-		var wrapper2 = this.createPanel();
+		var wrapper2 = this.createPanel('TextFormatPanel-addFont-wrapper2');
 		wrapper2.style.paddingTop = '10px';
 		wrapper2.style.paddingBottom = '10px';
 		wrapper2.appendChild(this.createTitle(mxResources.get('insert')));
@@ -3997,7 +4003,7 @@ TextFormatPanel.prototype.addFont = function(container)
 		this.styleButtons(btns);
 		btns[2].style.marginRight = '10px';
 		
-		var wrapper3 = this.createPanel();
+		var wrapper3 = this.createPanel('TextFormatPanel-addFont-colorPanel-wrapper3');
 		wrapper3.style.paddingTop = '10px';
 		wrapper3.style.paddingBottom = '10px';
 		wrapper3.appendChild(this.createTitle(mxResources.get('table')));
@@ -4568,24 +4574,24 @@ StyleFormatPanel.prototype.init = function()
 		if (ss.containsImage && ss.vertices.length == 1 && ss.style.shape == 'image' &&
 			ss.style.image != null && ss.style.image.substring(0, 19) == 'data:image/svg+xml;')
 		{
-			this.container.appendChild(this.addSvgStyles(this.createPanel()));
+			this.container.appendChild(this.addSvgStyles(this.createPanel('StyleFormatPanel-addSvgStyles')));
 		}
 		
 		if (!ss.containsImage || ss.style.shape == 'image')
 		{
-			this.container.appendChild(this.addFill(this.createPanel()));
+			this.container.appendChild(this.addFill(this.createPanel('StyleFormatPanel-addFill')));
 		}
 	
-		this.container.appendChild(this.addStroke(this.createPanel()));
-		this.container.appendChild(this.addLineJumps(this.createPanel()));
+		this.container.appendChild(this.addStroke(this.createPanel('StyleFormatPanel-addStroke')));
+		this.container.appendChild(this.addLineJumps(this.createPanel('StyleFormatPanel-addLineJumps')));
 		var opacityPanel = this.createRelativeOption(mxResources.get('opacity'), mxConstants.STYLE_OPACITY);
 		opacityPanel.style.paddingTop = '8px';
 		opacityPanel.style.paddingBottom = '8px';
 		this.container.appendChild(opacityPanel);
-		this.container.appendChild(this.addEffects(this.createPanel()));
+		this.container.appendChild(this.addEffects(this.createPanel('StyleFormatPanel-addEffects')));
 	}
 	
-	var opsPanel = this.addEditOps(this.createPanel());
+	var opsPanel = this.addEditOps(this.createPanel('StyleFormatPanel-addEditOps'));
 	
 	if (opsPanel.firstChild != null)
 	{
@@ -5921,7 +5927,7 @@ DiagramStylePanel.prototype.init = function()
 	});
 
 	ui.addListener('darkModeChanged', this.darkModeChangedListener);
-	this.container.appendChild(this.addView(this.createPanel()));
+	this.container.appendChild(this.addView(this.createPanel('DiagramStylePanel-addView')));
 };
 
 /**
@@ -6574,13 +6580,13 @@ DiagramFormatPanel.prototype.init = function()
 	var editor = ui.editor;
 	var graph = editor.graph;
 
-	this.container.appendChild(this.addView(this.createPanel()));
+	this.container.appendChild(this.addView(this.createPanel('DiagramFormatPanel-addView')));
 
 	if (graph.isEnabled())
 	{
-		this.container.appendChild(this.addOptions(this.createPanel()));
-		this.container.appendChild(this.addPaperSize(this.createPanel()));
-		this.container.appendChild(this.addStyleOps(this.createPanel()));
+		this.container.appendChild(this.addOptions(this.createPanel('DiagramFormatPanel-addOptions')));
+		this.container.appendChild(this.addPaperSize(this.createPanel('DiagramFormatPanel-addPaperSize', false)));
+		this.container.appendChild(this.addStyleOps(this.createPanel('DiagramFormatPanel-addStyleOps')));
 	}
 };
 
