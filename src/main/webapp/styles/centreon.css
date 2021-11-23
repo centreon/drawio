@@ -17,3 +17,30 @@ div[class*='geFormatSection-DiagramStylePanel'],
 div[class*='geFormatSection-ArrangePanel'] {
   display: none;
 }
+
+div.geFormatSection-StyleFormatPanel-addProperties,
+div.geFormatSection-StyleFormatPanel-addEditOps,
+div.geFormatSection-StyleFormatPanel-addEffects {
+  display: none;
+}
+
+div.FormatPanel-gradientPanel,
+div.FormatPanel-perimeterPanel {
+  display: none;
+}
+
+div.TextFormatPanel-addFont-stylePanel, 
+div.TextFormatPanel-LabelPosition,
+div.TextFormatPanel-writingDirection {
+  display: none;
+}
+div.geFormatSection-TextFormatPanel-addFont-extraPanel,
+div.geFormatSection-BaseFormatPanel-createRelativeOption,
+div.geFormatSection-TextFormatPanel-addFont-spacingPanel {
+  display: none;
+}
+
+div.BaseFormatPanel-colorOption-background-color,
+div.BaseFormatPanel-colorOption-border-color {
+  display: none;
+}
