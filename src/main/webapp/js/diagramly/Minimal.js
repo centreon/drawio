@@ -758,6 +758,7 @@ EditorUi.initMinimalTheme = function()
 		}
 		else
 		{
+			return;
 			if (graph.getSelectionCount() == 1)
 			{
 				if (graph.isCellFoldable(graph.getSelectionCell()))
