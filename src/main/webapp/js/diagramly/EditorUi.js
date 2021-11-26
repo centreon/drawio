@@ -12556,6 +12556,18 @@
 						this.handleRemoteInvokeResponse(data);
 						return;
 					}
+					else if (data.action === 'setStyleProperties') {
+						var graph = this.editor.graph;
+
+						var cell = graph.getSelectionCell();
+						var cellStyle = graph.getModel().getStyle(cell);
+
+						if  (data !== undefined && data.data !== undefined) {
+							var newImageUrl = cellStyle.replace(/image=.+\.[a-z]{3,4}/, 'image=' + data.data.imageUrl)
+							graph.getModel().setStyle(cell, newImageUrl);
+						}
+						return;
+					}
 					else if (data.action === 'setDataProperties') {
 						var graph = this.editor.graph;
 
