@@ -1447,10 +1447,15 @@ Menus.prototype.createPopupMenu = function(menu, cell, evt)
 	// this.addPopupMenuSelectionItems(menu, cell, evt);
 
 	if (!this.editorUi.editor.graph.isSelectionEmpty()) {
+		let showContextualMenu = true;
 		const contextualMenuCellType = ['LINK','MEDIA', 'RESOURCE', 'WIDGET']
 		const typeCell = cell.getAttribute('type');
 
-		if (contextualMenuCellType.includes(typeCell)) {
+		if (typeCell === 'LINK' && cell.getAttribute('linkType') === 'SIMPLE') {
+			showContextualMenu = false;
+		}
+
+		if (showContextualMenu && contextualMenuCellType.includes(typeCell)) {
 			this.addMenuItems(menu, ['editData'], null, evt);
 		}
 	}
