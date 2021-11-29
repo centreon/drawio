@@ -646,20 +646,14 @@ Actions.prototype.init = function()
 		// - Centreon -
 		// Added a selected element type check to create an event at the parent
 		// and display the property selector in the application.
-		var shapeTypesDef = ['LINK', 'MEDIA', 'RESOURCE', 'SHAPE', 'WIDGET'];
-		var shapeType = cell.getAttribute('type');
-		if (shapeTypesDef.includes(shapeType)) {
-			parent.postMessage(JSON.stringify({
-				event: 'setShowWizardShapeProperties',
-				linkType: cell.getAttribute('linkType'),
-				mediaType: cell.getAttribute('mediaType'),
-				resourceType: cell.getAttribute('resourceType'),
-				shapeType: cell.getAttribute('shapeType'),
-				widgetType: cell.getAttribute('widgetType')
-			}), '*');
-		} else {
-			ui.showDataDialog(cell);
-		}
+		parent.postMessage(JSON.stringify({
+			event: 'setShowWizardShapeProperties',
+			linkType: cell.getAttribute('linkType'),
+			mediaType: cell.getAttribute('mediaType'),
+			resourceType: cell.getAttribute('resourceType'),
+			shapeType: cell.getAttribute('shapeType'),
+			widgetType: cell.getAttribute('widgetType')
+		}), '*');
 	}, null, null, Editor.ctrlKey + '+M');
 	this.addAction('editTooltip...', function()
 	{
