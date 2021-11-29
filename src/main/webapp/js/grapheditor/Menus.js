@@ -1451,6 +1451,9 @@ Menus.prototype.createPopupMenu = function(menu, cell, evt)
 		const contextualMenuCellType = ['LINK','MEDIA', 'RESOURCE', 'WIDGET']
 		const typeCell = cell.getAttribute('type');
 
+		if (typeCell === 'WIDGET' && cell.getAttribute('widgetType') === 'LINK_LEGEND') {
+			showContextualMenu = false;
+		}
 		if (typeCell === 'LINK' && cell.getAttribute('linkType') === 'SIMPLE') {
 			showContextualMenu = false;
 		}
