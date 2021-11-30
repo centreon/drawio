@@ -646,13 +646,49 @@ Actions.prototype.init = function()
 		// - Centreon -
 		// Added a selected element type check to create an event at the parent
 		// and display the property selector in the application.
+		const propsShape = ['type', 'shapeType', 'modelId', 'id'];
+		const propsResourceCentreon = ['type', 'resourceType', 'resourceId', 'resourceName', 'modelId', 'viewId']
+		const propsLink = ['type', 'linkType'];
+		const propsMedia = ['type', 'mediaType', 'newTab', 'elementUrl'];
+		const propsWidget = [
+			'type', 'widgetType', 'resourceType', 'resourceId', 'pieChartInnerRadius',
+			'pieChartDisplayLabel', 'outputWidgetFormat', 'chartDisplayThreshold',
+			'chartFillLines', 'chartNbPoints', 'chartPeriod', 'chartShowGrid',
+			'chartStack', 'displayLegend', 'hiddenLine', 'metric1Max', 'metric1Min',
+			'metricName1', 'metric2Max', 'metric2Min', 'metricName2',
+			'metricsColorStart', 'metricsColorEnd'
+		];
+		
+		let cellAttributes = [];
+
+		function createAttributes(arrayProps) {
+			return arrayProps.map((key) => {
+				if (cell.getAttribute(key) !== undefined) {
+					return {[key]: cell.getAttribute(key)};
+				}
+			}).filter(prop => prop !== undefined);
+		};
+
+		if (cell.getAttribute('shapeType') !== undefined) {
+		 cellAttributes = createAttributes(propsShape);
+		}
+		if (cell.getAttribute('resourceType') !== undefined) {
+			cellAttributes = createAttributes(propsResourceCentreon);
+		}
+		if (cell.getAttribute('linkType') !== undefined) {
+		 	cellAttributes = createAttributes(propsLink);
+		}
+		if (cell.getAttribute('mediaType') !== undefined) {
+		 	cellAttributes = createAttributes(propsMedia);
+		}
+		if (cell.getAttribute('widgetType') !== undefined) {
+		 	cellAttributes = createAttributes(propsWidget);
+		}
+
 		parent.postMessage(JSON.stringify({
+			mxObject: cellAttributes,
+			mxStyle: cell.getStyle(),
 			event: 'setShowWizardShapeProperties',
-			linkType: cell.getAttribute('linkType'),
-			mediaType: cell.getAttribute('mediaType'),
-			resourceType: cell.getAttribute('resourceType'),
-			shapeType: cell.getAttribute('shapeType'),
-			widgetType: cell.getAttribute('widgetType')
 		}), '*');
 	}, null, null, Editor.ctrlKey + '+M');
 	this.addAction('editTooltip...', function()
