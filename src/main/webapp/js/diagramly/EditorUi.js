@@ -12562,10 +12562,13 @@
 						var cell = graph.getSelectionCell();
 						var cellStyle = graph.getModel().getStyle(cell);
 
-						if  (data !== undefined && data.data !== undefined) {
-							var newImageUrl = cellStyle.replace(/image=.+\.[a-z]{3,4}/, 'image=' + data.data.imageUrl)
-							graph.getModel().setStyle(cell, newImageUrl);
+						for (const [key, value] of Object.entries(data.data)) {
+							if (cellStyle.includes(key)) {
+								var search = new RegExp(`${key}=(.+?);`, 'g');
+								cellStyle = cellStyle.replace(search, `${key}=${value};`);
+							}
 						}
+						cell.setStyle(cellStyle);
 						return;
 					}
 					else if (data.action === 'setDataProperties') {
@@ -12579,7 +12582,7 @@
 							Object.entries(data.data).forEach(([attribute, value]) => {
 								cellValue.setAttribute(attribute, value);
 							})
-						}
+						};
 
 						graph.getModel().setValue(cell, cellValue);
 						return;
