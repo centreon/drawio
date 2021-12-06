@@ -659,7 +659,8 @@ Actions.prototype.init = function()
 			'chartFillLines', 'chartNbPoints', 'chartPeriod', 'chartShowGrid',
 			'chartStack', 'displayLegend', 'hiddenLine', 'metric1Max', 'metric1Min',
 			'metricName1', 'metric2Max', 'metric2Min', 'metricName2',
-			'metricsColorStart', 'metricsColorEnd', 'parentName', 'parentId'
+			'metricsColorStart', 'metricsColorEnd', 'parentName', 'parentId',
+			'resourceName'
 		];
 		
 		let cellAttributes = [];
