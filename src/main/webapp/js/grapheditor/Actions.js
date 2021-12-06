@@ -647,8 +647,11 @@ Actions.prototype.init = function()
 		// Added a selected element type check to create an event at the parent
 		// and display the property selector in the application.
 		const propsShape = ['type', 'shapeType', 'modelId', 'id'];
-		const propsResourceCentreon = ['type', 'resourceType', 'resourceId', 'resourceName', 'modelId', 'viewId']
-		const propsLink = ['type', 'linkType'];
+		const propsResourceCentreon = ['type', 'resourceType', 'resourceId',
+			'resourceName', 'modelId', 'viewId', 'parentName', 'parentId'];
+		const propsLink = ['type', 'linkType', 'parentName', 'parentId',
+			'resourceType', 'resourceId', 'resourceName', 'modelId', 'metric1Max',
+			'metric1Min', 'metricName1', 'metricName2'];
 		const propsMedia = ['type', 'mediaType', 'newTab', 'elementUrl'];
 		const propsWidget = [
 			'type', 'widgetType', 'resourceType', 'resourceId', 'pieChartInnerRadius',
@@ -656,7 +659,7 @@ Actions.prototype.init = function()
 			'chartFillLines', 'chartNbPoints', 'chartPeriod', 'chartShowGrid',
 			'chartStack', 'displayLegend', 'hiddenLine', 'metric1Max', 'metric1Min',
 			'metricName1', 'metric2Max', 'metric2Min', 'metricName2',
-			'metricsColorStart', 'metricsColorEnd'
+			'metricsColorStart', 'metricsColorEnd', 'parentName', 'parentId'
 		];
 		
 		let cellAttributes = [];
