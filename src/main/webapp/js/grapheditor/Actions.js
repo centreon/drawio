@@ -652,7 +652,8 @@ Actions.prototype.init = function()
 		const propsLink = ['type', 'linkType', 'parentName', 'parentId',
 			'resourceType', 'resourceId', 'resourceName', 'modelId', 'metric1Max',
 			'metric1Min', 'metricName1', 'metricName2'];
-		const propsMedia = ['type', 'mediaType', 'newTab', 'elementUrl'];
+		const propsMedia = ['type', 'mediaType', 'newTab', 'elementUrl',
+			'imageName', 'centreonImageId'];
 		const propsWidget = [
 			'type', 'widgetType', 'resourceType', 'resourceId', 'pieChartInnerRadius',
 			'pieChartDisplayLabel', 'outputWidgetFormat', 'chartDisplayThreshold',
