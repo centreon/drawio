@@ -133,7 +133,7 @@ EditorUi.initMinimalTheme = function()
 			{
 				var div = document.createElement('div');
 				div.style.cssText = 'position:absolute;left:0;right:0;border-top:1px solid lightgray;' +
-					'height:24px;bottom:31px;text-align:center;cursor:pointer;padding:6px 0 0 0;';
+					'height:24px;bottom:31px;text-align:center;cursor:pointer;padding:6px 0 0 0;display:none;';
 				div.className = 'geTitle';
 				div.innerHTML = '<span style="font-size:18px;margin-right:5px;">+</span>';
 				mxUtils.write(div, mxResources.get('moreShapes'));
@@ -784,7 +784,7 @@ EditorUi.initMinimalTheme = function()
 				this.addMenuItems(menu, ['-', 'lockUnlock'], null, evt);
 			}
 		}
-		
+		return;
 		if (graph.isEnabled() && graph.isSelectionEmpty())
 		{
 			this.addMenuItems(menu, ['-', 'fullscreen']);
@@ -2540,10 +2540,10 @@ EditorUi.initMinimalTheme = function()
 		
 				if (!small)
 				{
-					appElt = addMenu('diagram');
+					appElt = null;
 				}
 
-				var temp = (small) ? addMenu('diagram', null, Editor.drawLogoImage) : null;
+				var temp = null;
 
 				if (temp != null)
 				{
@@ -2557,11 +2557,12 @@ EditorUi.initMinimalTheme = function()
 	   				(small) ? Editor.formatImage : null)],
 	   				(small) ? 60 : null);
 			
+						/*
 		        var elt = addMenu('insert', true, (small) ? insertImage : null);
 	        	createGroup([elt, addMenuItem(mxResources.get('delete'), ui.actions.get('delete').funct,
 					null, mxResources.get('delete'), ui.actions.get('delete'),
 		        	(small) ? Editor.trashImage : null)], (small) ? 60 : null);
-	
+						*/
 		        if (iw >= 411)
 		        {
 			        createGroup([undoElt, redoElt], 60);
