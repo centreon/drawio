@@ -1442,7 +1442,7 @@ Menus.prototype.createPopupMenu = function(menu, cell, evt)
 	// this.addPopupMenuHistoryItems(menu, cell, evt);
 	// this.addPopupMenuEditItems(menu, cell, evt);
 	// this.addPopupMenuStyleItems(menu, cell, evt);
-	// this.addPopupMenuArrangeItems(menu, cell, evt);
+	this.addPopupMenuArrangeItems(menu, cell, evt);
 	// this.addPopupMenuCellItems(menu, cell, evt);
 	// this.addPopupMenuSelectionItems(menu, cell, evt);
 

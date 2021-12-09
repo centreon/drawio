@@ -850,7 +850,7 @@
 			this.createdSearchIndex = [];
 		}
 
-		this.addSearchPalette(true);
+		this.addSearchPalette(false);
 		
 		// Adds custom sections first
 		if (this.customEntries != null)
