@@ -650,8 +650,8 @@ Actions.prototype.init = function()
 		const propsResourceCentreon = ['type', 'resourceType', 'resourceId',
 			'resourceName', 'modelId', 'viewId', 'parentName', 'parentId'];
 		const propsLink = ['type', 'linkType', 'parentName', 'parentId',
-			'resourceType', 'resourceId', 'resourceName', 'modelId', 'metric1Max',
-			'metric1Min', 'metricName1', 'metricName2'];
+			'resourceType', 'resourceId', 'resourceName', 'modelId','metric1Min',
+			'metric1Max',	'metric2Min', 'metric2Max', 'metricName1', 'metricName2'];
 		const propsMedia = ['type', 'mediaType', 'newTab', 'elementUrl',
 			'imageName', 'centreonImageId'];
 		const propsWidget = [
