@@ -12585,6 +12585,19 @@
 						};
 
 						graph.getModel().setValue(cell, cellValue);
+
+						// Management of the icon with or without the "no resource" icon
+						var cellStyle = graph.getModel().getStyle(cell);
+						var searchEmptySvg = new RegExp(`(empty-resource\/)`, 'g');
+						var searchSvg = new RegExp(`(editor\/.+?);`, 'g');
+
+						if (cellStyle.match(searchEmptySvg)) {
+							cellStyle = cellStyle.replace(searchEmptySvg, '');
+						} else if (cellStyle.match(searchSvg)) {
+							cellStyle = cellStyle.replace(searchSvg, 'editor/empty-resource/');
+						}
+
+						graph.getModel().setStyle(cell, cellStyle);
 						return;
 					}
 					else
