@@ -4574,8 +4574,7 @@ StyleFormatPanel.prototype.init = function()
 	var editor = ui.editor;
 	var graph = editor.graph;
 	var ss = this.format.getSelectionState();
-	
-	if (!ss.containsLabel && ss.cells.length > 0)
+	if (!ss.containsLabel && ss.cells.length > 0 && !ss.style.style)
 	{
 		if (ss.containsImage && ss.vertices.length == 1 && ss.style.shape == 'image' &&
 			ss.style.image != null && ss.style.image.substring(0, 19) == 'data:image/svg+xml;')
