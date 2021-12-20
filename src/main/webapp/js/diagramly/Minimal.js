@@ -2289,8 +2289,8 @@ EditorUi.initMinimalTheme = function()
 			var toggleDarkAction = ui.actions.get('toggleDarkMode'); 
         	var undoAction = ui.actions.get('undo');
         	var redoAction = ui.actions.get('redo');        	
-	        var undoElt = addMenuItem('', undoAction.funct, null, mxResources.get('undo') + ' (' + undoAction.shortcut + ')', undoAction, Editor.undoImage);
-	        var redoElt = addMenuItem('', redoAction.funct, null, mxResources.get('redo') + ' (' + redoAction.shortcut + ')', redoAction, Editor.redoImage);
+	        var undoElt = addMenuItem('', undoAction.funct, null, mxResources.get('undo'), undoAction, Editor.undoImage);
+	        var redoElt = addMenuItem('', redoAction.funct, null, mxResources.get('redo'), redoAction, Editor.redoImage);
 			var fullscreenElt = addMenuItem('', fullscreenAction.funct, null, mxResources.get('fullscreen'), fullscreenAction, Editor.fullscreenImage);
 
 			if (footer != null)
