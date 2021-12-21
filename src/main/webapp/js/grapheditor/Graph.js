@@ -5671,6 +5671,7 @@ HoverIcons.prototype.getState = function(state)
  */
 HoverIcons.prototype.update = function(state, x, y)
 {
+	return;
 	if (!this.graph.connectionArrowsEnabled || (state != null &&
 		mxUtils.getValue(state.style, 'allowArrows', '1') == '0'))
 	{
