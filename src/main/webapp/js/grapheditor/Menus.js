@@ -1457,6 +1457,9 @@ Menus.prototype.createPopupMenu = function(menu, cell, evt)
 		if (typeCell === 'LINK' && cell.getAttribute('linkType') === 'SIMPLE') {
 			showContextualMenu = false;
 		}
+		if (typeCell === 'RESOURCE' && cell.getAttribute('resourceType') === 'BUSINESS_ACTIVITY') {
+			showContextualMenu = false;
+		}
 
 		if (showContextualMenu && contextualMenuCellType.includes(typeCell)) {
 			this.addMenuItems(menu, ['editData'], null, evt);
