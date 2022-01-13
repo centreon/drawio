@@ -661,7 +661,7 @@ Actions.prototype.init = function()
 			'chartStack', 'displayLegend', 'hiddenLine', 'metric1Max', 'metric1Min',
 			'metricName1', 'metric2Max', 'metric2Min', 'metricName2',
 			'metricsColorStart', 'metricsColorEnd', 'parentName', 'parentId',
-			'resourceName'
+			'resourceName', 'orientation',
 		];
 		
 		let cellAttributes = [];
