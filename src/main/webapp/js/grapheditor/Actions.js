@@ -648,8 +648,8 @@ Actions.prototype.init = function()
 		// and display the property selector in the application.
 		const propsShape = ['type', 'shapeType', 'modelId', 'id'];
 		const propsResourceCentreon = ['type', 'resourceType', 'resourceId',
-			'resourceName', 'modelId', 'viewId', 'parentName', 'parentId'];
-		const propsLink = ['type', 'linkType', 'parentName', 'parentId',
+			'resourceName', 'modelId', 'viewId', 'parentName', 'parentType', 'parentId'];
+		const propsLink = ['type', 'linkType', 'parentName', 'parentType', 'parentId',
 			'resourceType', 'resourceId', 'resourceName', 'modelId','metric1Min',
 			'metric1Max',	'metric2Min', 'metric2Max', 'metricName1', 'metricName2'];
 		const propsMedia = ['type', 'mediaType', 'newTab', 'elementUrl',
@@ -660,7 +660,7 @@ Actions.prototype.init = function()
 			'chartFillLines', 'chartNbPoints', 'chartPeriod', 'chartShowGrid',
 			'chartStack', 'displayLegend', 'hiddenLine', 'metric1Max', 'metric1Min',
 			'metricName1', 'metric2Max', 'metric2Min', 'metricName2',
-			'metricsColorStart', 'metricsColorEnd', 'parentName', 'parentId',
+			'metricsColorStart', 'metricsColorEnd', 'parentName', 'parentType', 'parentId',
 			'resourceName', 'orientation',
 		];
 		
