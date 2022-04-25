@@ -10135,8 +10135,6 @@
 		
 		mxEvent.addListener(textInput, 'copy', mxUtils.bind(this, function(evt)
 		{
-			return;
-
 			if (graph.isEnabled())
 			{
 				try
@@ -10154,8 +10152,6 @@
 		
 		mxEvent.addListener(textInput, 'cut', mxUtils.bind(this, function(evt)
 		{
-			return;
-
 			if (graph.isEnabled())
 			{
 				try
@@ -10173,8 +10169,6 @@
 		
 		mxEvent.addListener(textInput, 'paste', mxUtils.bind(this, function(evt)
 		{
-			return;
-
 			if (graph.isEnabled() && !graph.isCellLocked(graph.getDefaultParent()))
 			{
 				textInput.innerHTML = '&nbsp;';
@@ -10855,6 +10849,10 @@
 						mxUtils.trim(decodeURIComponent(spans[0].textContent)) :
 						decodeURIComponent(xml);
 							
+          // CENTREON - Modify the property "modelId" to remove value.
+          // This is necessary to create a new shape in the current data model.
+          tmp = tmp.replace(/modelId="\d+"/g, 'modelId=""')
+
 					if (this.isCompatibleString(tmp))
 					{
 						compat = true;
