@@ -13,8 +13,11 @@ div.geFormatSection-DiagramStylePanel-addView {
   display: none;
 }
 
-div[class*='geFormatSection-DiagramStylePanel'],
-div[class*='geFormatSection-ArrangePanel'] {
+div[class*='geFormatSection-DiagramStylePanel'] {
+  display: none;
+}
+div.geFormatSection-ArrangePanel-addTable,
+div.geFormatSection-ArrangePanel-addGroupOps {
   display: none;
 }
 
