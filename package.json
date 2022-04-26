@@ -6,5 +6,8 @@
     "type": "git",
     "url": "https://github.com/centreon/drawio",
     "directory": "src/main/webapp"
+  },
+  "scripts": {
+    "build:webapp": "ant -buildfile ./etc/build/build.xml"
   }
 }
