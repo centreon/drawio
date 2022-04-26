@@ -48,7 +48,7 @@ mxUtils.extend(OneDriveClient, DrawioClient);
  * existing thumbnail with the placeholder only once.
  */
 OneDriveClient.prototype.clientId = window.DRAWIO_MSGRAPH_CLIENT_ID || ((window.location.hostname == 'test.draw.io') ?
-	'2e598409-107f-4b59-89ca-d7723c8e00a4' : '45c10911-200f-4e27-a666-9e9fca147395');
+		'95e4b4ed-ed5c-4a05-935b-b411b4562ef2' : '24b129a6-117b-4394-bdc8-3b9955e5cdef');
 
 OneDriveClient.prototype.clientId = window.location.hostname == 'app.diagrams.net' ?
 		'b5ff67d6-3155-4fca-965a-59a3655c4476' : OneDriveClient.prototype.clientId;
@@ -397,7 +397,6 @@ OneDriveClient.prototype.authenticateStep2 = function(state, success, error, fai
 	}
 };
 
-
 OneDriveClient.prototype.getAccountTypeAndEndpoint = function(success, error)
 {
 	this.get(this.baseUrl + '/me/drive/root', mxUtils.bind(this, function(req)
@@ -646,7 +645,7 @@ OneDriveClient.prototype.getFile = function(id, success, error, denyConvert, asL
 							
 							if (Graph.fileSupport && new XMLHttpRequest().upload && this.ui.isRemoteFileFormat(data, meta['@microsoft.graph.downloadUrl']))
 							{
-								this.ui.parseFile(new Blob([data], {type: 'application/octet-stream'}), mxUtils.bind(this, function(xhr)
+								this.ui.parseFileData(data, mxUtils.bind(this, function(xhr)
 								{
 									try
 									{
@@ -1290,7 +1289,7 @@ OneDriveClient.prototype.pickLibrary = function(fn)
 	});
 };
 
-OneDriveClient.prototype.createInlinePicker = function(fn, foldersOnly)
+OneDriveClient.prototype.createInlinePicker = function(fn, foldersOnly, acceptAllFiles)
 {
 	return mxUtils.bind(this, function()
 	{
@@ -1306,16 +1305,23 @@ OneDriveClient.prototype.createInlinePicker = function(fn, foldersOnly)
 			{
 				if (foldersOnly && typeof item.folder == 'object')
 				{
-					fn({
-						value: [item]
-					});
-					return;
+					fn({value: [item]});
 				}
 				else if (!item.folder)
 				{
-					fn(OneDriveFile.prototype.getIdOf(item));
-					return;
+					var id = OneDriveFile.prototype.getIdOf(item);
+
+					this.executeRequest(this.getItemURL(id), mxUtils.bind(this, function(req)
+					{
+						if (req.getStatus() >= 200 && req.getStatus() <= 299)
+						{
+							var meta = JSON.parse(req.getText());
+							fn(id, {value: [meta]});
+						}
+					}), null);
 				}
+
+				return;
 			}
 			
 			return mxResources.get('invalidSel', null, 'Invalid selection');
@@ -1354,7 +1360,7 @@ OneDriveClient.prototype.createInlinePicker = function(fn, foldersOnly)
 		mxUtils.bind(this, function(err)
 		{
 			this.ui.showError(mxResources.get('error'), err);
-		}), foldersOnly); 
+		}), foldersOnly, null, null, null, null, acceptAllFiles); 
 	});
 };
 
@@ -1439,7 +1445,7 @@ OneDriveClient.prototype.pickFolder = function(fn, direct)
 /**
  * Checks if the client is authorized and calls the next step.
  */
-OneDriveClient.prototype.pickFile = function(fn)
+OneDriveClient.prototype.pickFile = function(fn, acceptAllFiles)
 {
 	fn = (fn != null) ? fn : mxUtils.bind(this, function(id)
 	{
@@ -1451,7 +1457,7 @@ OneDriveClient.prototype.pickFile = function(fn)
 		this.ui.showError(mxResources.get('error'), e && e.message? e.message : e);
 	});
 	
-	var odOpenDlg = this.inlinePicker? this.createInlinePicker(fn) :
+	var odOpenDlg = this.inlinePicker? this.createInlinePicker(fn, null, acceptAllFiles) :
 							mxUtils.bind(this, function()
 	{
 		OneDrive.open(
@@ -1463,7 +1469,7 @@ OneDriveClient.prototype.pickFile = function(fn)
 			{
 				'endpointHint': mxClient.IS_IE11? null : this.endpointHint, //IE11 doen't work with our modified version, so, setting endpointHint disable using our token BUT will force relogin!
 				'redirectUri': this.pickerRedirectUri,
-				'queryParameters': 'select=id,name,parentReference', //We can also get @microsoft.graph.downloadUrl within this request but it will break the normal process
+				'queryParameters': 'select=id,name,parentReference,webUrl', //We can also get @microsoft.graph.downloadUrl within this request but it will break the normal process
 				'accessToken': _token,
 				isConsumerAccount: false
 			},
@@ -1499,7 +1505,6 @@ OneDriveClient.prototype.pickFile = function(fn)
 		{
 			if (this.inlinePicker)
 			{
-				this.ui.hideDialog();
 				odOpenDlg();
 			}
 			else

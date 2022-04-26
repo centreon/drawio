@@ -34,7 +34,7 @@
 			
 			for (var i = 0; i < params.length; i++)
 			{
-				idx = params[i].indexOf('=');
+				var idx = params[i].indexOf('=');
 				
 				if (idx > 0)
 				{
@@ -182,7 +182,6 @@
 				// Supported domains are *.draw.io and the packaged version in Quip
 				var supportedDomain = (hostName.substring(hostName.length - 8, hostName.length) === '.draw.io') ||
 					(hostName.substring(hostName.length - 13, hostName.length) === '.diagrams.net');
-					(hostName.substring(hostName.length - 17, hostName.length) === '.quipelements.com');
 				
 				function loadAppJS()
 				{
@@ -190,11 +189,6 @@
 					{
 						mxScriptsLoaded = true;
 						checkAllLoaded();
-						
-						if (!supportedDomain)
-						{
-							mxscript('js/PostConfig.js');
-						}
 						
 						// Electron
 						if (mxIsElectron)
@@ -215,6 +209,10 @@
 									});
 								});
 							});
+						}
+						else if (!supportedDomain)
+						{
+							mxscript('js/PostConfig.js');
 						}
 					});
 				};
@@ -243,7 +241,7 @@
 	<link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
 	<link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
 	<link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
-	<link rel="stylesheet" type="text/css" href="js/croppie/croppie.min.css">
+	<link rel="mask-icon" href="images/safari-pinned-tab.svg" color="#d89000">
     <link rel="stylesheet" type="text/css" href="styles/grapheditor.css">
     <link rel="stylesheet" type="text/css" href="styles/centreon.css">
 

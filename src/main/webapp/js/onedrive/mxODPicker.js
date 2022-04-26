@@ -1,4 +1,5 @@
-function mxODPicker(container, previewFn, getODFilesList, getODFileInfo, getRecentList, addToRecent, pickedFileCallback, errorFn, foldersOnly, backFn, withSubmitBtn, withThumbnail, initFolderPath)
+function mxODPicker(container, previewFn, getODFilesList, getODFileInfo, getRecentList, addToRecent, pickedFileCallback,
+	errorFn, foldersOnly, backFn, withSubmitBtn, withThumbnail, initFolderPath, acceptAllFiles)
 {
 	var previewHtml = '';
 	
@@ -76,6 +77,7 @@ function mxODPicker(container, previewFn, getODFilesList, getODFileInfo, getRece
 	var isDarkMode = window.Editor != null && Editor.isDarkMode != null && Editor.isDarkMode();
 	
 	var css = 
+		'.odCatsList *, .odFilesSec * { user-select: none; }' +
 		'.odCatsList {' +
 		'	box-sizing: border-box;' + 
 		'	position:absolute;' + 
@@ -310,7 +312,9 @@ function mxODPicker(container, previewFn, getODFilesList, getODFileInfo, getRece
 						}
 						
 						var doc = mxUtils.parseXml(cnt);
-						var node = Editor.extractGraphModel(doc.documentElement);
+
+						var node = (doc.documentElement.nodeName == 'mxlibrary') ?
+							doc.documentElement : Editor.extractGraphModel(doc.documentElement);
 
 						if (node != null)
 						{
@@ -371,6 +375,9 @@ function mxODPicker(container, previewFn, getODFilesList, getODFileInfo, getRece
 		
 		function showRenderMsg(msg)
 		{
+			prevDiv.style.background = 'transparent';
+			prevDiv.innerHTML = '';	
+
 			var status = document.createElement('div');
 			status.className = 'odPreviewStatus';
 			mxUtils.write(status, msg);
@@ -378,13 +385,11 @@ function mxODPicker(container, previewFn, getODFilesList, getODFileInfo, getRece
 			spinner.stop();
 		};
 		
-		if (file == null || file.folder) 
+		if (file == null || file.folder || /\.drawiolib$/.test(file.name)) 
 		{
 			showRenderMsg(mxResources.get('noPreview'));
 			return;
 		}
-		
-		spinner.spin(prevDiv);
 		
 		try
 		{
@@ -395,20 +400,27 @@ function mxODPicker(container, previewFn, getODFilesList, getODFileInfo, getRece
 			}
 
 			loadingPreviewFile = file;
-			
+			spinner.spin(prevDiv);
+		
 			getDrawioFileDoc(file, function(doc)
 			{
+				spinner.stop();
+
 				if (loadingPreviewFile != file)
 				{
 					return;
 				}
-
-				var diagrams = doc.getElementsByTagName('diagram');
-				curViewer = AspectDialog.prototype.createViewer(prevDiv,
-						diagrams.length == 0? doc.documentElement : diagrams[0],
-						null, 'transparent');
-
-				spinner.stop();
+				else if (doc.documentElement.nodeName == 'mxlibrary')
+				{
+					showRenderMsg(mxResources.get('noPreview'));
+				}
+				else
+				{
+					var diagrams = doc.getElementsByTagName('diagram');
+					curViewer = AspectDialog.prototype.createViewer(prevDiv,
+							diagrams.length == 0? doc.documentElement : diagrams[0],
+							null, 'transparent');
+				}
 			}, 
 			function() //If the file is not a draw.io diagram
 			{
@@ -536,7 +548,7 @@ function mxODPicker(container, previewFn, getODFilesList, getODFileInfo, getRece
 						
 				if (isSharepointSites)
 				{
-					item.folder = true;
+					item.folder = isSharepointSites == 2? {isRoot: true} : true;
 				}
 				
 				var isFolder = item.folder !=  null;
@@ -571,7 +583,11 @@ function mxODPicker(container, previewFn, getODFilesList, getODFileInfo, getRece
 					currentItem.className += ' odRowSelected';
 					selectedFile = item;
 					selectedDriveId = driveId;
-					previewFn(selectedFile);
+					
+					if (!acceptAllFiles)
+					{
+						previewFn(selectedFile);
+					}
 				}
 				
 				(function(item2, row2)
@@ -588,7 +604,10 @@ function mxODPicker(container, previewFn, getODFilesList, getODFileInfo, getRece
 							selectedFile = item2;
 							selectedDriveId = driveId;
 							
-							previewFn(selectedFile);
+							if (!acceptAllFiles)
+							{
+								previewFn(selectedFile);
+							}
 						}
 					});
 				})(item, row);
@@ -688,16 +707,16 @@ function mxODPicker(container, previewFn, getODFilesList, getODFileInfo, getRece
 			
 			var list = resp.value || [];
 
-			var potentialDrawioFiles = isSharepointSites? list : [];
+			var potentialDrawioFiles = acceptAllFiles || isSharepointSites? list : [];
 			
-			for (var i = 0; !isSharepointSites && i < list.length; i++)
+			for (var i = 0; !isSharepointSites && !acceptAllFiles && i < list.length; i++)
 			{
 				var file = list[i];
 				var mimeType = file.file? file.file.mimeType : null;
 				
 				if (file.folder || mimeType == 'text/html' || mimeType == 'text/xml' || mimeType == 'application/xml' || mimeType == 'image/png' 
 					|| /\.svg$/.test(file.name) || /\.html$/.test(file.name) || /\.xml$/.test(file.name) || /\.png$/.test(file.name)
-					|| /\.drawio$/.test(file.name))
+					|| /\.drawio$/.test(file.name) || /\.drawiolib$/.test(file.name))
 				{
 					potentialDrawioFiles.push(file);
 				}
@@ -844,11 +863,6 @@ function mxODPicker(container, previewFn, getODFilesList, getODFileInfo, getRece
 	{
 		_$('#odSubmitBtn').addEventListener('click', doSubmit);
 	}
-	
-	document.body.onselectstart = function()
-	{
-		return false;
-	};
 	
 	if (initFolderPath != null)
 	{

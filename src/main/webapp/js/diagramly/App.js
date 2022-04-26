@@ -236,11 +236,6 @@ App.MODE_BROWSER = 'browser';
 App.MODE_TRELLO = 'trello';
 
 /**
- * Notion App Mode
- */
-App.MODE_NOTION = 'notion';
-
-/**
  * Embed App Mode
  */
 App.MODE_EMBED = 'embed';
@@ -294,14 +289,12 @@ App.PUSHER_CLUSTER = 'eu';
 /**
  * Specifies the URL for the pusher API.
  */
-App.PUSHER_URL = 'https://js.pusher.com/4.3/pusher.min.js';
+App.PUSHER_URL = 'https://js.pusher.com/7.0.3/pusher.min.js';
 
 /**
- * Socket.io library 
+ * SimplePeer library 
  */
-App.SOCKET_IO_URL = window.DRAWIO_BASE_URL + '/js/socket.io/socket.io.min.js';
-App.SIMPLE_PEER_URL = window.DRAWIO_BASE_URL + '/js/socket.io/simplepeer9.10.0.min.js';
-App.SOCKET_IO_SRV = 'http://localhost:3030';
+ App.SIMPLE_PEER_URL = window.DRAWIO_BASE_URL + '/js/simplepeer/simplepeer9.10.0.min.js';
 
 /**
  * Google APIs to load. The realtime API is needed to notify collaborators of conversion
@@ -368,7 +361,7 @@ App.loadScripts = function(scripts, onload)
 {
 	var n = scripts.length;
 	
-	for (var i = 0; i < n; i++)
+	for (var i = 0; i < scripts.length; i++)
 	{
 		mxscript(scripts[i], function()
 		{
@@ -635,7 +628,8 @@ App.main = function(callback, createUi)
 	if (window.mxscript != null)
 	{
 		// Checks for script content changes to avoid CSP errors in production
-		if (urlParams['dev'] == '1' && CryptoJS != null && App.mode != App.MODE_DROPBOX && App.mode != App.MODE_TRELLO)
+		if (urlParams['dev'] == '1' && !mxClient.IS_CHROMEAPP && !EditorUi.isElectronApp &&
+			CryptoJS != null && App.mode != App.MODE_DROPBOX && App.mode != App.MODE_TRELLO)
 		{
 			var scripts = document.getElementsByTagName('script');
 			
@@ -644,7 +638,7 @@ App.main = function(callback, createUi)
 			{
 				var content = mxUtils.getTextContent(scripts[0]);
 				
-				if (CryptoJS.MD5(content).toString() != 'b02227617087e21bd49f2faa15164112')
+				if (CryptoJS.MD5(content).toString() != '1f536e2400baaa30261b8c3976d6fe06')
 				{
 					console.log('Change bootstrap script MD5 in the previous line:', CryptoJS.MD5(content).toString());
 					alert('[Dev] Bootstrap script change requires update of CSP');
@@ -695,16 +689,16 @@ App.main = function(callback, createUi)
 		
 		// Loads Pusher API
 		if (('ArrayBuffer' in window) && !mxClient.IS_CHROMEAPP && !EditorUi.isElectronApp &&
-			DrawioFile.SYNC == 'auto' && (urlParams['embed'] != '1' || urlParams['embedRT'] == '1') && urlParams['local'] != '1' &&
+			DrawioFile.SYNC == 'auto' && (urlParams['embed'] != '1' ||
+			urlParams['embedRT'] == '1') && urlParams['local'] != '1' &&
 			(urlParams['chrome'] != '0' || urlParams['rt'] == '1') &&
 			urlParams['stealth'] != '1' && urlParams['offline'] != '1')
 		{
 			// TODO: Check if async loading is fast enough
 			mxscript(App.PUSHER_URL);
 			
-			if (urlParams['rtCursors'] == '1')
+			if (urlParams['fast-sync'] == '1')
 			{
-				mxscript(App.SOCKET_IO_URL);
 				mxscript(App.SIMPLE_PEER_URL);
 			}
 		}
@@ -818,7 +812,7 @@ App.main = function(callback, createUi)
 		// Loading the correct bundle (one file) via the fallback system in mxResources. The stylesheet
 		// is compiled into JS in the build process and is only needed for local development.
 		mxUtils.getAll((urlParams['dev'] != '1') ? [bundle] : [bundle,
-			STYLE_PATH + '/default.xml', STYLE_PATH + '/dark-default.xml'], function(xhr)
+			STYLE_PATH + '/default.xml'], function(xhr)
 		{
 			// Adds bundle text to resources
 			mxResources.parse(xhr[0].getText());
@@ -908,10 +902,10 @@ App.main = function(callback, createUi)
 			}
 						
 			// Prepares themes with mapping from old default-style to old XML file
-			if (xhr.length > 2)
+			if (xhr.length > 1)
 			{
 				Graph.prototype.defaultThemes['default-style2'] = xhr[1].getDocumentElement();
-	 			Graph.prototype.defaultThemes['darkTheme'] = xhr[2].getDocumentElement();
+	 			Graph.prototype.defaultThemes['darkTheme'] = xhr[1].getDocumentElement();
 			}
 			
 			// Main
@@ -1424,11 +1418,6 @@ App.prototype.init = function()
 		{
 			this.updateUserElement();
 			this.restoreLibraries();
-
-			this.showBanner('GithubFooter', 'Click to install GitHub app', mxUtils.bind(this, function()
-			{
-				this.openLink('https://github.com/apps/draw-io-app');
-			}));
 		}));
 	}
 	
@@ -1443,26 +1432,6 @@ App.prototype.init = function()
 	if (this.gitLab != null)
 	{
 		this.gitLab.addListener('userChanged', mxUtils.bind(this, function()
-		{
-			this.updateUserElement();
-			this.restoreLibraries();
-		}));
-	}
-
-	/**
-	 * Creates notion client.
-	 */
-	this.notion = 
-	//TODO disabled by default
-		/*(!mxClient.IS_IE || document.documentMode == 10 ||
-		mxClient.IS_IE11 || mxClient.IS_EDGE) &&
-		(urlParams['ntn'] != '0' && (urlParams['embed'] != '1' ||
-		urlParams['ntn'] == '1')) */
-		urlParams['ntn'] == '1' ? new NotionClient(this) : null;
-
-	if (this.notion != null)
-	{
-		this.notion.addListener('userChanged', mxUtils.bind(this, function()
 		{
 			this.updateUserElement();
 			this.restoreLibraries();
@@ -2711,10 +2680,6 @@ App.prototype.appIconClicked = function(evt)
 		{
 			this.openLink('https://trello.com/');
 		}
-		else if (mode == App.MODE_NOTION)
-		{
-			this.openLink('https://www.notion.so/');
-		}
 		else if (mode == App.MODE_GITHUB)
 		{
 			if (file != null && file.constructor == GitHubFile)
@@ -3093,7 +3058,7 @@ App.prototype.start = function()
 					window.addEventListener('storage', mxUtils.bind(this, function(evt)
 					{
 						var file = this.getCurrentFile();
-						EditorUi.debug('storage event', evt, file);
+						EditorUi.debug('storage event', [evt], [file]);
 	
 						if (file != null && evt.key == '.draft-alive-check' && evt.newValue != null && file.draftId != null)
 						{
@@ -3175,9 +3140,9 @@ App.prototype.start = function()
 					var doLoadFile = mxUtils.bind(this, function(xml)
 					{
 						// Extracts graph model from PNG
-						if (xml.substring(0, 22) == 'data:image/png;base64,')
+						if (Editor.isPngDataUrl(xml))
 						{
-							xml = this.extractGraphModelFromPng(xml);
+							xml = Editor.extractGraphModelFromPng(xml);
 						}
 						
 						var title = urlParams['title'];
@@ -3271,8 +3236,7 @@ App.prototype.start = function()
 						{
 							var id = this.getDiagramId();
 							
-							
-							if (EditorUi.enableDrafts && (urlParams['mode'] == null || EditorUi.isElectronApp) &&
+							if (EditorUi.enableDrafts && urlParams['mode'] == null &&
 								this.getServiceName() == 'draw.io' && (id == null || id.length == 0) &&
 								!this.editor.isChromelessView())
 							{
@@ -3299,11 +3263,11 @@ App.prototype.start = function()
 									}
 								}));
 							}
-							else if (urlParams['splash'] != '0')
+							else if (urlParams['splash'] != '0' || urlParams['mode'] != null)
 							{
 								this.loadFile();
 							}
-							else
+							else if (!EditorUi.isElectronApp)
 							{
 								this.createFile(this.defaultFilename, this.getFileData(), null, null, null, null, null, true);
 							}
@@ -3378,7 +3342,7 @@ App.prototype.start = function()
 						}), null, null, null, null, urlParams['browser'] == '1',
 							null, null, true, rowLimit, null, null, null,
 							this.editor.fileExtensions);
-						this.showDialog(dlg.container, 400, (serviceCount > rowLimit) ? 390 : 270,
+						this.showDialog(dlg.container, 420, (serviceCount > rowLimit) ? 390 : 280,
 							true, false, mxUtils.bind(this, function(cancel)
 						{
 							if (cancel && this.getCurrentFile() == null)
@@ -3470,8 +3434,9 @@ App.prototype.start = function()
 					// Removes open URL parameter. Hash is also updated in Init to load client.
 					if (urlParams['open'] != null && window.history && window.history.replaceState)
 					{
+						
 						window.history.replaceState(null, null, window.location.pathname +
-							this.getSearch(['open']));
+							this.getSearch(['open', 'sketch']));
 						window.location.hash = urlParams['open'];
 					}
 					
@@ -3510,6 +3475,54 @@ App.prototype.loadDraft = function(xml, success)
 	}), null, null, true);
 };
 
+App.prototype.filterDrafts = function(filePath, guid, callback)
+{
+	var drafts = [];
+
+	function result()
+	{
+		callback(drafts);
+	};
+
+	try
+	{
+		this.getDatabaseItems(mxUtils.bind(this, function(items)
+		{
+			// Collects orphaned drafts
+			for (var i = 0; i < items.length; i++)
+			{
+				try
+				{
+					var key = items[i].key;
+					
+					if (key != null && key.substring(0, 7) == '.draft_')
+					{
+						var obj = JSON.parse(items[i].data);
+						
+						if (obj != null && obj.type == 'draft' && obj.aliveCheck != guid && 
+							((filePath == null && obj.fileObject == null) ||
+								(obj.fileObject != null && obj.fileObject.path == filePath)))	
+						{
+							obj.key = key;
+							drafts.push(obj);
+						}
+					}
+				}
+				catch (e)
+				{
+					// ignore
+				}
+			}
+
+			result();
+		}, result));
+	}
+	catch (e)
+	{
+		result();
+	}
+};
+
 /**
  * Checks for orphaned drafts.
  */
@@ -3525,34 +3538,8 @@ App.prototype.checkDrafts = function()
 		{
 			localStorage.removeItem('.draft-alive-check');
 
-			this.getDatabaseItems(mxUtils.bind(this, function(items)
+			this.filterDrafts(null, guid, mxUtils.bind(this, function(drafts)
 			{
-				// Collects orphaned drafts
-				var drafts = [];
-				
-				for (var i = 0; i < items.length; i++)
-				{
-					try
-					{
-						var key = items[i].key;
-						
-						if (key != null && key.substring(0, 7) == '.draft_')
-						{
-							var obj = JSON.parse(items[i].data);
-							
-							if (obj != null && obj.type == 'draft' && obj.aliveCheck != guid)
-							{
-								obj.key = key;
-								drafts.push(obj);
-							}
-						}
-					}
-					catch (e)
-					{
-						// ignore
-					}
-				}
-				
 				if (drafts.length == 1)
 				{
 					this.loadDraft(drafts[0].data, mxUtils.bind(this, function()
@@ -3604,16 +3591,6 @@ App.prototype.checkDrafts = function()
 					dlg.init();
 				}
 				else if (urlParams['splash'] != '0')
-				{
-					this.loadFile();
-				}
-				else
-				{
-					this.createFile(this.defaultFilename, this.getFileData(), null, null, null, null, null, true);
-				}
-			}), mxUtils.bind(this, function()
-			{
-				if (urlParams['splash'] != '0')
 				{
 					this.loadFile();
 				}
@@ -4060,16 +4037,14 @@ App.prototype.pickLibrary = function(mode)
 	mode = (mode != null) ? mode : this.mode;
 	
 	if (mode == App.MODE_GOOGLE || mode == App.MODE_DROPBOX || mode == App.MODE_ONEDRIVE ||
-		mode == App.MODE_GITHUB || mode == App.MODE_GITLAB || mode == App.MODE_TRELLO ||
-		mode == App.MODE_NOTION)
+		mode == App.MODE_GITHUB || mode == App.MODE_GITLAB || mode == App.MODE_TRELLO)
 	{
 		var peer = (mode == App.MODE_GOOGLE) ? this.drive :
 			((mode == App.MODE_ONEDRIVE) ? this.oneDrive :
 			((mode == App.MODE_GITHUB) ? this.gitHub :
 			((mode == App.MODE_GITLAB) ? this.gitLab :
 			((mode == App.MODE_TRELLO) ? this.trello :
-			((mode == App.MODE_NOTION) ? this.notion :
-			this.dropbox)))));
+			this.dropbox))));
 		
 		if (peer != null)
 		{
@@ -4268,15 +4243,6 @@ App.prototype.saveLibrary = function(name, images, file, mode, noSpin, noReload,
 				else if (mode == App.MODE_GITLAB && this.gitLab != null && this.spinner.spin(document.body, mxResources.get('inserting')))
 				{
 					this.gitLab.insertLibrary(name, xml, mxUtils.bind(this, function(newFile)
-					{
-						this.spinner.stop();
-						this.hideDialog(true);
-						this.libraryLoaded(newFile, images);
-					}), error, folderId);
-				}
-				else if (mode == App.MODE_NOTION && this.notion != null && this.spinner.spin(document.body, mxResources.get('inserting')))
-				{
-					this.notion.insertLibrary(name, xml, mxUtils.bind(this, function(newFile)
 					{
 						this.spinner.stop();
 						this.hideDialog(true);
@@ -4555,7 +4521,7 @@ App.prototype.saveFile = function(forceDialog, success)
 				this.hideDialog();
 			}), mxResources.get('saveAs'), mxResources.get('download'), null, null, allowTab,
 				null, true, rowLimit, null, null, null, this.editor.fileExtensions, false);
-			this.showDialog(dlg.container, 400, (serviceCount > rowLimit) ? 390 : 270, true, true);
+			this.showDialog(dlg.container, 420, (serviceCount > rowLimit) ? 390 : 280, true, true);
 			dlg.init();
 		}
 	}
@@ -4571,25 +4537,25 @@ App.prototype.loadTemplate = function(url, onload, onerror, templateFilename, as
 {
 	var base64 = false;
 	var realUrl = url;
+	var filterFn = (templateFilename != null) ? templateFilename : url;
+	var isVisioFilename = /(\.v(dx|sdx?))($|\?)/i.test(filterFn) ||
+		/(\.vs(x|sx?))($|\?)/i.test(filterFn);
+	var binary = /\.png$/i.test(filterFn) || /\.pdf$/i.test(filterFn);
 	
 	if (!this.editor.isCorsEnabledForUrl(realUrl))
 	{
-		// Always uses base64 response to check magic numbers for file type
+		base64 = binary || isVisioFilename;
 		var nocache = 't=' + new Date().getTime();
-		realUrl = PROXY_URL + '?url=' + encodeURIComponent(url) + '&base64=1&' + nocache;
-		base64 = true;
+		realUrl = PROXY_URL + '?url=' + encodeURIComponent(url) +
+			'&' + nocache + ((base64) ? '&base64=1' : '');
 	}
 
-	var filterFn = (templateFilename != null) ? templateFilename : url;
-	
 	this.editor.loadUrl(realUrl, mxUtils.bind(this, function(responseData)
 	{
 		try
 		{
 			var data = (!base64) ? responseData : ((window.atob && !mxClient.IS_IE && !mxClient.IS_IE11) ?
 				atob(responseData) : Base64.decode(responseData));
-			var isVisioFilename = /(\.v(dx|sdx?))($|\?)/i.test(filterFn) ||
-				/(\.vs(x|sx?))($|\?)/i.test(filterFn);
 			
 			if (isVisioFilename || this.isVisioData(data))
 			{
@@ -4611,17 +4577,24 @@ App.prototype.loadTemplate = function(url, onload, onerror, templateFilename, as
 					onload(xml);
 				}, onerror, filterFn);
 			}
-			else if (!this.isOffline() && new XMLHttpRequest().upload && this.isRemoteFileFormat(data, filterFn))
+			else if (new XMLHttpRequest().upload && this.isRemoteFileFormat(data, filterFn))
 			{
-				// Asynchronous parsing via server
-				this.parseFile(new Blob([data], {type: 'application/octet-stream'}), mxUtils.bind(this, function(xhr)
+				if (this.isExternalDataComms())
 				{
-					if (xhr.readyState == 4 && xhr.status >= 200 && xhr.status <= 299 &&
-						xhr.responseText.substring(0, 13) == '<mxGraphModel')
+					// Asynchronous parsing via server
+					this.parseFileData(data, mxUtils.bind(this, function(xhr)
 					{
-						onload(xhr.responseText);
-					}
-				}), url);
+						if (xhr.readyState == 4 && xhr.status >= 200 && xhr.status <= 299 &&
+							xhr.responseText.substring(0, 13) == '<mxGraphModel')
+						{
+							onload(xhr.responseText);
+						}
+					}), url);
+				}
+				else
+				{
+					this.showError(mxResources.get('error'), mxResources.get('notInOffline'), null, onerror);
+				}
 			}
 			else if (this.isLucidChartData(data))
 			{
@@ -4635,9 +4608,9 @@ App.prototype.loadTemplate = function(url, onload, onerror, templateFilename, as
 			}
 			else
 			{
-				if (/(\.png)($|\?)/i.test(filterFn) || this.isPngData(data))
+				if (/(\.png)($|\?)/i.test(filterFn) || Editor.isPngData(data))
 				{
-					data = this.extractGraphModelFromPng(responseData);
+					data = Editor.extractGraphModelFromPng(responseData);
 				}
 				
 				onload(data);
@@ -4682,10 +4655,6 @@ App.prototype.getPeerForMode = function(mode)
 	else if (mode == App.MODE_TRELLO)
 	{
 		return this.trello;
-	}
-	else if (mode == App.MODE_NOTION)
-	{
-		return this.notion;
 	}
 	else
 	{
@@ -4752,14 +4721,6 @@ App.prototype.createFile = function(title, data, libs, mode, done, replace, fold
 			else if (mode == App.MODE_GITLAB && this.gitLab != null)
 			{
 				this.gitLab.insertFile(title, data, mxUtils.bind(this, function(file)
-				{
-					complete();
-					this.fileCreated(file, libs, replace, done, clibs);
-				}), error, false, folderId);
-			}
-			else if (mode == App.MODE_NOTION && this.notion != null)
-			{
-				this.notion.insertFile(title, data, mxUtils.bind(this, function(file)
 				{
 					complete();
 					this.fileCreated(file, libs, replace, done, clibs);
@@ -4988,7 +4949,11 @@ App.prototype.fileCreated = function(file, libs, replace, done, clibs)
 			}), mxUtils.bind(this, function(resp)
 			{
 				complete();
-				this.handleError(resp);
+
+				if (resp == null || resp.name != 'AbortError')
+				{
+					this.handleError(resp);
+				}
 			}));
 		}
 	}
@@ -5292,10 +5257,6 @@ App.prototype.loadFile = function(id, sameWindow, file, success, force)
 				{
 					peer = this.trello;
 				}
-				else if (id.charAt(0) == 'N')
-				{
-					peer = this.notion;
-				}
 				
 				if (peer == null)
 				{
@@ -5351,8 +5312,8 @@ App.prototype.loadFile = function(id, sameWindow, file, success, force)
 						{
 							console.log('error in loadFile:', id, resp);
 						}
-						
-						this.handleError(resp, (resp != null) ? mxResources.get('errorLoadingFile') : null, mxUtils.bind(this, function()
+
+						var fn = mxUtils.bind(this, function()
 						{
 							var currentFile = this.getCurrentFile();
 							
@@ -5365,7 +5326,17 @@ App.prototype.loadFile = function(id, sameWindow, file, success, force)
 							{
 								window.location.hash = '#' + currentFile.getHash();
 							}
-						}), null, null, '#' + peerChar + id);
+						});
+
+						if (resp == null || resp.name != 'AbortError')
+						{
+							this.handleError(resp, (resp != null) ? mxResources.get('errorLoadingFile') : null,
+								fn, null, null, '#' + peerChar + id);
+						}
+						else
+						{
+							fn();
+						}
 					}));
 				}
 			}
@@ -5459,10 +5430,23 @@ App.prototype.getLibraryStorageHint = function(file)
  */
 App.prototype.restoreLibraries = function()
 {
-	this.loadLibraries(mxSettings.getCustomLibraries(), mxUtils.bind(this, function()
+	var checked = [];
+
+	function addLibs(libs)
 	{
-		this.loadLibraries((urlParams['clibs'] || '').split(';'));
-	}));
+		for (var i = 0; i < libs.length; i++)
+		{
+			if (libs[i] != '' && mxUtils.indexOf(
+				checked, libs[i]) < 0)
+			{
+				checked.push(libs[i]);
+			}
+		}
+	};
+
+	addLibs(mxSettings.getCustomLibraries());
+	addLibs((urlParams['clibs'] || '').split(';'));
+	this.loadLibraries(checked);
 };
 
 /**
@@ -5472,9 +5456,9 @@ App.prototype.loadLibraries = function(libs, done)
 {
 	if (this.sidebar != null)
 	{
-		if (this.pendingLibraries == null)
+		if (this.loadedLibraries == null)
 		{
-			this.pendingLibraries = new Object();
+			this.loadedLibraries = new Object();
 		}
 		
 		// Ignores this library next time
@@ -5484,12 +5468,13 @@ App.prototype.loadLibraries = function(libs, done)
 			{
 				mxSettings.removeCustomLibrary(id);
 			}
-			
-			delete this.pendingLibraries[id];
+
+			delete this.loadedLibraries[id];
 		});
-				
+
 		var waiting = 0;
 		var files = [];
+		var idx = (libs.length > 0 && libs[0] == 'L.scratchpad') ? 1 : 0;
 
 		// Loads in order of libs array
 		var checkDone = mxUtils.bind(this, function()
@@ -5502,7 +5487,7 @@ App.prototype.loadLibraries = function(libs, done)
 					{
 						if (files[i] != null)
 						{
-							this.loadLibrary(files[i]);
+							this.loadLibrary(files[i], i <= idx);
 						}
 					}
 				}
@@ -5522,15 +5507,15 @@ App.prototype.loadLibraries = function(libs, done)
 				
 				(mxUtils.bind(this, function(id, index)
 				{
-					if (id != null && id.length > 0 && this.pendingLibraries[id] == null &&
+					if (id != null && id.length > 0 && this.loadedLibraries[id] == null &&
 						this.sidebar.palettes[id] == null)
 					{
 						// Waits for all libraries to load
+						this.loadedLibraries[id] = true;
 						waiting++;
 						
 						var onload = mxUtils.bind(this, function(file)
 						{
-							delete this.pendingLibraries[id];
 							files[index] = file;
 							waiting--;
 							checkDone();
@@ -5543,7 +5528,6 @@ App.prototype.loadLibraries = function(libs, done)
 							checkDone();
 						});
 						
-						this.pendingLibraries[id] = true;
 						var service = id.substring(0, 1);
 						
 						if (service == 'L')
@@ -5868,7 +5852,6 @@ App.prototype.updateButtonContainer = function()
 	}
 };
 
-
 App.prototype.fetchAndShowNotification = function(target, subtarget)
 {
 	if (this.fetchingNotif)
@@ -5889,7 +5872,7 @@ App.prototype.fetchAndShowNotification = function(target, subtarget)
 		});
 		
 		var lsReadFlag = target + 'NotifReadTS';
-		var lastRead = (localStorage != null) ? parseInt(localStorage.getItem(lsReadFlag)) : true;
+		var lastRead = isLocalStorage ? parseInt(localStorage.getItem(lsReadFlag)) : true;
 				
 		for (var i = 0; i < notifs.length; i++)
 		{
@@ -5901,7 +5884,7 @@ App.prototype.fetchAndShowNotification = function(target, subtarget)
 	
 	try
 	{
-		if (localStorage != null)
+		if (isLocalStorage)
 		{
 			cachedNotif = JSON.parse(localStorage.getItem(cachedNotifKey));
 		}
@@ -6177,7 +6160,7 @@ App.prototype.save = function(name, done)
 				}));
 			}
 			
-			file.handleFileError(err, true);
+			file.handleFileError(err, err == null || err.name != 'AbortError');
 		});
 		
 		try
@@ -6253,14 +6236,6 @@ App.prototype.pickFolder = function(mode, fn, enabled, direct, force)
 	else if (enabled && mode == App.MODE_GITLAB && this.gitLab != null)
 	{
 		this.gitLab.pickFolder(mxUtils.bind(this, function(folderPath)
-		{
-			resume();
-			fn(folderPath);
-		}));
-	}
-	else if (enabled && mode == App.MODE_NOTION && this.notion != null)
-	{
-		this.notion.pickFolder(mxUtils.bind(this, function(folderPath)
 		{
 			resume();
 			fn(folderPath);
@@ -6620,7 +6595,7 @@ App.prototype.convertFile = function(url, filename, mimeType, extension, success
 				}
 				else if (Graph.fileSupport && new XMLHttpRequest().upload && this.isRemoteFileFormat(data, url))
 				{
-					this.parseFile(new Blob([data], {type: 'application/octet-stream'}), mxUtils.bind(this, function(xhr)
+					this.parseFileData(data, mxUtils.bind(this, function(xhr)
 					{
 						if (xhr.readyState == 4)
 						{
@@ -6789,11 +6764,6 @@ App.prototype.updateHeader = function()
 					this.appIcon.style.backgroundImage = 'url(' + IMAGE_PATH + '/gitlab-logo-white.svg)';
 					this.appIcon.style.backgroundSize = '100% 100%';
 				}
-				else if (mode == App.MODE_NOTION)
-				{
-					this.appIcon.style.backgroundImage = 'url(' + IMAGE_PATH + '/notion-logo-white.svg)';
-					this.appIcon.style.backgroundSize = '70% 70%';
-				}				
 				else if (mode == App.MODE_TRELLO)
 				{
 					this.appIcon.style.backgroundImage = 'url(' + IMAGE_PATH + '/trello-logo-white-orange.svg)';
@@ -6900,6 +6870,9 @@ App.prototype.updateHeader = function()
 		
 		mxEvent.addListener(this.toggleFormatElement, 'click', mxUtils.bind(this, function(evt)
 		{
+			EditorUi.logEvent({category: 'TOOLBAR-ACTION-',
+				action: 'formatPanel'});
+		
 			this.actions.get('formatPanel').funct();
 			mxEvent.consume(evt);
 		}));
@@ -6959,6 +6932,9 @@ App.prototype.updateHeader = function()
 		mxEvent.addListener(this.fullscreenElement, 'click', mxUtils.bind(this, function(evt)
 		{
 			var visible = this.fullscreenMode;
+
+			EditorUi.logEvent({category: 'TOOLBAR-ACTION-',
+				action: 'fullscreen' , currentstate: visible});
 			
 			if (uiTheme != 'atlas' && urlParams['embed'] != '1')
 			{
@@ -7014,6 +6990,8 @@ App.prototype.updateHeader = function()
 			// Toggles compact mode
 			mxEvent.addListener(this.toggleElement, 'click', mxUtils.bind(this, function(evt)
 			{
+				EditorUi.logEvent({category: 'TOOLBAR-ACTION-',
+					action: 'toggleUI'});
 				this.toggleCompactMode();
 				mxEvent.consume(evt);
 			}));
@@ -7088,7 +7066,6 @@ App.prototype.updateUserElement = function()
 		(this.dropbox == null || this.dropbox.getUser() == null) &&
 		(this.gitHub == null || this.gitHub.getUser() == null) &&
 		(this.gitLab == null || this.gitLab.getUser() == null) &&
-		(this.notion == null || this.notion.getUser() == null) &&
 		(this.trello == null || !this.trello.isAuthorized())) //TODO Trello no user issue
 	{
 		if (this.userElement != null)
@@ -7560,37 +7537,6 @@ App.prototype.updateUserElement = function()
 						}), mxResources.get('gitlab'));
 					}
 
-					if (this.notion != null)
-					{
-						addUser(this.notion.getUser(), IMAGE_PATH + '/notion-logo.svg', mxUtils.bind(this, function()
-						{
-							var file = this.getCurrentFile();
-
-							if (file != null && file.constructor == NotionFile)
-							{
-								var doLogout = mxUtils.bind(this, function()
-								{
-									this.notion.logout();
-									window.location.hash = '';
-								});
-
-								if (!file.isModified())
-								{
-									doLogout();
-								}
-								else
-								{
-									this.confirm(mxResources.get('allChangesLost'), null, doLogout,
-										mxResources.get('cancel'), mxResources.get('discardChanges'));
-								}
-							}
-							else
-							{
-								this.notion.logout();
-							}
-						}), mxResources.get('notion'));
-					}
-					
 					//TODO We have no user info from Trello, how we can create a user?
 					if (this.trello != null)
 					{
@@ -7711,10 +7657,6 @@ App.prototype.updateUserElement = function()
 		else if (this.gitLab != null && this.gitLab.getUser() != null)
 		{
 			user = this.gitLab.getUser();
-		}
-		else if (this.notion != null && this.notion.getUser() != null)
-		{
-			user = this.notion.getUser();
 		}
 		//TODO Trello no user issue
 		
