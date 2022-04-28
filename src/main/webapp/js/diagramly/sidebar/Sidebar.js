@@ -41,6 +41,8 @@
 	
 	Sidebar.prototype.gcp2 = ['Paths', 'Zones', 'Service Cards', 'Compute', 'API Management', 'Security', 'Data Analytics', 'Data Transfer', 'Cloud AI', 'Internet of Things', 'Databases', 'Storage', 'Management Tools', 'Networking', 'Developer Tools', 'Expanded Product Cards', 'User Device Cards', 'Product Cards', 'General Icons', 'Icons AI Machine Learning', 'Icons Compute', 'Icons Data Analytics', 'Icons Management Tools', 'Icons Networking', 'Icons Developer Tools', 'Icons API Management', 'Icons Internet of Things', 'Icons Databases', 'Icons Storage', 'Icons Security', 'Icons Migration', 'Icons Hybrid and Multi Cloud'];
 	
+	Sidebar.prototype.gcpicons = ['AI and Machine Learning', 'API Management', 'Compute', 'Data Analytics', 'Databases', 'Developer Tools', 'Expanded Product Card Icons', 'Generic', 'Hybrid and Multi Cloud', 'Security', 'Internet of Things', 'Management Tools', 'Migration', 'Networking', 'Open Source Icons', 'Storage'];
+	
     Sidebar.prototype.rack = ['General', 'APC', 'Cisco', 'Dell', 'F5', 'HP', 'HPE Aruba Gateways Controllers', 'HPE Aruba Security', 'HPE Aruba Switches', 'IBM', 'Oracle'];
     
 	Sidebar.prototype.pids = ['Agitators', 'Apparatus Elements', 'Centrifuges', 'Compressors', 'Compressors ISO', 'Crushers Grinding', 
@@ -131,7 +133,7 @@
            	                           {id: 'signs', prefix: 'signs', libs: Sidebar.prototype.signs},
            	                           {id: 'gcp', prefix: 'gcp', libs: Sidebar.prototype.gcp},
            	                           {id: 'gcp2', prefix: 'gcp2', libs: Sidebar.prototype.gcp2},
-//           	                           {id: 'gcp19', prefix: 'gcp19', libs: Sidebar.prototype.gcp2},
+           	                           {id: 'gcpicons', prefix: 'gcpicons', libs: Sidebar.prototype.gcpicons},
            	                           {id: 'rack', prefix: 'rack', libs: Sidebar.prototype.rack},
            	                           {id: 'electrical', prefix: 'electrical', libs: Sidebar.prototype.electrical},
            	                           {id: 'aws2', prefix: 'aws2', libs: Sidebar.prototype.aws2},
@@ -155,6 +157,41 @@
            	                           {id: 'webicons', libs: ['webicons', 'weblogos']},
            	                           {id: 'sysml', prefix: 'sysml', libs: Sidebar.prototype.sysml}];
 	
+	/**
+	 * Removes disabled libraries from search results.
+	 */
+	var sidebarAddEntry = Sidebar.prototype.addEntry;
+
+	Sidebar.prototype.addEntry = function(tags, fn)
+	{
+		if (this.currentSearchEntryLibrary != null && this.enabledLibraries != null &&
+			mxUtils.indexOf(this.enabledLibraries, this.currentSearchEntryLibrary.id) < 0)
+		{
+			return fn;
+		}
+		else
+		{
+			return sidebarAddEntry.apply(this, arguments);
+		}	
+	};
+
+	/**
+	 * Refreshes scratchpad.
+	 */
+	var sidebarRefresh = Sidebar.prototype.refresh;
+	Sidebar.prototype.refresh = function()
+	{
+		var ui = this.editorUi;
+		sidebarRefresh.apply(this, arguments);
+
+		if (ui.scratchpad != null)
+		{
+			ui.loadLibrary(new StorageLibrary(ui,
+				ui.scratchpad.getData(),
+				'.scratchpad'));
+		}
+	};
+
 	/**
 	 * Adds hint for quick tutorial video for certain search terms.
 	 */
@@ -313,48 +350,55 @@
 	 */
 	Sidebar.prototype.isEntryVisible = function(key)
 	{
-		var config = this.getConfigurationById(key);
-		
-		if (config != null)
+		if (key == '.scratchpad')
 		{
-			var id = (config.libs != null) ? ((config.prefix || '') + config.libs[0]) : key;
-			var elts = this.palettes[id];
-
-			if (elts != null)
-			{
-				return elts[0].style.display != 'none';
-			}
+			return this.editorUi.scratchpad != null;
 		}
-		
-		if (this.customEntries != null)
+		else
 		{
-			for (var i = 0; i < this.customEntries.length; i++)
+			var config = this.getConfigurationById(key);
+			
+			if (config != null)
 			{
-				var section = this.customEntries[i];
-				
-				for (var j = 0; j < section.entries.length; j++)
+				var id = (config.libs != null) ? ((config.prefix || '') + config.libs[0]) : key;
+				var elts = this.palettes[id];
+
+				if (elts != null)
 				{
-					var entry = section.entries[j];
+					return elts[0].style.display != 'none';
+				}
+			}
+			
+			if (this.customEntries != null)
+			{
+				for (var i = 0; i < this.customEntries.length; i++)
+				{
+					var section = this.customEntries[i];
 					
-					if (entry.id == key)
+					for (var j = 0; j < section.entries.length; j++)
 					{
-						if (entry.libs != null && entry.libs.length > 0)
+						var entry = section.entries[j];
+						
+						if (entry.id == key)
 						{
-							var elts = this.palettes[entry.id + '.0'];
-							
-							if (elts != null)
+							if (entry.libs != null && entry.libs.length > 0)
 							{
-								return elts[0].style.display != 'none';
+								var elts = this.palettes[entry.id + '.0'];
+								
+								if (elts != null)
+								{
+									return elts[0].style.display != 'none';
+								}
 							}
+						
+							break;
 						}
-					
-						break;
 					}
 				}
 			}
+			
+			return false;
 		}
-		
-		return false;
 	};
 
 	/**
@@ -401,7 +445,7 @@
 		
 		// Merges array of semicolon separated strings into a single array
 		var temp = all.join(';').split(';');
-		
+
 		// Resolves aliases and creates lookup
 		var visible = {};
 		
@@ -418,6 +462,7 @@
 				this.showPalettes(this.configuration[i].prefix || '',
 					this.configuration[i].libs || [this.configuration[i].id],
 					visible[this.configuration[i].id] == true);
+
 			}
 		}
 		
@@ -454,65 +499,75 @@
 	{
 		// Defines all entries for the sidebar. This is used in the MoreShapes dialog. Create screenshots using the savesidebar URL parameter and
 		// http://www.alderg.com/merge.html for creating a vertical stack of PNG images if multiple sidebars are part of an entry.
-		this.entries = [{title: mxResources.get('standard'),
-            			entries: [{title: mxResources.get('general'), id: 'general', image: IMAGE_PATH + '/sidebar-general.png'},
-            			          {title: mxResources.get('basic'), id: 'basic', image: IMAGE_PATH + '/sidebar-basic.png'},
-            			          {title: mxResources.get('arrows'), id: 'arrows2', image: IMAGE_PATH + '/sidebar-arrows2.png'},
-            			          {title: mxResources.get('clipart'), id: 'clipart', image: IMAGE_PATH + '/sidebar-clipart.png'},
-            			          {title: mxResources.get('flowchart'), id: 'flowchart', image: IMAGE_PATH + '/sidebar-flowchart.png'}]},
+
+		var stdEntries = [{title: mxResources.get('general'), id: 'general', image: IMAGE_PATH + '/sidebar-general.png'},
+			{title: mxResources.get('basic'), id: 'basic', image: IMAGE_PATH + '/sidebar-basic.png'},
+			{title: mxResources.get('arrows'), id: 'arrows2', image: IMAGE_PATH + '/sidebar-arrows2.png'},
+			{title: mxResources.get('clipart'), id: 'clipart', image: IMAGE_PATH + '/sidebar-clipart.png'},
+			{title: mxResources.get('flowchart'), id: 'flowchart', image: IMAGE_PATH + '/sidebar-flowchart.png'}];
+		
+		if (urlParams['sketch'] == '1')
+		{
+			stdEntries = [{title: mxResources.get('searchShapes'), id: 'search'},
+				{title: mxResources.get('scratchpad'), id: '.scratchpad'}].
+				concat(stdEntries);
+		}
+
+		this.entries = [{title: mxResources.get('standard'), entries: stdEntries},
             			{title: mxResources.get('software'),
             			entries: [{title: 'Active Directory', id: 'active_directory', image: IMAGE_PATH + '/sidebar-active_directory.png'},
-            					  {title: mxResources.get('android'), id: 'android', image: IMAGE_PATH + '/sidebar-android.png'},
-            					  {title: 'Atlassian', id: 'atlassian', image: IMAGE_PATH + '/sidebar-atlassian.png'},
-            			          {title: mxResources.get('bootstrap'), id: 'bootstrap', image: IMAGE_PATH + '/sidebar-bootstrap.png'},
-            			          {title: 'C4', id: 'c4', image: IMAGE_PATH + '/sidebar-c4.png'},
-            			          {title: 'Data Flow Diagram', id: 'dfd', image: IMAGE_PATH + '/sidebar-dfd.png'},
-            			          {title: mxResources.get('entityRelation'), id: 'er', image: IMAGE_PATH + '/sidebar-er.png'},
-            			          {title: mxResources.get('ios'), id: 'ios', image: IMAGE_PATH + '/sidebar-ios.png'},
-            			          {title: mxResources.get('mockups'), id: 'mockups', image: IMAGE_PATH + '/sidebar-mockups.png'},
-            			          {title: 'Sitemap', id: 'sitemap', image: IMAGE_PATH + '/sidebar-sitemap.png'},
-            			          {title: mxResources.get('uml') + ' 2.5', id: 'uml25', image: IMAGE_PATH + '/sidebar-uml25.png'},
-            			          {title: mxResources.get('uml'), id: 'uml', image: IMAGE_PATH + '/sidebar-uml.png'}]},
+								{title: mxResources.get('android'), id: 'android', image: IMAGE_PATH + '/sidebar-android.png'},
+								{title: 'Atlassian', id: 'atlassian', image: IMAGE_PATH + '/sidebar-atlassian.png'},
+								{title: mxResources.get('bootstrap'), id: 'bootstrap', image: IMAGE_PATH + '/sidebar-bootstrap.png'},
+								{title: 'C4', id: 'c4', image: IMAGE_PATH + '/sidebar-c4.png'},
+								{title: 'Data Flow Diagram', id: 'dfd', image: IMAGE_PATH + '/sidebar-dfd.png'},
+								{title: mxResources.get('entityRelation'), id: 'er', image: IMAGE_PATH + '/sidebar-er.png'},
+								{title: mxResources.get('ios'), id: 'ios', image: IMAGE_PATH + '/sidebar-ios.png'},
+								{title: mxResources.get('mockups'), id: 'mockups', image: IMAGE_PATH + '/sidebar-mockups.png'},
+								{title: 'Sitemap', id: 'sitemap', image: IMAGE_PATH + '/sidebar-sitemap.png'},
+								{title: mxResources.get('uml') + ' 2.5', id: 'uml25', image: IMAGE_PATH + '/sidebar-uml25.png'},
+								{title: mxResources.get('uml'), id: 'uml', image: IMAGE_PATH + '/sidebar-uml.png'}]},
             			{title: mxResources.get('networking'),
             			entries: [{title: 'Allied Telesis', id: 'allied_telesis', image: IMAGE_PATH + '/sidebar-allied_telesis.png'},
-            					  {title: 'AWS17', id: 'aws3', image: IMAGE_PATH + '/sidebar-aws3.png'},
-							      {title: 'AWS18', id: 'aws4b', image: IMAGE_PATH + '/sidebar-aws4b.png'},
-							      {title: 'AWS19', id: 'aws4', image: IMAGE_PATH + '/sidebar-aws4.png'},
-			            			// TODO: Add isometric containers  		                          
-            			          {title: mxResources.get('aws3d'), id: 'aws3d', image: IMAGE_PATH + '/sidebar-aws3d.png'},
-            			          {title: mxResources.get('azure'), id: 'azure2', image: IMAGE_PATH + '/sidebar-azure.png'},
-            			          {title: 'Cloud & Enterprise', id: 'mscae', image: IMAGE_PATH + '/sidebar-mscae.png'},
-            			          {title: mxResources.get('cisco'), id: 'cisco', image: IMAGE_PATH + '/sidebar-cisco.png'},
-            			          {title: 'Cisco19', id: 'cisco19', image: IMAGE_PATH + '/sidebar-cisco19.png'},
-            			          {title: 'Cisco Safe', id: 'cisco_safe', image: IMAGE_PATH + '/sidebar-cisco_safe.png'},
-            			          {title: 'Cumulus', id: 'cumulus', image: IMAGE_PATH + '/sidebar-cumulus.png'},
-            			          {title: 'Citrix', id: 'citrix', image: IMAGE_PATH + '/sidebar-citrix.png'},
-            			          {title: 'Google Cloud Platform', id: 'gcp2', image: IMAGE_PATH + '/sidebar-gcp2.png'},
-            			          {title: 'IBM', id: 'ibm', image: IMAGE_PATH + '/sidebar-ibm.png'},
-            			          {title: 'Kubernetes', id: 'kubernetes', image: IMAGE_PATH + '/sidebar-kubernetes.png'},
-            			          {title: 'Network', id: 'network', image: IMAGE_PATH + '/sidebar-network.png'},
-            			          {title: 'Office', id: 'office', image: IMAGE_PATH + '/sidebar-office.png'},
-            			          {title: mxResources.get('rack'), id: 'rack', image: IMAGE_PATH + '/sidebar-rack.png'},
-            			          {title: 'Veeam', id: 'veeam2', image: IMAGE_PATH + '/sidebar-veeam.png'},
-            			          {title: 'VMware', id: 'vvd', image: IMAGE_PATH + '/sidebar-vvd.png'}]},
+								{title: 'AWS17', id: 'aws3', image: IMAGE_PATH + '/sidebar-aws3.png'},
+								{title: 'AWS18', id: 'aws4b', image: IMAGE_PATH + '/sidebar-aws4b.png'},
+								{title: 'AWS19', id: 'aws4', image: IMAGE_PATH + '/sidebar-aws4.png'},
+								// TODO: Add isometric containers  		                          
+								{title: mxResources.get('aws3d'), id: 'aws3d', image: IMAGE_PATH + '/sidebar-aws3d.png'},
+								{title: mxResources.get('azure'), id: 'azure2', image: IMAGE_PATH + '/sidebar-azure.png'},
+								{title: 'Cloud & Enterprise', id: 'mscae', image: IMAGE_PATH + '/sidebar-mscae.png'},
+								{title: mxResources.get('cisco'), id: 'cisco', image: IMAGE_PATH + '/sidebar-cisco.png'},
+								{title: 'Cisco19', id: 'cisco19', image: IMAGE_PATH + '/sidebar-cisco19.png'},
+								{title: 'Cisco Safe', id: 'cisco_safe', image: IMAGE_PATH + '/sidebar-cisco_safe.png'},
+								{title: 'Cumulus', id: 'cumulus', image: IMAGE_PATH + '/sidebar-cumulus.png'},
+								{title: 'Citrix', id: 'citrix', image: IMAGE_PATH + '/sidebar-citrix.png'},
+								{title: 'Google Cloud Platform', id: 'gcp2', image: IMAGE_PATH + '/sidebar-gcp2.png'},
+								{title: 'GCP Icons', id: 'gcpicons', image: IMAGE_PATH + '/sidebar-gcpicons.png'},
+								{title: 'IBM', id: 'ibm', image: IMAGE_PATH + '/sidebar-ibm.png'},
+								{title: 'Kubernetes', id: 'kubernetes', image: IMAGE_PATH + '/sidebar-kubernetes.png'},
+								{title: 'Network', id: 'network', image: IMAGE_PATH + '/sidebar-network.png'},
+								{title: 'Office', id: 'office', image: IMAGE_PATH + '/sidebar-office.png'},
+								{title: mxResources.get('rack'), id: 'rack', image: IMAGE_PATH + '/sidebar-rack.png'},
+								{title: 'Veeam', id: 'veeam2', image: IMAGE_PATH + '/sidebar-veeam.png'},
+								{title: 'VMware', id: 'vvd', image: IMAGE_PATH + '/sidebar-vvd.png'}]},
             			{title: mxResources.get('business'),
             			entries: [{title: 'ArchiMate 3.0', id: 'archimate3', image: IMAGE_PATH + '/sidebar-archimate3.png'},
-            			          {title: mxResources.get('archiMate21'), id: 'archimate', image: IMAGE_PATH + '/sidebar-archimate.png'},
-            			          {title: mxResources.get('bpmn') + ' 2.0', id: 'bpmn2', image: IMAGE_PATH + '/sidebar-bpmn.png'},
-            			          {title: mxResources.get('sysml'), id: 'sysml', image: IMAGE_PATH + '/sidebar-sysml.png'},
-            			          {title: 'Value Stream Mapping', id: 'lean_mapping', image: IMAGE_PATH + '/sidebar-leanmapping.png'}]},
+								{title: mxResources.get('archiMate21'), id: 'archimate', image: IMAGE_PATH + '/sidebar-archimate.png'},
+								{title: mxResources.get('bpmn') + ' 2.0', id: 'bpmn2', image: IMAGE_PATH + '/sidebar-bpmn.png'},
+								{title: mxResources.get('sysml'), id: 'sysml', image: IMAGE_PATH + '/sidebar-sysml.png'},
+								{title: 'Value Stream Mapping', id: 'lean_mapping', image: IMAGE_PATH + '/sidebar-leanmapping.png'}]},
             			{title: mxResources.get('other'),
             			entries: [{title: mxResources.get('cabinets'), id: 'cabinets', image: IMAGE_PATH + '/sidebar-cabinets.png'},
-            					  {title: 'Infographic', id: 'infographic', image: IMAGE_PATH + '/sidebar-infographic.png'},
-            			          {title: mxResources.get('eip'), id: 'eip', image: IMAGE_PATH + '/sidebar-eip.png'},
-            			          {title: mxResources.get('electrical'), id: 'electrical', image: IMAGE_PATH + '/sidebar-electrical.png'},
-            			          {title: mxResources.get('floorplans'), id: 'floorplan', image: IMAGE_PATH + '/sidebar-floorplans.png'},
-            			          {title: 'Fluid Power (ISO 1219)', id: 'fluid_power', image: IMAGE_PATH + '/sidebar-fluid_power.png'},
-            			          {title: mxResources.get('gmdl'), id: 'gmdl', image: IMAGE_PATH + '/sidebar-gmdl.png'},
-            			          {title: mxResources.get('procEng'), id: 'pid', image: IMAGE_PATH + '/sidebar-pid.png'},
-            			          {title: 'Threat Modeling', id: 'threatModeling', image: IMAGE_PATH + '/sidebar-threatmodeling.png'},
-            			          {title: 'Web Icons', id: 'webicons', image: IMAGE_PATH + '/sidebar-webIcons.png'},
-            			          {title: mxResources.get('signs'), id: 'signs', image: IMAGE_PATH + '/sidebar-signs.png'}]}];
+								{title: 'Infographic', id: 'infographic', image: IMAGE_PATH + '/sidebar-infographic.png'},
+								{title: mxResources.get('eip'), id: 'eip', image: IMAGE_PATH + '/sidebar-eip.png'},
+								{title: mxResources.get('electrical'), id: 'electrical', image: IMAGE_PATH + '/sidebar-electrical.png'},
+								{title: mxResources.get('floorplans'), id: 'floorplan', image: IMAGE_PATH + '/sidebar-floorplans.png'},
+								{title: 'Fluid Power (ISO 1219)', id: 'fluid_power', image: IMAGE_PATH + '/sidebar-fluid_power.png'},
+								{title: mxResources.get('gmdl'), id: 'gmdl', image: IMAGE_PATH + '/sidebar-gmdl.png'},
+								{title: mxResources.get('procEng'), id: 'pid', image: IMAGE_PATH + '/sidebar-pid.png'},
+								{title: 'Threat Modeling', id: 'threatModeling', image: IMAGE_PATH + '/sidebar-threatmodeling.png'},
+								{title: 'Web Icons', id: 'webicons', image: IMAGE_PATH + '/sidebar-webIcons.png'},
+								{title: mxResources.get('signs'), id: 'signs', image: IMAGE_PATH + '/sidebar-signs.png'}]}];
 
 		// Uses search.xml index file instead (faster load times)
 		this.addStencilsToIndex = false;
@@ -830,20 +885,10 @@
 		var imgDir = GRAPH_IMAGE_PATH;
 		var dir = STENCIL_PATH;
 		var signs = this.signs;
-		var gcp = this.gcp;
 		var rack = this.rack;
 		var pids = this.pids;
 		var cisco = this.cisco;
-		var cisco19 = this.cisco19;
-		var cisco_safe = this.cisco_safe;
 		var sysml = this.sysml;
-		var eip = this.eip;
-		var gmdl = this.gmdl;
-		var office = this.office;
-		var veeam = this.veeam;
-		var veeam2 = this.veeam2;
-		var archimate3 = this.archimate3;
-		var electrical = this.electrical;
 		
 		if (urlParams['createindex'] == '1')
 		{
@@ -1171,6 +1216,7 @@
 		this.addCumulusPalette();
 		this.addCitrixPalette();
 		this.addGCP2Palette();
+		this.addGCPIconsPalette();
 		this.addIBMPalette();
 		this.addNetworkPalette();
 		this.addOfficePalette();
@@ -1305,41 +1351,34 @@
 					{
 						try
 						{
-							if (req.getStatus() >= 200 && req.getStatus() <= 299)
+							// Ignore response if nothing or error returned
+							if (req.getStatus() >= 200 && req.getStatus() <= 299 &&
+								req.getText() != null && req.getText().length > 0)
 							{
-								// Ignore without error if no response
-								if (req.getText() != null && req.getText().length > 0)
+								try
 								{
-									try
-									{
-										var res = JSON.parse(req.getText());
-										
-										if (res == null || res.icons == null)
-										{
-											succ(results, len, false, terms);
-											this.editorUi.handleError(res);
-										}
-										else
-										{
-											this.extractIconsFromResponse(res, results);
-											succ(results, (page - 1) * count + results.length, res.icons.length == count, terms);
-										}
-									}
-									catch (e)
+									var res = JSON.parse(req.getText());
+									
+									if (res == null || res.icons == null)
 									{
 										succ(results, len, false, terms);
-										this.editorUi.handleError(e);
+										this.editorUi.handleError(res);
+									}
+									else
+									{
+										this.extractIconsFromResponse(res, results);
+										succ(results, (page - 1) * count + results.length, res.icons.length == count, terms);
 									}
 								}
-								else
+								catch (e)
 								{
 									succ(results, len, false, terms);
+									this.editorUi.handleError(e);
 								}
 							}
 							else
 							{
 								succ(results, len, false, terms);
-								this.editorUi.handleError({message: mxResources.get('unknownError')});
 							}
 						}
 						catch (e)
