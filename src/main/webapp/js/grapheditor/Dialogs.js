@@ -101,6 +101,7 @@ var ColorDialog = function(editorUi, color, apply, cancelFn)
 		table.setAttribute('cellspacing', '0');
 		table.style.marginBottom = '20px';
 		table.style.cellSpacing = '0px';
+		table.style.marginLeft = '1px';
 		var tbody = document.createElement('tbody');
 		table.appendChild(tbody);
 
@@ -115,7 +116,7 @@ var ColorDialog = function(editorUi, color, apply, cancelFn)
 				(mxUtils.bind(this, function(clr)
 				{
 					var td = document.createElement('td');
-					td.style.border = '1px solid black';
+					td.style.border = '0px solid black';
 					td.style.padding = '0px';
 					td.style.width = '16px';
 					td.style.height = '16px';
@@ -124,14 +125,20 @@ var ColorDialog = function(editorUi, color, apply, cancelFn)
 					{
 						clr = defaultColor;
 					}
-					
-					if (clr == 'none')
+
+					if (clr != null)
 					{
-						td.style.background = 'url(\'' + Dialog.prototype.noColorImage + '\')';
-					}
-					else if (clr != null)
-					{
-						td.style.backgroundColor = '#' + clr;
+						td.style.borderWidth = '1px';
+
+						if (clr == 'none')
+						{
+							td.style.background = 'url(\'' + Dialog.prototype.noColorImage + '\')';
+						}
+						else
+						{
+							td.style.backgroundColor = '#' + clr;
+						}
+
 						var name = this.colorNames[clr.toUpperCase()];
 
 						if (name != null)
@@ -425,29 +432,47 @@ var AboutDialog = function(editorUi)
  * Constructs a new textarea dialog.
  */
 var TextareaDialog = function(editorUi, title, url, fn, cancelFn, cancelTitle, w, h,
-	addButtons, noHide, noWrap, applyTitle, helpLink, customButtons)
+	addButtons, noHide, noWrap, applyTitle, helpLink, customButtons, header)
 {
 	w = (w != null) ? w : 300;
 	h = (h != null) ? h : 120;
 	noHide = (noHide != null) ? noHide : false;
-	var row, td;
-	
-	var table = document.createElement('table');
-	var tbody = document.createElement('tbody');
-	
-	row = document.createElement('tr');
-	
-	td = document.createElement('td');
-	td.style.fontSize = '10pt';
-	td.style.width = '100px';
-	mxUtils.write(td, title);
-	
-	row.appendChild(td);
-	tbody.appendChild(row);
 
-	row = document.createElement('tr');
-	td = document.createElement('td');
+	var div = document.createElement('div');
+	div.style.position = 'absolute';
+	div.style.top = '20px';
+	div.style.bottom = '20px';
+	div.style.left = '20px';
+	div.style.right = '20px';
 
+	var top = document.createElement('div');
+
+	top.style.position = 'absolute';
+	top.style.left = '0px';
+	top.style.right = '0px';
+
+	var main = top.cloneNode(false);
+	var buttons = top.cloneNode(false);
+
+	top.style.top = '0px';
+	top.style.height = '20px';
+	main.style.top = '20px';
+	main.style.bottom = '64px';
+	buttons.style.bottom = '0px';
+	buttons.style.height = '60px';
+	buttons.style.textAlign = 'center';
+
+	mxUtils.write(top, title);
+
+	div.appendChild(top);
+	div.appendChild(main);
+	div.appendChild(buttons);
+
+	if (header != null)
+	{
+		top.appendChild(header);
+	}
+	
 	var nameInput = document.createElement('textarea');
 	
 	if (noWrap)
@@ -462,8 +487,13 @@ var TextareaDialog = function(editorUi, title, url, fn, cancelFn, cancelTitle, w
 	
 	mxUtils.write(nameInput, url || '');
 	nameInput.style.resize = 'none';
-	nameInput.style.width = w + 'px';
-	nameInput.style.height = h + 'px';
+	nameInput.style.outline = 'none';
+	nameInput.style.position = 'absolute';
+	nameInput.style.boxSizing = 'border-box';
+	nameInput.style.top = '0px';
+	nameInput.style.left = '0px';
+	nameInput.style.height = '100%';
+	nameInput.style.width = '100%';
 	
 	this.textarea = nameInput;
 
@@ -473,17 +503,8 @@ var TextareaDialog = function(editorUi, title, url, fn, cancelFn, cancelTitle, w
 		nameInput.scrollTop = 0;
 	};
 
-	td.appendChild(nameInput);
-	row.appendChild(td);
-	
-	tbody.appendChild(row);
+	main.appendChild(nameInput);
 
-	row = document.createElement('tr');
-	td = document.createElement('td');
-	td.style.paddingTop = '14px';
-	td.style.whiteSpace = 'nowrap';
-	td.setAttribute('align', 'right');
-	
 	if (helpLink != null)
 	{
 		var helpBtn = mxUtils.button(mxResources.get('help'), function()
@@ -492,23 +513,29 @@ var TextareaDialog = function(editorUi, title, url, fn, cancelFn, cancelTitle, w
 		});
 		helpBtn.className = 'geBtn';
 		
-		td.appendChild(helpBtn);
+		buttons.appendChild(helpBtn);
 	}
 	
 	if (customButtons != null)
 	{
 		for (var i = 0; i < customButtons.length; i++)
 		{
-			(function(label, fn)
+			(function(label, fn, title)
 			{
 				var customBtn = mxUtils.button(label, function(e)
 				{
 					fn(e, nameInput);
 				});
+
+				if (title != null)
+				{
+					customBtn.setAttribute('title', title);
+				}
+
 				customBtn.className = 'geBtn';
 				
-				td.appendChild(customBtn);
-			})(customButtons[i][0], customButtons[i][1]);
+				buttons.appendChild(customBtn);
+			})(customButtons[i][0], customButtons[i][1], customButtons[i][2]);
 		}
 	}
 	
@@ -521,16 +548,18 @@ var TextareaDialog = function(editorUi, title, url, fn, cancelFn, cancelTitle, w
 			cancelFn();
 		}
 	});
+
+	cancelBtn.setAttribute('title', 'Escape');
 	cancelBtn.className = 'geBtn';
 	
 	if (editorUi.editor.cancelFirst)
 	{
-		td.appendChild(cancelBtn);
+		buttons.appendChild(cancelBtn);
 	}
 	
 	if (addButtons != null)
 	{
-		addButtons(td, nameInput);
+		addButtons(buttons, nameInput);
 	}
 	
 	if (fn != null)
@@ -545,19 +574,25 @@ var TextareaDialog = function(editorUi, title, url, fn, cancelFn, cancelTitle, w
 			fn(nameInput.value);
 		});
 		
-		genericBtn.className = 'geBtn gePrimaryBtn';	
-		td.appendChild(genericBtn);
+		genericBtn.setAttribute('title', 'Ctrl+Enter');
+		genericBtn.className = 'geBtn gePrimaryBtn';
+		buttons.appendChild(genericBtn);
+
+		mxEvent.addListener(nameInput, 'keypress', function(e)
+		{
+			if (e.keyCode == 13 && mxEvent.isControlDown(e))
+			{
+				genericBtn.click();
+			}
+		});
 	}
 	
 	if (!editorUi.editor.cancelFirst)
 	{
-		td.appendChild(cancelBtn);
+		buttons.appendChild(cancelBtn);
 	}
 
-	row.appendChild(td);
-	tbody.appendChild(row);
-	table.appendChild(tbody);
-	this.container = table;
+	this.container = div;
 };
 
 /**
@@ -1611,6 +1646,14 @@ var EditDataDialog = function(ui, cell)
 			mxUtils.alert(mxResources.get('invalidName'));
 		}
 	});
+
+	mxEvent.addListener(nameInput, 'keypress', function(e)
+	{
+		if (e.keyCode == 13 )
+		{
+			addBtn.click();
+		}
+	});
 	
 	this.init = function()
 	{
@@ -1639,6 +1682,8 @@ var EditDataDialog = function(ui, cell)
 		ui.hideDialog.apply(ui, arguments);
 	});
 	
+
+	cancelBtn.setAttribute('title', 'Escape');
 	cancelBtn.className = 'geBtn';
 	
 	var applyBtn = mxUtils.button(mxResources.get('apply'), function()
@@ -1679,7 +1724,17 @@ var EditDataDialog = function(ui, cell)
 			mxUtils.alert(e);
 		}
 	});
+
+	applyBtn.setAttribute('title', 'Ctrl+Enter');
 	applyBtn.className = 'geBtn gePrimaryBtn';
+
+	mxEvent.addListener(div, 'keypress', function(e)
+	{
+		if (e.keyCode == 13 && mxEvent.isControlDown(e))
+		{
+			applyBtn.click();
+		}
+	});
 	
 	function updateAddBtn()
 	{
@@ -1978,6 +2033,7 @@ var OutlineWindow = function(editorUi, x, y, w, h)
 
 	var zoomInAction = editorUi.actions.get('zoomIn');
 	var zoomOutAction = editorUi.actions.get('zoomOut');
+
 	mxEvent.addMouseWheelListener(function(evt, up)
 	{
 		var outlineWheel = false;
@@ -1996,14 +2052,16 @@ var OutlineWindow = function(editorUi, x, y, w, h)
 
 		if (outlineWheel)
 		{
-			if (up)
+			var factor = graph.zoomFactor;
+
+			// Slower zoom for pinch gesture on trackpad
+			if (evt.deltaY != null && Math.round(evt.deltaY) != evt.deltaY)
 			{
-				zoomInAction.funct();
+				factor = 1 + (Math.abs(evt.deltaY) / 20) * (factor - 1);
 			}
-			else
-			{
-				zoomOutAction.funct();
-			}
+
+			graph.lazyZoom(up, null, null, factor);
+			mxEvent.consume(evt);
 		}
 	});
 };
