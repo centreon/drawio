@@ -1448,7 +1448,8 @@ Menus.prototype.createPopupMenu = function(menu, cell, evt)
 
 	if (!this.editorUi.editor.graph.isSelectionEmpty()) {
 		let showContextualMenu = true;
-		const contextualMenuCellType = ['LINK','MEDIA', 'RESOURCE', 'WIDGET']
+
+		const contextualMenuCellType = ['LINK','MEDIA', 'RESOURCE', 'WIDGET','CONTAINER']
 		const typeCell = cell.getAttribute('type');
 
 		if (typeCell === 'WIDGET' && cell.getAttribute('widgetType') === 'LINK_LEGEND') {
@@ -1458,8 +1459,12 @@ Menus.prototype.createPopupMenu = function(menu, cell, evt)
 			showContextualMenu = false;
 		}
 
+
 		if (showContextualMenu && contextualMenuCellType.includes(typeCell)) {
 			this.addMenuItems(menu, ['editData'], null, evt);
+		}
+		if (typeCell === 'CONTAINER') {
+			this.addMenuItems(menu, ['createViewFromContainer'], null, evt);
 		}
 	}
 };

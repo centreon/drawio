@@ -646,6 +646,7 @@ Actions.prototype.init = function()
 		// - Centreon -
 		// Added a selected element type check to create an event at the parent
 		// and display the property selector in the application.
+
 		const propsShape = ['type', 'shapeType', 'modelId', 'id'];
 		const propsResourceCentreon = ['type', 'resourceType', 'resourceId',
 			'resourceName', 'modelId', 'viewId', 'parentName', 'parentType', 'parentId'];
@@ -663,6 +664,7 @@ Actions.prototype.init = function()
 			'metricsColorStart', 'metricsColorEnd', 'parentName', 'parentType', 'parentId',
 			'resourceName', 'orientation',
 		];
+		const propsContainer = ['type', 'modelId', 'viewId', 'containerName', 'centreonImageId'];
 		
 		let cellAttributes = [];
 
@@ -689,6 +691,13 @@ Actions.prototype.init = function()
 		if (cell.getAttribute('widgetType') !== undefined) {
 		 	cellAttributes = createAttributes(propsWidget);
 		}
+		if (cell.getAttribute('type') === 'CONTAINER') {
+			cellAttributes = createAttributes(propsContainer);
+		}
+
+		console.log('Action');
+		console.log(cellAttributes);
+		console.log('Action');
 
 		parent.postMessage(JSON.stringify({
 			mxObject: cellAttributes,
@@ -696,6 +705,33 @@ Actions.prototype.init = function()
 			event: 'setShowWizardShapeProperties',
 		}), '*');
 	}, null, null, Editor.ctrlKey + '+M');
+	this.addAction('createViewFromContainer...', function()
+{
+	var cell = graph.getSelectionCell() || graph.getModel().getRoot();
+
+	const propsContainer = ['type', 'modelId','viewId', 'containerName', 'centreonImageId'];
+
+	function createAttributes(arrayProps) {
+		return arrayProps.map((key) => {
+			if (cell.getAttribute(key) !== undefined) {
+				return {[key]: cell.getAttribute(key)};
+			}
+		}).filter(prop => prop !== undefined);
+	};
+	
+	if (cell.getAttribute('type') === 'CONTAINER') {
+
+		console.log('CreateViewFromContainer')
+		cellAttributes = createAttributes(propsContainer);
+		console.log(cellAttributes)
+		parent.postMessage(JSON.stringify({
+			mxObject: cellAttributes,
+			mxStyle: cell.getStyle(),
+			event: 'editContainer',
+		}), '*');
+	}
+
+}, null, null, Editor.ctrlKey + '+Shift+C');
 	this.addAction('editTooltip...', function()
 	{
 		var cell = graph.getSelectionCell();
