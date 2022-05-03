@@ -700,7 +700,7 @@ Actions.prototype.init = function()
 			'metricsColorStart', 'metricsColorEnd', 'parentName', 'parentType', 'parentId',
 			'resourceName', 'orientation',
 		];
-		const propsContainer = ['type', 'modelId', 'viewId', 'containerName', 'centreonImageId'];
+		const containerProps = ['type', 'modelId', 'viewId', 'containerName', 'centreonImageId'];
 		
 		let cellAttributes = [];
 
@@ -728,7 +728,7 @@ Actions.prototype.init = function()
 		 	cellAttributes = createAttributes(propsWidget);
 		}
 		if (cell.getAttribute('type') === 'CONTAINER') {
-			cellAttributes = createAttributes(propsContainer);
+			cellAttributes = createAttributes(containerProps);
 		}
 
 		parent.postMessage(JSON.stringify({
@@ -741,7 +741,7 @@ Actions.prototype.init = function()
 {
 	var cell = graph.getSelectionCell() || graph.getModel().getRoot();
 
-	const propsContainer = ['type', 'modelId','viewId', 'containerName', 'centreonImageId'];
+	const containerProps = ['type', 'modelId','viewId', 'containerName', 'centreonImageId'];
 
 	function createAttributes(arrayProps) {
 		return arrayProps.map((key) => {
@@ -752,7 +752,7 @@ Actions.prototype.init = function()
 	};
 	
 	if (cell.getAttribute('type') === 'CONTAINER') {
-		cellAttributes = createAttributes(propsContainer);
+		cellAttributes = createAttributes(containerProps);
 		parent.postMessage(JSON.stringify({
 			mxObject: cellAttributes,
 			mxStyle: cell.getStyle(),
