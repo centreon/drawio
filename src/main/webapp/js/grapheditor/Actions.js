@@ -731,10 +731,6 @@ Actions.prototype.init = function()
 			cellAttributes = createAttributes(propsContainer);
 		}
 
-		console.log('Action');
-		console.log(cellAttributes);
-		console.log('Action');
-
 		parent.postMessage(JSON.stringify({
 			mxObject: cellAttributes,
 			mxStyle: cell.getStyle(),
@@ -756,10 +752,7 @@ Actions.prototype.init = function()
 	};
 	
 	if (cell.getAttribute('type') === 'CONTAINER') {
-
-		console.log('CreateViewFromContainer')
 		cellAttributes = createAttributes(propsContainer);
-		console.log(cellAttributes)
 		parent.postMessage(JSON.stringify({
 			mxObject: cellAttributes,
 			mxStyle: cell.getStyle(),
