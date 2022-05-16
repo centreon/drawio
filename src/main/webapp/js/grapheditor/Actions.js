@@ -682,15 +682,16 @@ Actions.prototype.init = function()
 		// - Centreon -
 		// Added a selected element type check to create an event at the parent
 		// and display the property selector in the application.
-		const propsShape = ['type', 'shapeType', 'modelId', 'id'];
-		const propsResourceCentreon = ['type', 'resourceType', 'resourceId',
+
+		const shapesProps = ['type', 'shapeType', 'modelId', 'id'];
+		const resourceCentreonProps = ['type', 'resourceType', 'resourceId',
 			'resourceName', 'modelId', 'viewId', 'parentName', 'parentType', 'parentId'];
-		const propsLink = ['type', 'linkType', 'parentName', 'parentType', 'parentId',
+		const linkProps = ['type', 'linkType', 'parentName', 'parentType', 'parentId',
 			'resourceType', 'resourceId', 'resourceName', 'modelId','metric1Min',
 			'metric1Max',	'metric2Min', 'metric2Max', 'metricName1', 'metricName2'];
-		const propsMedia = ['type', 'mediaType', 'newTab', 'elementUrl',
+		const mediaProps = ['type', 'mediaType', 'newTab', 'elementUrl',
 			'imageName', 'centreonImageId'];
-		const propsWidget = [
+		const widgetProps = [
 			'type', 'widgetType', 'resourceType', 'resourceId', 'pieChartInnerRadius',
 			'pieChartDisplayLabel', 'outputWidgetFormat', 'chartDisplayThreshold',
 			'chartFillLines', 'chartNbPoints', 'chartPeriod', 'chartShowGrid',
@@ -699,6 +700,7 @@ Actions.prototype.init = function()
 			'metricsColorStart', 'metricsColorEnd', 'parentName', 'parentType', 'parentId',
 			'resourceName', 'orientation',
 		];
+		const containerProps = ['type', 'modelId', 'viewId', 'imageName', 'centreonImageId', 'label'];
 		
 		let cellAttributes = [];
 
@@ -711,19 +713,22 @@ Actions.prototype.init = function()
 		};
 
 		if (cell.getAttribute('shapeType') !== undefined) {
-		 cellAttributes = createAttributes(propsShape);
+		 cellAttributes = createAttributes(shapesProps);
 		}
 		if (cell.getAttribute('resourceType') !== undefined) {
-			cellAttributes = createAttributes(propsResourceCentreon);
+			cellAttributes = createAttributes(resourceCentreonProps);
 		}
 		if (cell.getAttribute('linkType') !== undefined) {
-		 	cellAttributes = createAttributes(propsLink);
+		 	cellAttributes = createAttributes(linkProps);
 		}
 		if (cell.getAttribute('mediaType') !== undefined) {
-		 	cellAttributes = createAttributes(propsMedia);
+		 	cellAttributes = createAttributes(mediaProps);
 		}
 		if (cell.getAttribute('widgetType') !== undefined) {
-		 	cellAttributes = createAttributes(propsWidget);
+		 	cellAttributes = createAttributes(widgetProps);
+		}
+		if (cell.getAttribute('type') === 'CONTAINER') {
+			cellAttributes = createAttributes(containerProps);
 		}
 
 		parent.postMessage(JSON.stringify({
@@ -732,6 +737,30 @@ Actions.prototype.init = function()
 			event: 'setShowWizardShapeProperties',
 		}), '*');
 	}, null, null, Editor.ctrlKey + '+M');
+	this.addAction('createViewFromContainer...', function()
+{
+	var cell = graph.getSelectionCell() || graph.getModel().getRoot();
+
+	const containerProps = ['type', 'modelId','viewId', 'imageName', 'centreonImageId'];
+
+	function createAttributes(arrayProps) {
+		return arrayProps.map((key) => {
+			if (cell.getAttribute(key) !== undefined) {
+				return {[key]: cell.getAttribute(key)};
+			}
+		}).filter(prop => prop !== undefined);
+	};
+	
+	if (cell.getAttribute('type') === 'CONTAINER') {
+		cellAttributes = createAttributes(containerProps);
+		parent.postMessage(JSON.stringify({
+			mxObject: cellAttributes,
+			mxStyle: cell.getStyle(),
+			event: 'editContainer',
+		}), '*');
+	}
+
+}, null, null, Editor.ctrlKey + '+Shift+C');
 	this.addAction('editTooltip...', function()
 	{
 		var cell = graph.getSelectionCell();
