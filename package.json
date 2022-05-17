@@ -8,6 +8,6 @@
     "directory": "src/main/webapp"
   },
   "scripts": {
-    "build:webapp": "ant -buildfile ./etc/build/build.xml && find . -name \"*.js\" -exec chmod 644 {} \\;"
+    "build:webapp": "ant -silent -buildfile ./etc/build/build.xml && find . -name \"*.js\" -exec chmod 644 {} \\;"
   }
 }
