@@ -1514,7 +1514,6 @@ EditorUi.prototype.installShapePicker = function()
 	
 	graph.dblClick = function(evt, cell)
 	{
-		console.log('DoubleClick Blocker..')
 		return;
 		if (this.isEnabled())
 		{
