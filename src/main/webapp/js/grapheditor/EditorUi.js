@@ -1514,6 +1514,8 @@ EditorUi.prototype.installShapePicker = function()
 	
 	graph.dblClick = function(evt, cell)
 	{
+		console.log('DoubleClick Blocker..')
+		return;
 		if (this.isEnabled())
 		{
 			if (cell == null && ui.sidebar != null && !mxEvent.isShiftDown(evt) &&
@@ -1859,22 +1861,10 @@ EditorUi.prototype.getCellsForShapePicker = function(cell, hovering)
 	});
 	
 	return [(cell != null) ? this.editor.graph.cloneCell(cell) :
-			createVertex('text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;', 40, 20, 'Text'),
-		createVertex('whiteSpace=wrap;html=1;'),
-		createVertex('ellipse;whiteSpace=wrap;html=1;'),
-		createVertex('rhombus;whiteSpace=wrap;html=1;', 80, 80),
-		createVertex('rounded=1;whiteSpace=wrap;html=1;'),
-		createVertex('shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;'),
-		createVertex('shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fixedSize=1;', 120, 60),
-		createVertex('shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;', 120, 80),
-		createVertex('shape=step;perimeter=stepPerimeter;whiteSpace=wrap;html=1;fixedSize=1;', 120, 80),
-		createVertex('shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;'),
-		createVertex('triangle;whiteSpace=wrap;html=1;', 60, 80),
-		createVertex('shape=document;whiteSpace=wrap;html=1;boundedLbl=1;', 120, 80),
-		createVertex('shape=tape;whiteSpace=wrap;html=1;', 120, 100),
-		createVertex('ellipse;shape=cloud;whiteSpace=wrap;html=1;', 120, 80),
-		createVertex('shape=singleArrow;whiteSpace=wrap;html=1;arrowWidth=0.4;arrowSize=0.4;', 80, 60),
-		createVertex('shape=waypoint;sketch=0;size=6;pointerEvents=1;points=[];fillColor=none;resizable=0;rotatable=0;perimeter=centerPerimeter;snapToPoint=1;', 40, 40)];
+			createVertex('whiteSpace=wrap;html=1;aspect=fixed;'),
+		createVertex('triangle;whiteSpace=wrap;html=1;rotation=-90;'),
+		createVertex('ellipse;whiteSpace=wrap;html=1;aspect=fixed;'),
+		createVertex('rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeWidth=1;strokeColor=#f0f0f0;fontSize=36;', null, null,'ABC')];
 };
 
 /**
