@@ -3485,6 +3485,7 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 Sidebar.prototype.itemClicked = function(cells, ds, evt, elt)
 {
 	var graph = this.editorUi.editor.graph;
+	graph.setCellStyles(mxConstants.STYLE_IMAGE_BORDER, '#000000', cells);
 	graph.container.focus();
 	
 	// Alt+Click inserts and connects
