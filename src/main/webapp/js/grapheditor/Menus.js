@@ -1460,8 +1460,9 @@ Menus.prototype.createPopupMenu = function(menu, cell, evt)
 		if (showContextualMenu && contextualMenuCellType.includes(typeCell)) {
 			this.addMenuItems(menu, ['editData'], null, evt);
 		}
-		if (typeCell === 'CONTAINER') {
-			this.addMenuItems(menu, ['createViewFromContainer'], null, evt);
+
+		if (cell.getAttribute('viewId') && typeCell === 'CONTAINER') {
+			this.addMenuItems(menu, ['createMapFromContainer'], null, evt);
 		}
 	}
 };
