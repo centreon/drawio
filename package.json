@@ -8,6 +8,8 @@
     "directory": "src/main/webapp"
   },
   "scripts": {
+    "install:i18n": "cd ./etc/propgen && npm ci",
+    "build:i18n": "node ./etc/propgen/convert.js && cp ./resources/*.txt ./src/main/webapp/resources/ && rm -rf ./resources",
     "build:webapp": "ant -silent -buildfile ./etc/build/build.xml && find . -name \"*.js\" -exec chmod 644 {} \\;"
   }
 }
