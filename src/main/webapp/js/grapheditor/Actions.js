@@ -737,7 +737,7 @@ Actions.prototype.init = function()
 			event: 'setShowWizardShapeProperties',
 		}), '*');
 	}, null, null, Editor.ctrlKey + '+M');
-	this.addAction('createMapFromContainer...', function()
+	this.addAction('createMapFromContainer', function()
 {
 	var cell = graph.getSelectionCell() || graph.getModel().getRoot();
 

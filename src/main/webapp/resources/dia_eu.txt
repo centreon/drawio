@@ -1198,3 +1198,4 @@ confACleanOnly=Garbitu Dsigram zirriborroak bakarrik
 brush=Brotxa
 openDevTools=Ireki garatzaileen tresnak
 autoBkp=Babeskopia automatikoa
+confAIgnoreCollectErr=Ignore collecting current pages errors
