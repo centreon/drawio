@@ -111,20 +111,23 @@ async function main()
             }
         }
 
-        const addTranslation = {
-            'createMapFromContainer': ['Create Map From Container','Créer une carte à partir d\'un conteneur'],
-            }
-
-        let indexI18 = codes.indexOf('i18n');
-        let indexFr = codes.indexOf('fr');
-        let indexEn = codes.indexOf('en');
-
-        Object.keys(addTranslation).map((key) => {
-            let values = addTranslation[key]
-            outputFiles[indexI18] += key + '=' + key + '\n';
-            outputFiles[indexEn] += key + '=' + values[0] + '\n';
-            outputFiles[indexFr] += key + '=' + values[1] + '\n';
-        })
+        const termsToTranslate = {
+            createMapFromContainer: {
+              en: 'Create Map From Container',
+              fr: "Créer une carte à partir d'un conteneur",
+            },
+          };
+      
+          const indexI18 = codes.indexOf('i18n');
+          const indexFr = codes.indexOf('fr');
+          const indexEn = codes.indexOf('en');
+      
+          Object.keys(termsToTranslate).forEach((termToTranslate) => {
+            const translateTermTo = termsToTranslate[termToTranslate];
+            outputFiles[indexI18] += `${termToTranslate}=${termToTranslate}\n`;
+            outputFiles[indexEn] += `${termToTranslate}=${translateTermTo.en}\n`;
+            outputFiles[indexFr] += `${termToTranslate}=${translateTermTo.fr}\n`;
+          });
 
         let outDir = './resources';
 
