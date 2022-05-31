@@ -2216,7 +2216,7 @@ Sidebar.prototype.createItem = function(cells, title, showLabel, showTitle, widt
 		{
 			if (mxEvent.isMouseEvent(evt))
 			{
-				this.showTooltip(elt, cells, bounds.width, bounds.height, title, showLabel);
+				this.showTooltip(elt, originalCells, bounds.width, bounds.height, title, showLabel);
 			}
 		}));
 	}
@@ -3485,6 +3485,29 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 Sidebar.prototype.itemClicked = function(cells, ds, evt, elt)
 {
 	var graph = this.editorUi.editor.graph;
+	const contextualMenuCellType = ['RESOURCE', 'WIDGET'];
+	cells.forEach((cell) => {
+		const typeCell = cell.getAttribute('type');
+		if(!contextualMenuCellType.includes(typeCell)) {
+			return;
+		}
+		if (typeCell === 'WIDGET' && cell.getAttribute('widgetType') === 'LINK_LEGEND') {
+			return;
+		}
+		if (typeCell === 'WIDGET' && cell.getAttribute('widgetType') === 'OUTPUT') {
+			return;
+		}
+
+		var cellStyle = graph.getModel().getStyle(cell);
+		var searchSvg = new RegExp(`/editor/`, 'g');
+		var searchEmptySvg = new RegExp(`/empty-resource/`, 'g');
+
+		if (cellStyle.match(searchSvg) && !cellStyle.match(searchEmptySvg)) {
+			cellStyle = cellStyle.replace(searchSvg, '/editor/empty-resource/');
+		}
+
+		graph.getModel().setStyle(cell, cellStyle);
+	});
 	graph.container.focus();
 	
 	// Alt+Click inserts and connects
