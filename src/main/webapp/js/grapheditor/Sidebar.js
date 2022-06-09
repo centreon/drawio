@@ -3485,6 +3485,8 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 Sidebar.prototype.itemClicked = function(cells, ds, evt, elt)
 {
 	var graph = this.editorUi.editor.graph;
+	graph.setCellStyles(mxConstants.STYLE_IMAGE_BORDER, '#000000', cells);
+
 	const contextualMenuCellType = ['RESOURCE', 'WIDGET'];
 	cells.forEach((cell) => {
 		if (graph.model.isEdge(cell)) {

@@ -1254,8 +1254,9 @@ Graph = function(container, model, renderHint, stylesheet, themes, standalone)
 							}
 						})
 					}
-				})
-
+				});
+				
+				this.setCellStyles(mxConstants.STYLE_IMAGE_BORDER, '#000000', cells);
 			}
 		}));
 		
@@ -10679,7 +10680,7 @@ if (typeof mxVertexHandler !== 'undefined')
 		{
 			var select = null;
 
-			if (cells != null && cells.length > 0)
+			if (cells !== null && cells.length > 0)
 			{
 				this.model.beginUpdate();
 				try
@@ -13097,7 +13098,7 @@ if (typeof mxVertexHandler !== 'undefined')
 		}
 
 		// Adds rotation handle and live preview
-		mxVertexHandler.prototype.rotationEnabled = true;
+		mxVertexHandler.prototype.rotationEnabled = false;
 		mxVertexHandler.prototype.manageSizers = true;
 		mxVertexHandler.prototype.livePreview = true;
 		mxGraphHandler.prototype.maxLivePreview = 16;
