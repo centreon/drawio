@@ -1239,10 +1239,10 @@ Graph = function(container, model, renderHint, stylesheet, themes, standalone)
 			ch.destroyFocusHighlight();
 
 			var cells = this.getSelectionCells();
-			if (cells != null && cells.length > 0)
+			if (cells !== null && cells.length > 0)
 			{
 				cells.forEach((cell) => {
-					if(!this.model.isEdge(cell)) {
+					if (!this.model.isEdge(cell)) {
 						this.setCellStyles(mxConstants.STYLE_IMAGE_BORDER, '#000000', cells);
 					}
 				});
@@ -10647,7 +10647,7 @@ if (typeof mxVertexHandler !== 'undefined')
 		{
 			var select = null;
 
-			if (cells != null && cells.length > 0)
+			if (cells !== null && cells.length > 0)
 			{
 				this.model.beginUpdate();
 				try
