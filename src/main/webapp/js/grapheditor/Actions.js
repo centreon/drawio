@@ -414,6 +414,26 @@ Actions.prototype.init = function()
 	{
 		// Cancels interactive operations
 		graph.escape();
+		
+		var cells = graph.getDeletableCells(graph.getSelectionCells());
+
+		if (cells != null && cells.length > 0)
+		{
+			cells.forEach((cell) => {
+
+				if(!graph.model.isEdge(cell)) {
+
+					var edges = graph.getEdges(cell);
+
+					if (edges != null && edges.length > 0)
+					{
+						graph.setCellStyles(mxConstants.STYLE_STROKECOLOR, '#000000', edges);						
+					}
+				}
+			})
+
+		}
+
 		var select = graph.deleteCells(graph.getDeletableCells(graph.getSelectionCells()), includeEdges);
 		
 		if (select != null)

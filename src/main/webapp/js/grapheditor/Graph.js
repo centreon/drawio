@@ -1237,6 +1237,27 @@ Graph = function(container, model, renderHint, stylesheet, themes, standalone)
 			}
 			
 			ch.destroyFocusHighlight();
+
+			var cells = this.getSelectionCells();
+
+			if (cells != null && cells.length > 0)
+			{
+				cells.forEach((cell) => {
+
+					if(!this.model.isEdge(cell)) {
+						var edges = this.getEdges(cell);
+
+						edges.forEach((edge) => {
+
+							if((this.isDataAddedToEdge(edge) || edge.getAttribute('linkType') == 'SIMPLE') && edge.source && edge.target) {
+								this.setCellStyles(mxConstants.STYLE_STROKECOLOR, 'red', [edge]);
+							}
+							
+						})
+					}
+				})
+
+			}
 		}));
 		
 		// Initializes touch interface
@@ -2624,6 +2645,32 @@ Graph.prototype.init = function(container)
 		
 		return cells;
 	};
+
+	Graph.prototype.isDataAddedToEdge = function(edge){
+		console.log('I am in isDataAddedToEdge');
+		const edgeTypes = ['METRIC','STATUS']
+		const linkType = edge.getAttribute('linkType');
+		let idDateAdded = false;
+
+		if (edge.getAttribute('resourceId') && edgeTypes.includes(linkType)) {
+			idDateAdded = true;
+		}
+
+		return idDateAdded;
+	};
+
+	var mxConnectCellEvent = mxGraph.prototype.connectCell ;
+	mxGraph.prototype.connectCell = function (edge,terminal,source,constraint) {
+		const connectedEdge =  mxConnectCellEvent.apply(this, arguments);
+
+		if((this.isDataAddedToEdge(connectedEdge) || connectedEdge.getAttribute('linkType') == 'SIMPLE') && connectedEdge.source && connectedEdge.target) {
+			this.setCellStyles(mxConstants.STYLE_STROKECOLOR, 'red', [edge]);
+		}else if(this.getCellStyle(connectedEdge).strokeColor === 'red') {
+			this.setCellStyles(mxConstants.STYLE_STROKECOLOR, '#000000', [edge]);
+		}		
+
+		return connectedEdge;
+	}
 
 	/**
 	 * Overrides scrollRectToVisible to fix ignored transform.
