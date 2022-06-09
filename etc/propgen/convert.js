@@ -111,6 +111,24 @@ async function main()
             }
         }
 
+        const termsToTranslate = {
+            createMapFromContainer: {
+              en: 'Create Map From Container',
+              fr: "Créer une carte à partir d'un conteneur",
+            },
+          };
+      
+          const indexI18 = codes.indexOf('i18n');
+          const indexFr = codes.indexOf('fr');
+          const indexEn = codes.indexOf('en');
+      
+          Object.keys(termsToTranslate).forEach((termToTranslate) => {
+            const translateTermTo = termsToTranslate[termToTranslate];
+            outputFiles[indexI18] += `${termToTranslate}=${termToTranslate}\n`;
+            outputFiles[indexEn] += `${termToTranslate}=${translateTermTo.en}\n`;
+            outputFiles[indexFr] += `${termToTranslate}=${translateTermTo.fr}\n`;
+          });
+
         let outDir = './resources';
 
         if (!fs.existsSync(outDir))
