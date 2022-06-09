@@ -757,11 +757,11 @@ Actions.prototype.init = function()
 			event: 'setShowWizardShapeProperties',
 		}), '*');
 	}, null, null, Editor.ctrlKey + '+M');
-	this.addAction('createViewFromContainer...', function()
+	this.addAction('createMapFromContainer', function()
 {
 	var cell = graph.getSelectionCell() || graph.getModel().getRoot();
 
-	const containerProps = ['type', 'modelId','viewId', 'imageName', 'centreonImageId'];
+	const containerProps = ['type', 'modelId', 'viewId', 'imageName', 'centreonImageId', 'label'];
 
 	function createAttributes(arrayProps) {
 		return arrayProps.map((key) => {
@@ -776,7 +776,7 @@ Actions.prototype.init = function()
 		parent.postMessage(JSON.stringify({
 			mxObject: cellAttributes,
 			mxStyle: cell.getStyle(),
-			event: 'editContainer',
+			event: 'createMapFromContainer',
 		}), '*');
 	}
 
