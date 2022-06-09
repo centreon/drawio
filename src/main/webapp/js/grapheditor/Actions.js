@@ -427,7 +427,7 @@ Actions.prototype.init = function()
 
 					if (edges != null && edges.length > 0)
 					{
-						graph.setCellStyles(mxConstants.STYLE_STROKECOLOR, '#000000', edges);						
+						graph.setCellStyles(mxConstants.STYLE_DASHED, '1', edges);
 					}
 				}
 			})

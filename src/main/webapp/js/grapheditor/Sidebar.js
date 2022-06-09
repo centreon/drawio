@@ -3487,6 +3487,10 @@ Sidebar.prototype.itemClicked = function(cells, ds, evt, elt)
 	var graph = this.editorUi.editor.graph;
 	const contextualMenuCellType = ['RESOURCE', 'WIDGET'];
 	cells.forEach((cell) => {
+		if(graph.model.isEdge(cell)) {
+			graph.setCellStyles(mxConstants.STYLE_DASHED, '1', [cell]);
+		}
+
 		const typeCell = cell.getAttribute('type');
 		if(!contextualMenuCellType.includes(typeCell)) {
 			return;

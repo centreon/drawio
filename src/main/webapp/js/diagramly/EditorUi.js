@@ -12925,7 +12925,7 @@
 						graph.getModel().setValue(cell, cellValue);
 
 						if(graph.model.isEdge(cell) && cell.source && cell.target) {
-							this.setCellStyles(mxConstants.STYLE_STROKECOLOR, 'red', [cell]);
+							graph.setCellStyles(mxConstants.STYLE_DASHED, '0', [cell]);
 						}
 
 						// Management of the icon with or without the "no resource" icon

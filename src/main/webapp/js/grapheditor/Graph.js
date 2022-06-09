@@ -1250,9 +1250,8 @@ Graph = function(container, model, renderHint, stylesheet, themes, standalone)
 						edges.forEach((edge) => {
 
 							if((this.isDataAddedToEdge(edge) || edge.getAttribute('linkType') == 'SIMPLE') && edge.source && edge.target) {
-								this.setCellStyles(mxConstants.STYLE_STROKECOLOR, 'red', [edge]);
+								this.setCellStyles(mxConstants.STYLE_DASHED, '0', [edge]);
 							}
-							
 						})
 					}
 				})
@@ -2664,9 +2663,9 @@ Graph.prototype.init = function(container)
 		const connectedEdge =  mxConnectCellEvent.apply(this, arguments);
 
 		if((this.isDataAddedToEdge(connectedEdge) || connectedEdge.getAttribute('linkType') == 'SIMPLE') && connectedEdge.source && connectedEdge.target) {
-			this.setCellStyles(mxConstants.STYLE_STROKECOLOR, 'red', [edge]);
-		}else if(this.getCellStyle(connectedEdge).strokeColor === 'red') {
-			this.setCellStyles(mxConstants.STYLE_STROKECOLOR, '#000000', [edge]);
+			this.setCellStyles(mxConstants.STYLE_DASHED, '0', [edge]);
+		}else if(this.getCellStyle(connectedEdge).dashed === 0) {
+			this.setCellStyles(mxConstants.STYLE_DASHED, '1', [edge]);
 		}		
 
 		return connectedEdge;
