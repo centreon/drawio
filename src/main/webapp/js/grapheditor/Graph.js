@@ -13065,7 +13065,7 @@ if (typeof mxVertexHandler !== 'undefined')
 		}
 
 		// Adds rotation handle and live preview
-		mxVertexHandler.prototype.rotationEnabled = true;
+		mxVertexHandler.prototype.rotationEnabled = false;
 		mxVertexHandler.prototype.manageSizers = true;
 		mxVertexHandler.prototype.livePreview = true;
 		mxGraphHandler.prototype.maxLivePreview = 16;
