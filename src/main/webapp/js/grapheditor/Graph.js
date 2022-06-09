@@ -2646,16 +2646,10 @@ Graph.prototype.init = function(container)
 	};
 
 	Graph.prototype.isDataAddedToEdge = function(edge){
-		console.log('I am in isDataAddedToEdge');
 		const edgeTypes = ['METRIC','STATUS']
 		const linkType = edge.getAttribute('linkType');
-		let idDateAdded = false;
 
-		if (edge.getAttribute('resourceId') && edgeTypes.includes(linkType)) {
-			idDateAdded = true;
-		}
-
-		return idDateAdded;
+		return edge.getAttribute('resourceId') && edgeTypes.includes(linkType)
 	};
 
 	var mxConnectCellEvent = mxGraph.prototype.connectCell ;
@@ -2664,7 +2658,10 @@ Graph.prototype.init = function(container)
 
 		if((this.isDataAddedToEdge(connectedEdge) || connectedEdge.getAttribute('linkType') == 'SIMPLE') && connectedEdge.source && connectedEdge.target) {
 			this.setCellStyles(mxConstants.STYLE_DASHED, '0', [edge]);
-		}else if(this.getCellStyle(connectedEdge).dashed === 0) {
+			return connectedEdge;
+		}
+		
+		if(this.getCellStyle(connectedEdge).dashed === 0) {
 			this.setCellStyles(mxConstants.STYLE_DASHED, '1', [edge]);
 		}		
 
