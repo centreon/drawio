@@ -12924,6 +12924,10 @@
 
 						graph.getModel().setValue(cell, cellValue);
 
+						if (graph.model.isEdge(cell) && cell.source && cell.target) {
+							graph.setCellStyles(mxConstants.STYLE_DASHED, '0', [cell]);
+						}
+
 						// Management of the icon with or without the "no resource" icon
 						var cellStyle = graph.getModel().getStyle(cell);
 						var searchEmptySvg = new RegExp(`(empty-resource\/)`, 'g');
