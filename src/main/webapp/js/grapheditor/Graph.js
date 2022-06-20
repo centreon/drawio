@@ -1255,8 +1255,6 @@ Graph = function(container, model, renderHint, stylesheet, themes, standalone)
 						})
 					}
 				});
-				
-				this.setCellStyles(mxConstants.STYLE_IMAGE_BORDER, '#000000', cells);
 			}
 		}));
 		
