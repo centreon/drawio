@@ -7,7 +7,7 @@
 EditorUi = function(editor, container, lightbox)
 {
 	mxEventSource.call(this);
-	
+
 	this.destroyFunctions = [];
 	this.editor = editor || new Editor();
 	this.container = container || document.body;
@@ -1514,20 +1514,20 @@ EditorUi.prototype.installShapePicker = function()
 	
 	graph.dblClick = function(evt, cell)
 	{
-		return;
 		if (this.isEnabled())
 		{
 			if (cell == null && ui.sidebar != null && !mxEvent.isShiftDown(evt) &&
 				!graph.isCellLocked(graph.getDefaultParent()))
 			{
-				var pt = mxUtils.convertPoint(this.container, mxEvent.getClientX(evt), mxEvent.getClientY(evt));
-				mxEvent.consume(evt);
+				return;
+				// var pt = mxUtils.convertPoint(this.container, mxEvent.getClientX(evt), mxEvent.getClientY(evt));
+				// mxEvent.consume(evt);
 
-				// Asynchronous to avoid direct insert after double tap
-				window.setTimeout(mxUtils.bind(this, function()
-				{
-					ui.showShapePicker(pt.x, pt.y);
-				}), 30);
+				// // Asynchronous to avoid direct insert after double tap
+				// window.setTimeout(mxUtils.bind(this, function()
+				// {
+				// 	ui.showShapePicker(pt.x, pt.y);
+				// }), 30);
 			}
 			else
 			{

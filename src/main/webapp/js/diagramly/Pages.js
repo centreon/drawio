@@ -58,6 +58,11 @@ DiagramPage.prototype.getName = function()
 	return this.node.getAttribute('name');
 };
 
+DiagramPage.prototype.getViewId = function()
+{
+	return this.node.getAttribute('viewId');
+};
+
 /**
  * 
  */
@@ -70,6 +75,18 @@ DiagramPage.prototype.setName = function(value)
 	else
 	{
 		this.node.setAttribute('name', value);
+	}
+};
+
+DiagramPage.prototype.setViewId = function(value)
+{
+	if (value == null)
+	{
+		this.node.removeAttribute('name');
+	}
+	else
+	{
+		this.node.setAttribute('viewId', value);
 	}
 };
 
@@ -1420,11 +1437,11 @@ EditorUi.prototype.updateTabContainer = function()
 		var insertTab = null;
 		
 		// Not chromeless and not read-only file
-		if (this.isPageInsertTabVisible())
-		{
-			insertTab = this.createPageInsertTab();
-			this.tabContainer.appendChild(insertTab);
-		}
+		// if (this.isPageInsertTabVisible())
+		// {
+		// 	insertTab = this.createPageInsertTab();
+		// 	this.tabContainer.appendChild(insertTab);
+		// }
 
 		if (wrapper.clientWidth > this.tabContainer.clientWidth - btnWidth)
 		{
@@ -1616,7 +1633,7 @@ EditorUi.prototype.createPageMenuTab = function(hoverEnabled, invert)
 				if (!invert)
 				{
 					menu.addSeparator(parent);
-					addInsert();
+					// addInsert();
 				}
 
 				var page = this.currentPage;
@@ -1650,8 +1667,8 @@ EditorUi.prototype.createPageMenuTab = function(hoverEnabled, invert)
 
 			if (invert)
 			{
-				menu.addSeparator(parent);
-				addInsert();
+				// menu.addSeparator(parent);
+				// addInsert();
 				menu.addSeparator(parent);
 				addPages();
 			}
@@ -1837,20 +1854,20 @@ EditorUi.prototype.createPageMenu = function(page, label)
 		var graph = this.editor.graph;
 		var model = graph.model;
 
-		menu.addItem(mxResources.get('insert'), null, mxUtils.bind(this, function()
-		{
-			this.insertPage(null, mxUtils.indexOf(this.pages, page) + 1);
-		}), parent);
+		// menu.addItem(mxResources.get('insert'), null, mxUtils.bind(this, function()
+		// {
+		// 	this.insertPage(null, mxUtils.indexOf(this.pages, page) + 1);
+		// }), parent);
 	
 		menu.addItem(mxResources.get('delete'), null, mxUtils.bind(this, function()
 		{
 			this.removePage(page);
 		}), parent);
 		
-		menu.addItem(mxResources.get('rename'), null, mxUtils.bind(this, function()
-		{
-			this.renamePage(page, label);
-		}), parent);
+		// menu.addItem(mxResources.get('rename'), null, mxUtils.bind(this, function()
+		// {
+		// 	this.renamePage(page, label);
+		// }), parent);
 		
 		var url = this.getLinkForPage(page);
 

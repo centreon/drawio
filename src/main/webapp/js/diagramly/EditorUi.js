@@ -1608,6 +1608,8 @@
 			currentPage, uncompressed, resolveReferences);
 		file = (file != null) ? file : this.getCurrentFile();
 
+		console.log(node);
+
 		var result = this.createFileData(node, graph, file, window.location.href,
 			forceXml, forceSvg, forceHtml, embeddedCallback, ignoreSelection, compact,
 			uncompressed);
@@ -1825,9 +1827,20 @@
 			// Creates tabbed file structure if enforced by URL
 			if (urlParams['pages'] != '0' && this.fileNode == null && node != null)
 			{
+				let name  = null;
+				let viewId = null;
+				if(node.getAttribute('name')) {
+					name = node.getAttribute('name');
+					node.removeAttribute('name');
+				}
+				if(node.getAttribute('viewId')) {
+					viewId = node.getAttribute('viewId');
+					node.removeAttribute('viewId');
+				}
 				this.fileNode = node.ownerDocument.createElement('mxfile');
 				this.currentPage = new DiagramPage(node.ownerDocument.createElement('diagram'));
-				this.currentPage.setName(mxResources.get('pageWithNumber', [1]));
+				this.currentPage.setName(name);
+				this.currentPage.setViewId(viewId);
 		 	 	this.pages = [this.currentPage];
 			}
 			
@@ -9674,6 +9687,27 @@
 			graphAddClickHandler.call(this, highlight, beforeClick, onClick);
 		};
 
+		var graphDblClick= graph.dblClick;
+		graph.dblClick = function(evt, cell)
+		{
+			if(cell !== null) {
+				if (cell.getAttribute('viewId') && cell.getAttribute('label') && cell.getAttribute('type') === 'CONTAINER') {					
+					if(ui.pages.filter((page) => page.getViewId() === cell.getAttribute('viewId')).length == 0){
+						ui.containerViewId = cell.getAttribute('viewId');
+						ui.containerLabel = cell.getAttribute('label');
+						parent.postMessage(JSON.stringify({
+							event: 'createDrawioPageFromContainer',
+							viewId: cell.getAttribute('viewId'),
+						}), '*');						
+					}else {
+						console.log('Page for container existe');
+					}
+				}
+
+			}
+			graphDblClick.apply(this, arguments);
+		};
+
 		editorUiInit.apply(this, arguments);
 		
 		if (mxClient.IS_SVG)
@@ -12856,6 +12890,31 @@
 						{
 							data = data.xml;
 						}						
+					} 
+					else if (data.action == 'loadFromContainer'){
+
+						var node = (data.xml != null && data.xml.length > 0) ? mxUtils.parseXml(data.xml).documentElement : null;
+						var cause = Editor.extractParserError(node, mxResources.get('invalidOrMissingFile'));
+						if (!cause)
+						{
+							var tmp = (node != null) ? this.editor.extractGraphModel(node, true) : null;
+							if (tmp != null)
+							{
+								node = tmp;
+							}
+
+							console.log('loadFromContainer')
+							node.ownerDocument.createElement('mxfile');
+							page = new DiagramPage(node.ownerDocument.createElement('diagram'));
+							page.setName(this.containerLabel);
+							page.setViewId(this.containerViewId);
+							this.insertPage(page);
+
+							console.log(this.currentPage.getName())
+							console.log(this.currentPage.getViewId())
+						}
+
+						return;
 					}
 					else if (data.action == 'merge')
 					{

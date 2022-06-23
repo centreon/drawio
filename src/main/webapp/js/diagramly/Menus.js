@@ -2479,6 +2479,7 @@
 				{
 					var msg = editorUi.createLoadMessage('save');
 					msg.xml = data;
+					msg.viewId = editorUi.currentPage.getViewId();
 					
 					if (exit)
 					{
@@ -2486,6 +2487,7 @@
 					}
 					
 					data = JSON.stringify(msg);
+
 				}
 				
 				var parent = window.opener || window.parent;
