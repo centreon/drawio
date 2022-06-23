@@ -1464,15 +1464,15 @@ ArrangePanel.prototype.init = function()
 		this.addGeometry(this.container);
 		this.addEdgeGeometry(this.container);
 	
-		if (!ss.containsLabel || ss.edges.length == 0)
-		{
-			this.container.appendChild(this.addAngle(this.createPanel('ArrangePanel-addAngle')));
-		}
+		// if (!ss.containsLabel || ss.edges.length == 0)
+		// {
+		// 	this.container.appendChild(this.addAngle(this.createPanel('ArrangePanel-addAngle')));
+		// }
 		
-		if (!ss.containsLabel)
-		{
-			this.container.appendChild(this.addFlip(this.createPanel('ArrangePanel-addFlip')));
-		}
+		// if (!ss.containsLabel)
+		// {
+		// 	this.container.appendChild(this.addFlip(this.createPanel('ArrangePanel-addFlip')));
+		// }
 
 		this.container.appendChild(this.addAlign(this.createPanel('ArrangePanel-addAlign')));
 		
