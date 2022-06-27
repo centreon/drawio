@@ -12857,6 +12857,14 @@
 							data = data.xml;
 						}						
 					}
+					else if (data.action == 'Save'){
+						this.actions.get('save').funct();
+						return;
+					}
+					else if (data.action == 'Exit'){
+						this.actions.get('exit').funct();
+						return;
+					}
 					else if (data.action == 'merge')
 					{
 						var file = this.getCurrentFile();
