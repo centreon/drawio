@@ -211,7 +211,7 @@ SelectPage.prototype.execute = function()
 		page = this.ui.currentPage;
 	
 		// Switches the root cell and sets the view state
-		graph.model.prefix = Editor.guid() + '-';
+		// graph.model.prefix = Editor.guid() + '-';
 		graph.model.rootChanged(page.root);
 		graph.setViewState(page.viewState);
 
@@ -1068,7 +1068,7 @@ EditorUi.prototype.createPageId = function()
 	{
 		id = Editor.guid();
 	} while (this.getPageById(id) != null)
-	
+
 	return id;
 };
 

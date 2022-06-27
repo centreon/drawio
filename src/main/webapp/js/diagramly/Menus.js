@@ -2472,13 +2472,14 @@
 					graph.stopEditing();
 				}
 				
-				var data = (urlParams['pages'] != '0' || (editorUi.pages != null && editorUi.pages.length > 1)) ?
-					editorUi.getFileData(true) : mxUtils.getXml(editorUi.editor.getGraphXml());
+				// var data = (urlParams['pages'] != '0' || (editorUi.pages != null && editorUi.pages.length > 1)) ?
+				// 	editorUi.getFileData(true) : mxUtils.getXml(editorUi.editor.getGraphXml());
 				
+				var data = editorUi.editor.getGraphXml();
 				if (urlParams['proto'] == 'json')
 				{
 					var msg = editorUi.createLoadMessage('save');
-					msg.xml = data;
+					msg.xml = mxUtils.getXml(data);
 					msg.viewId = editorUi.currentPage.getViewId();
 					
 					if (exit)

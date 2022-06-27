@@ -12903,15 +12903,17 @@
 								node = tmp;
 							}
 
-							console.log('loadFromContainer')
-							node.ownerDocument.createElement('mxfile');
-							page = new DiagramPage(node.ownerDocument.createElement('diagram'));
+							var page = new DiagramPage(this.fileNode.ownerDocument.createElement('diagram'), this.createPageId());
 							page.setName(this.containerLabel);
 							page.setViewId(this.containerViewId);
+							var enc = new mxCodec(mxUtils.createXmlDocument());
+							var temp = enc.encode(node);
+							this.editor.graph.saveViewState(page.viewState, temp);
+							console.log(Graph.compressNode(temp))
+							mxUtils.setTextContent(page.node, Graph.compressNode(temp));
+
 							this.insertPage(page);
 
-							console.log(this.currentPage.getName())
-							console.log(this.currentPage.getViewId())
 						}
 
 						return;
