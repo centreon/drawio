@@ -12861,7 +12861,7 @@
 						this.actions.get('save').funct();
 						return;
 					}
-					else if (data.action == 'exit'){
+					else if (data.action == 'Exit'){
 						this.actions.get('exit').funct();
 						return;
 					}
