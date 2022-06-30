@@ -9703,7 +9703,6 @@
 						console.log('Page for container existe');
 					}
 				}
-
 			}
 			graphDblClick.apply(this, arguments);
 		};
@@ -12891,7 +12890,8 @@
 							data = data.xml;
 						}						
 					} 
-					else if (data.action == 'loadFromContainer'){
+					else if (data.action == 'loadFromContainer')
+					{
 
 						var node = (data.xml != null && data.xml.length > 0) ? mxUtils.parseXml(data.xml).documentElement : null;
 						var cause = Editor.extractParserError(node, mxResources.get('invalidOrMissingFile'));
@@ -12918,11 +12918,32 @@
 
 						return;
 					}
-					else if (data.action == 'Save'){
+					else if (data.action == 'refreshPageXml')
+					{
+						var node = (data.xml != null && data.xml.length > 0) ? mxUtils.parseXml(data.xml).documentElement : null;
+						var cause = Editor.extractParserError(node, mxResources.get('invalidOrMissingFile'));
+						if (!cause)
+						{
+							var tmp = (node != null) ? this.editor.extractGraphModel(node, true) : null;
+							if (tmp != null)
+							{
+								node = tmp;
+							}
+							
+							if (node != null)
+							{
+								this.editor.setGraphXml(node);
+							}
+						}
+						return;
+					}
+					else if (data.action == 'Save')
+					{
 						this.actions.get('save').funct();
 						return;
 					}
-					else if (data.action == 'Exit'){
+					else if (data.action == 'Exit')
+					{
 						this.actions.get('exit').funct();
 						return;
 					}
@@ -13006,6 +13027,11 @@
 						}
 
 						graph.getModel().setStyle(cell, cellStyle);
+
+						if(cell.getAttribute('type') === 'CONTAINER') {
+							this.actions.get('save').funct();
+						}
+					
 						return;
 					}
 					else
