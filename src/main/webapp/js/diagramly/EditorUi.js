@@ -9693,11 +9693,10 @@
 			if(cell !== null) {
 				if (cell.getAttribute('viewId') && cell.getAttribute('label') && cell.getAttribute('type') === 'CONTAINER') {					
 					if(ui.pages.filter((page) => page.getViewId() === cell.getAttribute('viewId')).length == 0){
-						ui.containerViewId = cell.getAttribute('viewId');
-						ui.containerLabel = cell.getAttribute('label');
 						parent.postMessage(JSON.stringify({
 							event: 'createDrawioPageFromContainer',
 							viewId: cell.getAttribute('viewId'),
+							label: cell.getAttribute('label'),
 						}), '*');						
 					}else {
 						console.log('Page for container existe');
@@ -12904,8 +12903,8 @@
 							}
 
 							var page = new DiagramPage(this.fileNode.ownerDocument.createElement('diagram'), this.createPageId());
-							page.setName(this.containerLabel);
-							page.setViewId(this.containerViewId);
+							page.setName(data.data.label);
+							page.setViewId(data.data.viewId);
 							var enc = new mxCodec(mxUtils.createXmlDocument());
 							var temp = enc.encode(node);
 							this.editor.graph.saveViewState(page.viewState, temp);

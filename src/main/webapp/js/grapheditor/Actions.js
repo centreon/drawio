@@ -777,6 +777,25 @@ Actions.prototype.init = function()
 	}
 
 }, null, null, Editor.ctrlKey + '+Shift+C');
+this.addAction('openContainerTab', function()
+{
+	var cell = graph.getSelectionCell() || graph.getModel().getRoot();
+
+	if(cell !== null) {
+		if (cell.getAttribute('viewId') && cell.getAttribute('label') && cell.getAttribute('type') === 'CONTAINER') {					
+			if(ui.pages.filter((page) => page.getViewId() === cell.getAttribute('viewId')).length == 0) {
+				console.log('-----------openContainerTab')
+				parent.postMessage(JSON.stringify({
+					event: 'createDrawioPageFromContainer',
+					viewId: cell.getAttribute('viewId'),
+					label: cell.getAttribute('label'),
+				}), '*');						
+			}else {
+				console.log('Page for container existe');
+			}
+		}
+	}
+}, null, null, Editor.ctrlKey + '+Shift+C+T');
 	this.addAction('editTooltip...', function()
 	{
 		var cell = graph.getSelectionCell();
