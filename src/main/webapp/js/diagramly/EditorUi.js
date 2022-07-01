@@ -9691,6 +9691,7 @@
 		graph.dblClick = function(evt, cell)
 		{
 			if(cell !== null) {
+
 				if (cell.getAttribute('viewId') && cell.getAttribute('label') && cell.getAttribute('type') === 'CONTAINER') {					
 					if(ui.pages.filter((page) => page.getViewId() === cell.getAttribute('viewId')).length == 0){
 						parent.postMessage(JSON.stringify({
@@ -9699,8 +9700,14 @@
 							label: cell.getAttribute('label'),
 						}), '*');						
 					}else {
-						console.log('Page for container existe');
+						ui.showError(mxResources.get('warning'), 'the Tab for this Container is already open!', mxResources.get('ok'))
 					}
+				}else if(!cell.getAttribute('viewId') && cell.getAttribute('label') && cell.getAttribute('type') === 'CONTAINER') {
+					ui.showError(mxResources.get('warning'), 'Please Save to see the contents of the container', mxResources.get('ok'))
+				}else if(cell.getAttribute('viewId') && !cell.getAttribute('label') && cell.getAttribute('type') === 'CONTAINER') {
+					ui.showError(mxResources.get('warning'), 'Please Edit Container Data to see the contents of the container', mxResources.get('ok'))
+				}else {
+					ui.showError(mxResources.get('warning'), 'Please Edit Container Data then Save to see the contents of the container', mxResources.get('ok'))
 				}
 			}
 			graphDblClick.apply(this, arguments);
@@ -12932,6 +12939,7 @@
 							if (node != null)
 							{
 								this.editor.setGraphXml(node);
+								this.editor.setModified(false)
 							}
 						}
 						return;
@@ -13027,10 +13035,6 @@
 
 						graph.getModel().setStyle(cell, cellStyle);
 
-						if(cell.getAttribute('type') === 'CONTAINER') {
-							this.actions.get('save').funct();
-						}
-					
 						return;
 					}
 					else

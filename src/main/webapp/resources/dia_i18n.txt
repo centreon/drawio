@@ -1204,4 +1204,4 @@ draftSaveInt=draftSaveInt
 pluginsDisabled=pluginsDisabled
 extExpNotConfigured=extExpNotConfigured
 createMapFromContainer=createMapFromContainer
-openContainerTab=openContainerTab
+editContent=editContent

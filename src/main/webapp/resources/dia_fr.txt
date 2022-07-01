@@ -1204,4 +1204,4 @@ draftSaveInt=Draft save interval [sec] (0 to disable)
 pluginsDisabled=External plugins disabled.
 extExpNotConfigured=External image service is not configured
 createMapFromContainer=Créer une carte à partir d'un conteneur
-openContainerTab=Ouvrir l'onglet Conteneur
+editContent=Modifier le contenu

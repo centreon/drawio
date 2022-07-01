@@ -1463,7 +1463,7 @@ Menus.prototype.createPopupMenu = function(menu, cell, evt)
 
 		if (cell.getAttribute('viewId') && typeCell === 'CONTAINER') {
 			this.addMenuItems(menu, ['createMapFromContainer'], null, evt);
-			this.addMenuItems(menu, ['openContainerTab'], null, evt);
+			this.addMenuItems(menu, ['editContent'], null, evt);
 		}
 	}
 };

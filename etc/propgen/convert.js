@@ -116,9 +116,9 @@ async function main()
               en: 'Create Map From Container',
               fr: "Créer une carte à partir d'un conteneur",
             },
-            openContainerTab: {
-              en: 'Open Container Tab',
-              fr: "Ouvrir l'onglet Conteneur",
+            editContent: {
+              en: 'Edit Content',
+              fr: "Modifier le contenu",
             }
           };
       
