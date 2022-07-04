@@ -1608,8 +1608,6 @@
 			currentPage, uncompressed, resolveReferences);
 		file = (file != null) ? file : this.getCurrentFile();
 
-		console.log(node);
-
 		var result = this.createFileData(node, graph, file, window.location.href,
 			forceXml, forceSvg, forceHtml, embeddedCallback, ignoreSelection, compact,
 			uncompressed);
@@ -1827,21 +1825,18 @@
 			// Creates tabbed file structure if enforced by URL
 			if (urlParams['pages'] != '0' && this.fileNode == null && node != null)
 			{
-				let name  = null;
-				let viewId = null;
-				if(node.getAttribute('name')) {
-					name = node.getAttribute('name');
-					node.removeAttribute('name');
-				}
-				if(node.getAttribute('viewId')) {
-					viewId = node.getAttribute('viewId');
-					node.removeAttribute('viewId');
-				}
 				this.fileNode = node.ownerDocument.createElement('mxfile');
 				this.currentPage = new DiagramPage(node.ownerDocument.createElement('diagram'));
-				this.currentPage.setName(name);
-				this.currentPage.setViewId(viewId);
+				if(node.hasAttribute('name')) {
+					this.currentPage.setName(node.getAttribute('name'));
+					node.removeAttribute('name');
+				}
+				if(node.hasAttribute('viewId')) {
+					this.currentPage.setViewId(node.getAttribute('viewId'));
+					node.removeAttribute('viewId');
+				}
 		 	 	this.pages = [this.currentPage];
+				this.savedPages = 0;
 			}
 			
 			// Avoids scroll offset when switching page
@@ -3159,6 +3154,8 @@
 	 */
 	EditorUi.prototype.libraryLoaded = function(file, images, optionalTitle, expand)
 	{
+
+		
 		if (this.sidebar == null)
 		{
 			return;
@@ -12892,7 +12889,7 @@
 						else
 						{
 							data = data.xml;
-						}						
+						}					
 					} 
 					else if (data.action == 'loadFromContainer')
 					{
@@ -12913,7 +12910,6 @@
 							var enc = new mxCodec(mxUtils.createXmlDocument());
 							var temp = enc.encode(node);
 							this.editor.graph.saveViewState(page.viewState, temp);
-							console.log(Graph.compressNode(temp))
 							mxUtils.setTextContent(page.node, Graph.compressNode(temp));
 
 							this.insertPage(page);
@@ -13005,6 +13001,7 @@
 						return;
 					}
 					else if (data.action === 'setDataProperties') {
+
 						var graph = this.editor.graph;
 
 						var cell = graph.getSelectionCell();
@@ -13016,6 +13013,18 @@
 								cellValue.setAttribute(attribute, value);
 							})
 						};
+
+						if(cell.getAttribute('type') === 'CONTAINER')
+						{
+							const isOpenInTab = this.pages.filter((page) => page.getName() === cell.getAttribute('label')).length > 0;
+							
+							if(isOpenInTab && (cell.getAttribute('label') !== cellValue.getAttribute('label')))
+							{
+								this.showError(mxResources.get('warning'), 'you can\'t change container Name if it open in the Tab', mxResources.get('ok'))
+								return;
+							}
+
+						}
 
 						graph.getModel().setValue(cell, cellValue);
 
@@ -13032,7 +13041,6 @@
 						}
 
 						graph.getModel().setStyle(cell, cellStyle);
-
 						return;
 					}
 					else

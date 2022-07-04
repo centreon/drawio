@@ -2496,8 +2496,13 @@
 				
 				if (urlParams['modified'] != '0' && urlParams['keepmodified'] != '1')
 				{
-					editorUi.editor.modified = false;
-					editorUi.editor.setStatus('');
+					editorUi.currentPage.setSaved(true);
+					const countOfNotSavedPage = editorUi.pages.filter((page) => page.getSaved() === null || page.getSaved() === 'false').length;
+
+					if(countOfNotSavedPage <= 0) {
+						editorUi.editor.modified = false;
+						editorUi.editor.setStatus('');
+					}
 				}
 				
 				//Add support to saving files if embedded mode is running with files
