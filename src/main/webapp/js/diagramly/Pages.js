@@ -228,7 +228,6 @@ SelectPage.prototype.execute = function()
 		page = this.ui.currentPage;
 	
 		// Switches the root cell and sets the view state
-		// graph.model.prefix = Editor.guid() + '-';
 		graph.model.rootChanged(page.root);
 		graph.setViewState(page.viewState);
 
@@ -1172,14 +1171,6 @@ EditorUi.prototype.removePage = function(page)
 					
 					next = this.pages[tmp];
 				}
-				// else if (this.pages.length <= 1)
-				// {
-				// 	Removes label with incorrect page number to force
-				// 	default page name which is OK for a single page
-				// 	next = this.insertPage();
-				// 	graph.model.execute(new RenamePage(this, next,
-				// 		mxResources.get('pageWithNumber', [1])));
-				// }
 				
 				// Uses model to fire event to trigger autosave
 				graph.model.execute(new ChangePage(this, page, next));
@@ -1452,28 +1443,10 @@ EditorUi.prototype.updateTabContainer = function()
 		
 		this.tabContainer.innerHTML = '';
 		this.tabContainer.appendChild(wrapper);
-		
-		// Adds floating menu with all pages and insert option
-		// var menutab = this.createPageMenuTab();
-		// this.tabContainer.appendChild(menutab);
-		var insertTab = null;
-		
-		// Not chromeless and not read-only file
-		// if (this.isPageInsertTabVisible())
-		// {
-		// 	insertTab = this.createPageInsertTab();
-		// 	this.tabContainer.appendChild(insertTab);
-		// }
 
 		if (wrapper.clientWidth > this.tabContainer.clientWidth - btnWidth)
 		{
-			if (insertTab != null)
-			{
-				insertTab.style.position = 'absolute';
-				insertTab.style.right = '0px';
-				// wrapper.style.marginRight = '30px';
-			}
-			
+
 			var temp = this.createControlTab(4, '&nbsp;&#10094;&nbsp;');
 			temp.style.position = 'absolute';
 			temp.style.right = (this.editor.chromeless) ? '29px' : '55px';
@@ -1637,14 +1610,6 @@ EditorUi.prototype.createPageMenuTab = function(hoverEnabled, invert)
 				}
 			});
 
-			var addInsert = mxUtils.bind(this, function()
-			{
-				menu.addItem(mxResources.get('insertPage'), null, mxUtils.bind(this, function()
-				{
-					this.insertPage();
-				}), parent);
-			});
-
 			if (!invert)
 			{
 				addPages();
@@ -1652,11 +1617,6 @@ EditorUi.prototype.createPageMenuTab = function(hoverEnabled, invert)
 			
 			if (this.editor.graph.isEnabled())
 			{
-				if (!invert)
-				{
-					menu.addSeparator(parent);
-					// addInsert();
-				}
 
 				var page = this.currentPage;
 				
@@ -1689,8 +1649,6 @@ EditorUi.prototype.createPageMenuTab = function(hoverEnabled, invert)
 
 			if (invert)
 			{
-				// menu.addSeparator(parent);
-				// addInsert();
 				menu.addSeparator(parent);
 				addPages();
 			}
@@ -1777,12 +1735,6 @@ EditorUi.prototype.addTabListeners = function(page, tab)
 	mxEvent.disableContextMenu(tab);
 	var graph = this.editor.graph;
 	var model = graph.model;
-
-	// mxEvent.addListener(tab, 'dblclick', mxUtils.bind(this, function(evt)
-	// {
-	// 	this.renamePage(page)
-	// 	mxEvent.consume(evt);
-	// }));
 	
 	var menuWasVisible = false;
 	var pageWasActive = false;
@@ -1875,11 +1827,6 @@ EditorUi.prototype.createPageMenu = function(page, label)
 	{
 		var graph = this.editor.graph;
 		var model = graph.model;
-
-		// menu.addItem(mxResources.get('insert'), null, mxUtils.bind(this, function()
-		// {
-		// 	this.insertPage(null, mxUtils.indexOf(this.pages, page) + 1);
-		// }), parent);
 	
 		menu.addItem(mxResources.get('delete'), null, mxUtils.bind(this, function()
 		{
@@ -1894,68 +1841,6 @@ EditorUi.prototype.createPageMenu = function(page, label)
 				this.removePage(page);
 			});
 		}), parent);
-		
-		// menu.addItem(mxResources.get('rename'), null, mxUtils.bind(this, function()
-		// {
-		// 	this.renamePage(page, label);
-		// }), parent);
-		
-		// var url = this.getLinkForPage(page);
-
-		// if (url != null)
-		// {
-		// 	menu.addSeparator(parent);
-			
-		// 	menu.addItem(mxResources.get('link'), null, mxUtils.bind(this, function()
-		// 	{
-		// 		this.showPublishLinkDialog(mxResources.get('url'), true, null, null,
-		// 			mxUtils.bind(this, function(linkTarget, linkColor, allPages, lightbox, editLink, layers)
-		// 		{
-		// 			var params = this.createUrlParameters(linkTarget, linkColor, allPages, lightbox, editLink, layers);
-					
-		// 			if (!allPages)
-		// 			{
-		// 				params.push('hide-pages=1');
-		// 			}
-					
-		// 			if (!graph.isSelectionEmpty())
-		// 			{
-		// 				var bounds = graph.getBoundingBox(graph.getSelectionCells());
-								
-		// 				var t = graph.view.translate;
-		// 				var s = graph.view.scale;
-		// 				bounds.width /= s;
-		// 				bounds.height /= s;
-		// 				bounds.x = bounds.x / s - t.x;
-		// 				bounds.y = bounds.y / s - t.y;
-					
-		// 				params.push('viewbox=' + encodeURIComponent(JSON.stringify({x: Math.round(bounds.x), y: Math.round(bounds.y),
-		// 					width: Math.round(bounds.width), height: Math.round(bounds.height), border: 100})));
-		// 			}
-					
-		// 			var dlg = new EmbedDialog(this, this.getLinkForPage(page, params, lightbox));
-		// 			this.showDialog(dlg.container, 450, 240, true, true);
-		// 			dlg.init();
-		// 		}));
-		// 	}));
-		// }
-		
-		// menu.addSeparator(parent);
-		
-		// menu.addItem(mxResources.get('duplicate'), null, mxUtils.bind(this, function()
-		// {
-		// 	this.duplicatePage(page, mxResources.get('copyOf', [page.getName()]));
-		// }), parent);
-		
-		// if (!mxClient.IS_CHROMEAPP && !EditorUi.isElectronApp && this.getServiceName() == 'draw.io')
-		// {		
-		// 	menu.addSeparator(parent);
-			
-		// 	menu.addItem(mxResources.get('openInNewWindow'), null, mxUtils.bind(this, function()
-		// 	{
-		// 		this.editor.editAsNew(this.getFileData(true, null, null, null, true, true));
-		// 	}), parent);
-		// }
 	});
 };
 

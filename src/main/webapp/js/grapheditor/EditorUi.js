@@ -1517,9 +1517,8 @@ EditorUi.prototype.installShapePicker = function()
 		return popupMenuHandlerIsMenuShowing.apply(this, arguments) || ui.shapePicker != null;
 	};
 	
-	// Adds dbl click dialog for inserting shapes
+	// (Adds dbl click dialog for inserting shapes) Disabled
 	var graphDblClick = graph.dblClick;
-	
 	graph.dblClick = function(evt, cell)
 	{
 		if (this.isEnabled())
@@ -1528,14 +1527,6 @@ EditorUi.prototype.installShapePicker = function()
 				!graph.isCellLocked(graph.getDefaultParent()))
 			{
 				return;
-				// var pt = mxUtils.convertPoint(this.container, mxEvent.getClientX(evt), mxEvent.getClientY(evt));
-				// mxEvent.consume(evt);
-
-				// // Asynchronous to avoid direct insert after double tap
-				// window.setTimeout(mxUtils.bind(this, function()
-				// {
-				// 	ui.showShapePicker(pt.x, pt.y);
-				// }), 30);
 			}
 			else
 			{
@@ -5159,7 +5150,6 @@ EditorUi.prototype.save = function(name)
 				}
 			}
 
-			// this.editor.setModified(false);
 			this.editor.setFilename(name);
 			this.updateDocumentTitle();
 		}
