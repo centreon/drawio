@@ -117,7 +117,7 @@ async function main()
               fr: "Créer une carte à partir d'un conteneur",
             },
             editContent: {
-              en: 'Edit Content',
+              en: 'Edit content',
               fr: "Modifier le contenu",
             }
           };
