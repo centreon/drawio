@@ -116,6 +116,10 @@ async function main()
               en: 'Create Map From Container',
               fr: "Créer une carte à partir d'un conteneur",
             },
+            editContent: {
+              en: 'Edit content',
+              fr: "Modifier le contenu",
+            }
           };
       
           const indexI18 = codes.indexOf('i18n');

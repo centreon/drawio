@@ -777,6 +777,30 @@ Actions.prototype.init = function()
 	}
 
 }, null, null, Editor.ctrlKey + '+Shift+C');
+this.addAction('editContent', function()
+{
+	var cell = graph.getSelectionCell() || graph.getModel().getRoot();
+
+	if(cell !== null) {
+		if (cell.getAttribute('viewId') && cell.getAttribute('label') && cell.getAttribute('type') === 'CONTAINER') {					
+			if(ui.pages.filter((page) => page.getViewId() === cell.getAttribute('viewId')).length == 0) {
+				parent.postMessage(JSON.stringify({
+					event: 'createDrawioPageFromContainer',
+					viewId: cell.getAttribute('viewId'),
+					label: cell.getAttribute('label'),
+				}), '*');						
+			}else {
+				ui.showError(mxResources.get('warning'), 'the Tab for this Container is already open!', mxResources.get('ok'))
+			}
+		}else if(!cell.getAttribute('viewId') && cell.getAttribute('label') && cell.getAttribute('type') === 'CONTAINER') {
+			ui.showError(mxResources.get('warning'), 'Please Save to see the contents of the container', mxResources.get('ok'))
+		}else if(cell.getAttribute('viewId') && !cell.getAttribute('label') && cell.getAttribute('type') === 'CONTAINER') {
+			ui.showError(mxResources.get('warning'), 'Please Edit Container Data to see the contents of the container', mxResources.get('ok'))
+		}else {
+			ui.showError(mxResources.get('warning'), 'Please Edit Container Data then Save to see the contents of the container', mxResources.get('ok'))
+		}
+	}
+}, null, null, Editor.ctrlKey + '+Shift+C+T');
 	this.addAction('editTooltip...', function()
 	{
 		var cell = graph.getSelectionCell();

@@ -1827,8 +1827,16 @@
 			{
 				this.fileNode = node.ownerDocument.createElement('mxfile');
 				this.currentPage = new DiagramPage(node.ownerDocument.createElement('diagram'));
-				this.currentPage.setName(mxResources.get('pageWithNumber', [1]));
+				if(node.hasAttribute('name')) {
+					this.currentPage.setName(node.getAttribute('name'));
+					node.removeAttribute('name');
+				}
+				if(node.hasAttribute('viewId')) {
+					this.currentPage.setViewId(node.getAttribute('viewId'));
+					node.removeAttribute('viewId');
+				}
 		 	 	this.pages = [this.currentPage];
+				this.savedPages = 0;
 			}
 			
 			// Avoids scroll offset when switching page
@@ -3146,6 +3154,8 @@
 	 */
 	EditorUi.prototype.libraryLoaded = function(file, images, optionalTitle, expand)
 	{
+
+		
 		if (this.sidebar == null)
 		{
 			return;
@@ -9674,6 +9684,30 @@
 			graphAddClickHandler.call(this, highlight, beforeClick, onClick);
 		};
 
+		var graphDblClick= graph.dblClick;
+		graph.dblClick = function(evt, cell)
+		{
+			if(cell !== null && cell.getAttribute('type') === 'CONTAINER') {
+
+				if (cell.getAttribute('viewId') && cell.getAttribute('label') ) {					
+					if(ui.pages.filter((page) => page.getViewId() === cell.getAttribute('viewId')).length == 0){
+						parent.postMessage(JSON.stringify({
+							event: 'createDrawioPageFromContainer',
+							viewId: cell.getAttribute('viewId'),
+							label: cell.getAttribute('label'),
+						}), '*');						
+					}else {
+						ui.showError(mxResources.get('warning'), 'the Tab for this Container is already open!', mxResources.get('ok'))
+					}
+				} else if (!cell.getAttribute('label')) {
+					ui.showError(mxResources.get('warning'), 'Please Edit Container Data then Save to see the contents of the container', mxResources.get('ok'))
+				} else {
+					ui.showError(mxResources.get('warning'), 'Please Save to see the contents of the container', mxResources.get('ok'))
+				}
+			}
+			graphDblClick.apply(this, arguments);
+		};
+
 		editorUiInit.apply(this, arguments);
 		
 		if (mxClient.IS_SVG)
@@ -12855,13 +12889,62 @@
 						else
 						{
 							data = data.xml;
-						}						
+						}					
+					} 
+					else if (data.action == 'loadFromContainer')
+					{
+
+						var node = (data.xml != null && data.xml.length > 0) ? mxUtils.parseXml(data.xml).documentElement : null;
+						var cause = Editor.extractParserError(node, mxResources.get('invalidOrMissingFile'));
+						if (!cause)
+						{
+							var tmp = (node != null) ? this.editor.extractGraphModel(node, true) : null;
+							if (tmp != null)
+							{
+								node = tmp;
+							}
+
+							var page = new DiagramPage(this.fileNode.ownerDocument.createElement('diagram'), this.createPageId());
+							page.setName(data.data.label);
+							page.setViewId(data.data.viewId);
+							var enc = new mxCodec(mxUtils.createXmlDocument());
+							var temp = enc.encode(node);
+							this.editor.graph.saveViewState(page.viewState, temp);
+							mxUtils.setTextContent(page.node, Graph.compressNode(temp));
+
+							this.insertPage(page);
+
+						}
+
+						return;
 					}
-					else if (data.action == 'Save'){
+					else if (data.action == 'refreshPageXml')
+					{
+						var node = (data.xml != null && data.xml.length > 0) ? mxUtils.parseXml(data.xml).documentElement : null;
+						var cause = Editor.extractParserError(node, mxResources.get('invalidOrMissingFile'));
+						if (!cause)
+						{
+							var tmp = (node != null) ? this.editor.extractGraphModel(node, true) : null;
+							if (tmp != null)
+							{
+								node = tmp;
+							}
+							
+							if (node != null)
+							{
+								this.editor.setGraphXml(node);
+								this.editor.setModified(false)
+							}
+						}
+						return;
+					}
+					else if (data.action == 'Save')
+					{
 						this.actions.get('save').funct();
 						return;
 					}
-					else if (data.action == 'Exit'){
+					else if (data.action == 'Exit')
+					{
 						this.actions.get('exit').funct();
 						return;
 					}
@@ -12918,6 +13001,7 @@
 						return;
 					}
 					else if (data.action === 'setDataProperties') {
+
 						var graph = this.editor.graph;
 
 						var cell = graph.getSelectionCell();
@@ -12929,6 +13013,18 @@
 								cellValue.setAttribute(attribute, value);
 							})
 						};
+
+						if(cell.getAttribute('type') === 'CONTAINER')
+						{
+							const isOpenInTab = this.pages.filter((page) => page.getName() === cell.getAttribute('label')).length > 0;
+							
+							if(isOpenInTab && (cell.getAttribute('label') !== cellValue.getAttribute('label')))
+							{
+								this.showError(mxResources.get('warning'), 'you can\'t change container Name if it open in the Tab', mxResources.get('ok'))
+								return;
+							}
+
+						}
 
 						graph.getModel().setValue(cell, cellValue);
 

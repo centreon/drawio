@@ -7,7 +7,7 @@
 EditorUi = function(editor, container, lightbox)
 {
 	mxEventSource.call(this);
-	
+
 	this.destroyFunctions = [];
 	this.editor = editor || new Editor();
 	this.container = container || document.body;
@@ -70,6 +70,14 @@ EditorUi = function(editor, container, lightbox)
 	graph.addListener(mxEvent.EDITING_STARTED, this.selectionStateListener);
 	graph.addListener(mxEvent.EDITING_STOPPED, this.selectionStateListener);
 	graph.getView().addListener('unitChanged', this.selectionStateListener);
+
+	graph.getModel().addListener(mxEvent.CHANGE,  mxUtils.bind(this, function(sender, evt)
+	{
+		if(this.currentPage.getSaved()) {
+			this.currentPage.setSaved(false);
+		}
+		
+	}));
 
 	// Disables graph and forced panning in chromeless mode
 	if (this.editor.chromeless && !this.editor.editable)
@@ -1509,25 +1517,16 @@ EditorUi.prototype.installShapePicker = function()
 		return popupMenuHandlerIsMenuShowing.apply(this, arguments) || ui.shapePicker != null;
 	};
 	
-	// Adds dbl click dialog for inserting shapes
+	// (Adds dbl click dialog for inserting shapes) Disabled
 	var graphDblClick = graph.dblClick;
-	
 	graph.dblClick = function(evt, cell)
 	{
-		return;
 		if (this.isEnabled())
 		{
 			if (cell == null && ui.sidebar != null && !mxEvent.isShiftDown(evt) &&
 				!graph.isCellLocked(graph.getDefaultParent()))
 			{
-				var pt = mxUtils.convertPoint(this.container, mxEvent.getClientX(evt), mxEvent.getClientY(evt));
-				mxEvent.consume(evt);
-
-				// Asynchronous to avoid direct insert after double tap
-				window.setTimeout(mxUtils.bind(this, function()
-				{
-					ui.showShapePicker(pt.x, pt.y);
-				}), 30);
+				return;
 			}
 			else
 			{
@@ -5151,7 +5150,6 @@ EditorUi.prototype.save = function(name)
 				}
 			}
 
-			this.editor.setModified(false);
 			this.editor.setFilename(name);
 			this.updateDocumentTitle();
 		}
