@@ -71,14 +71,6 @@ EditorUi = function(editor, container, lightbox)
 	graph.addListener(mxEvent.EDITING_STOPPED, this.selectionStateListener);
 	graph.getView().addListener('unitChanged', this.selectionStateListener);
 
-	graph.getModel().addListener(mxEvent.CHANGE,  mxUtils.bind(this, function(sender, evt)
-	{
-		if(this.currentPage.getSaved()) {
-			this.currentPage.setSaved(false);
-		}
-		
-	}));
-
 	// Disables graph and forced panning in chromeless mode
 	if (this.editor.chromeless && !this.editor.editable)
 	{

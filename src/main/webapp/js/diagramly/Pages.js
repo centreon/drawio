@@ -1610,6 +1610,14 @@ EditorUi.prototype.createPageMenuTab = function(hoverEnabled, invert)
 				}
 			});
 
+			var addInsert = mxUtils.bind(this, function()
+			{
+				menu.addItem(mxResources.get('insertPage'), null, mxUtils.bind(this, function()
+				{
+					this.insertPage();
+				}), parent);
+			});
+
 			if (!invert)
 			{
 				addPages();
@@ -1617,6 +1625,11 @@ EditorUi.prototype.createPageMenuTab = function(hoverEnabled, invert)
 			
 			if (this.editor.graph.isEnabled())
 			{
+				if (!invert)
+				{
+					menu.addSeparator(parent);
+					addInsert();
+				}
 
 				var page = this.currentPage;
 				
@@ -1649,6 +1662,7 @@ EditorUi.prototype.createPageMenuTab = function(hoverEnabled, invert)
 
 			if (invert)
 			{
+				addInsert();
 				menu.addSeparator(parent);
 				addPages();
 			}
