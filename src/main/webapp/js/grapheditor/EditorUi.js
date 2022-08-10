@@ -5348,8 +5348,8 @@ EditorUi.prototype.altShiftActions = {67: 'clearWaypoints', // Alt+Shift+C
   84: 'editTooltip', // Alt+Shift+T
   86: 'pasteSize', // Alt+Shift+V
   88: 'copySize', // Alt+Shift+X
-  66: 'copyData', // Alt+Shift+B
-  69: 'pasteData' // Alt+Shift+E
+//   66: 'copyData', // Alt+Shift+B
+//   69: 'pasteData' // Alt+Shift+E
 };
 
 /**
@@ -5685,7 +5685,7 @@ EditorUi.prototype.createKeyHandler = function(editor)
 		keyHandler.bindAction(74, true, 'fitPage'); // Ctrl+J
 		keyHandler.bindAction(74, true, 'fitTwoPages', true); // Ctrl+Shift+J
 		keyHandler.bindAction(48, true, 'customZoom'); // Ctrl+0
-		keyHandler.bindAction(82, true, 'turn'); // Ctrl+R
+		// keyHandler.bindAction(82, true, 'turn'); // Ctrl+R
 		keyHandler.bindAction(82, true, 'clearDefaultStyle', true); // Ctrl+Shift+R
 		keyHandler.bindAction(83, true, 'save'); // Ctrl+S
 		keyHandler.bindAction(83, true, 'saveAs', true); // Ctrl+Shift+S

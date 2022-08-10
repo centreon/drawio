@@ -355,7 +355,7 @@ Actions.prototype.init = function()
 				ui.copiedValue = value;
 			}
 		}
-	}, null, null, 'Alt+Shift+B');
+	}, null, null, 'Alt+Shift+B'); // A block
 
 	this.addAction('pasteData', function(evt, trigger)
 	{
@@ -408,7 +408,7 @@ Actions.prototype.init = function()
 				model.endUpdate();
 			}
 		}
-	}, null, null, 'Alt+Shift+E');
+	}, null, null, 'Alt+Shift+E');  // A block
 	
 	function deleteCells(includeEdges)
 	{
@@ -695,11 +695,24 @@ Actions.prototype.init = function()
 	this.addAction('editData...', function()
 	{
 		var cell = graph.getSelectionCell() || graph.getModel().getRoot();
-		// - Centreon -
-		// Added a selected element type check to create an event at the parent
-		// and display the property selector in the application.
+		if(!cell || !cell.value) {
+			return;
+		}
+		const contextualMenuCellType = ['LINK','MEDIA', 'RESOURCE', 'WIDGET','CONTAINER']
+		const typeCell = cell.getAttribute('type');
 
-		const shapesProps = ['type', 'shapeType', 'modelId', 'id'];
+		if (typeCell === 'WIDGET' && cell.getAttribute('widgetType') === 'LINK_LEGEND') {
+			return;
+		}
+		if (typeCell === 'LINK' && cell.getAttribute('linkType') === 'SIMPLE') {
+			return;
+		}
+
+		if (!contextualMenuCellType.includes(typeCell)) {
+			return;
+		}
+
+		// const shapesProps = ['type', 'shapeType', 'modelId', 'id'];
 		const resourceCentreonProps = ['type', 'resourceType', 'resourceId',
 			'resourceName', 'modelId', 'viewId', 'parentName', 'parentType', 'parentId'];
 		const linkProps = ['type', 'linkType', 'parentName', 'parentType', 'parentId',
@@ -728,9 +741,9 @@ Actions.prototype.init = function()
 			}).filter(prop => prop !== undefined);
 		};
 
-		if (cell.getAttribute('shapeType') !== undefined) {
-		 cellAttributes = createAttributes(shapesProps);
-		}
+		// if (cell.getAttribute('shapeType') !== undefined) {
+		//  cellAttributes = createAttributes(shapesProps);
+		// }
 		if (cell.getAttribute('resourceType') !== undefined) {
 			cellAttributes = createAttributes(resourceCentreonProps);
 		}
@@ -751,7 +764,8 @@ Actions.prototype.init = function()
 			mxObject: cellAttributes,
 			mxStyle: cell.getStyle(),
 			event: 'setShowWizardShapeProperties',
-		}), '*');
+		}), '*');	
+
 	}, null, null, Editor.ctrlKey + '+M');
 	this.addAction('createMapFromContainer', function()
 {
@@ -766,6 +780,7 @@ Actions.prototype.init = function()
 			}
 		}).filter(prop => prop !== undefined);
 	};
+
 	
 	if (cell.getAttribute('type') === 'CONTAINER') {
 		cellAttributes = createAttributes(containerProps);
@@ -837,7 +852,7 @@ this.addAction('editContent', function()
 			ui.showDialog(dlg.container, 320, 200, true, true);
 			dlg.init();
 		}
-	}, null, null, 'Alt+Shift+T');
+	}, null, null, 'Alt+Shift+T');// a blick
 	this.addAction('openLink', function()
 	{
 		var link = graph.getLinkForCell(graph.getSelectionCell());
@@ -862,7 +877,7 @@ this.addAction('editContent', function()
 				graph.setAttributeForCell(cell, 'linkTarget', linkTarget);
 			}, true, graph.getLinkTargetForCell(cell));
 		}
-	}, null, null, 'Alt+Shift+L');
+	}, null, null, 'Alt+Shift+L'); // a blick
 	this.put('insertImage', new Action(mxResources.get('image') + '...', function()
 	{
 		if (graph.isEnabled() && !graph.isCellLocked(graph.getDefaultParent()))
