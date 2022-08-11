@@ -712,7 +712,6 @@ Actions.prototype.init = function()
 			return;
 		}
 
-		// const shapesProps = ['type', 'shapeType', 'modelId', 'id'];
 		const resourceCentreonProps = ['type', 'resourceType', 'resourceId',
 			'resourceName', 'modelId', 'viewId', 'parentName', 'parentType', 'parentId'];
 		const linkProps = ['type', 'linkType', 'parentName', 'parentType', 'parentId',
@@ -741,9 +740,6 @@ Actions.prototype.init = function()
 			}).filter(prop => prop !== undefined);
 		};
 
-		// if (cell.getAttribute('shapeType') !== undefined) {
-		//  cellAttributes = createAttributes(shapesProps);
-		// }
 		if (cell.getAttribute('resourceType') !== undefined) {
 			cellAttributes = createAttributes(resourceCentreonProps);
 		}
