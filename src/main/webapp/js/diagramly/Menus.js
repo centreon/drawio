@@ -2472,14 +2472,16 @@
 					graph.stopEditing();
 				}
 				
-				var data = editorUi.editor.getGraphXml();
+				var data = (urlParams['pages'] != '0' || (editorUi.pages != null && editorUi.pages.length > 1)) ?
+				editorUi.getFileData(true) : mxUtils.getXml(editorUi.editor.getGraphXml());
 				
 				if (urlParams['proto'] == 'json')
 				{
+
+					console.log(editorUi.editor.getGraphXml())
 					var msg = editorUi.createLoadMessage('save');
-					msg.xml = mxUtils.getXml(data);
-					msg.viewId = editorUi.currentPage.getViewId();
-					
+					msg.xml = data;
+
 					if (exit)
 					{
 						msg.exit = true;
@@ -2493,13 +2495,8 @@
 				
 				if (urlParams['modified'] != '0' && urlParams['keepmodified'] != '1')
 				{
-					editorUi.currentPage.setSaved(true);
-					const countOfNotSavedPage = editorUi.pages.filter((page) => page.getSaved() === null || page.getSaved() === 'false').length;
-
-					if(countOfNotSavedPage <= 0) {
-						editorUi.editor.modified = false;
-						editorUi.editor.setStatus('');
-					}
+					editorUi.editor.modified = false;
+					editorUi.editor.setStatus('');
 				}
 				
 				//Add support to saving files if embedded mode is running with files
