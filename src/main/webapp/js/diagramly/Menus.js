@@ -2493,11 +2493,6 @@
 				var parent = window.opener || window.parent;
 				parent.postMessage(data, '*');
 				
-				if (urlParams['modified'] != '0' && urlParams['keepmodified'] != '1')
-				{
-					editorUi.editor.modified = false;
-					editorUi.editor.setStatus('');
-				}
 				
 				//Add support to saving files if embedded mode is running with files
 				var file = editorUi.getCurrentFile();
@@ -2523,7 +2518,7 @@
 				}
 				else
 				{
-					var fn = function()
+					var discardChangesFn = function()
 					{
 						editorUi.editor.modified = false;
 						var msg = (urlParams['proto'] == 'json') ? JSON.stringify({event: 'exit',
@@ -2531,15 +2526,23 @@
 						var parent = window.opener || window.parent;
 						parent.postMessage(msg, '*');
 					}
+
+					var SaveAllFn = function()
+					{
+						console.log('SaveAndExit');
+						editorUi.actions.get('save').funct(true);
+					}
 					
 					if (!editorUi.editor.modified)
 					{
-						fn();
+						discardChangesFn();
 					}
 					else
 					{
-						editorUi.confirm(mxResources.get('allChangesLost'), null, fn,
-							mxResources.get('cancel'), mxResources.get('discardChanges'));
+						console.log('SaveAnd--------Exit');
+
+						editorUi.confirm('Proceed', SaveAllFn, discardChangesFn,
+							mxResources.get('saveAndExit'), mxResources.get('discardChanges'),true);
 					}
 				}
 			});

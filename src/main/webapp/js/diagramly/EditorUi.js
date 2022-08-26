@@ -16346,15 +16346,6 @@ var ConfirmDialog = function(editorUi, message, okFn, cancelFn, okLabel, cancelL
 	var cb = document.createElement('input');
 	cb.setAttribute('type', 'checkbox');
 
-	var saveBtn = mxUtils.button('Save and close', function() // mxResources.get('save'),
-	{
-		editorUi.actions.get('save').funct(true);
-	});
-
-	saveBtn.className = 'geBtn gePrimaryBtn';
-
-	btns.appendChild(saveBtn);
-
 	var cancelBtn = mxUtils.button(cancelLabel || mxResources.get('cancel'), function()
 	{
 		editorUi.hideDialog();
