@@ -16320,15 +16320,20 @@ var ConfirmDialog = function(editorUi, message, okFn, cancelFn, okLabel, cancelL
 	div.style.textAlign = 'center';
 	maxHeight = (maxHeight != null) ? maxHeight : 44;
 	
-	var p2 = document.createElement('div');
-	p2.style.padding = '6px';
-	p2.style.overflow = 'auto';
-	p2.style.maxHeight = maxHeight + 'px';
-	p2.style.lineHeight = '1.2em';
-	
-	mxUtils.write(p2, message);
-	div.appendChild(p2);
-	
+	const messages = message.split(/\\n/);
+	messages.forEach((msg) => {
+		if(msg != '') 
+		{
+			const p2 = document.createElement('div');
+			p2.style.padding = '6px';
+			p2.style.overflow = 'auto';
+			p2.style.maxHeight = maxHeight + 'px';
+			p2.style.lineHeight = '1.2em';
+			mxUtils.write(p2, msg);
+			div.appendChild(p2);
+		}
+	})
+
 	if (imgSrc != null)
 	{
 		var p3 = document.createElement('div');
@@ -16423,7 +16428,7 @@ var ConfirmDialog = function(editorUi, message, okFn, cancelFn, okLabel, cancelL
 	}
 	else
 	{
-		btns.style.marginTop = '12px';
+		btns.style.marginTop = '15px';
 	}
 
 	this.init = function()

@@ -125,8 +125,8 @@ async function main()
               fr: "Procéder",
             },
             proceedMessage: {
-              en: 'You have unsaved changes. If you proceed all changes will be lost.',
-              fr: "Vous avez des changements non enregistrés. Si vous continuez, toutes les modifications seront perdues.",
+                en: String.raw`You have unsaved changes.\nIf you proceed all changes will be lost.`,
+                fr: String.raw`Vous avez des changements non enregistrés.\nSi vous continuez, toutes les modifications seront perdues.`,
             }
           };
       

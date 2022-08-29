@@ -1212,4 +1212,4 @@ private=Private
 createMapFromContainer=Create Map From Container
 editContent=Edit content
 proceed=Proceed
-proceedMessage=You have unsaved changes. If you proceed all changes will be lost.
+proceedMessage=You have unsaved changes.\nIf you proceed all changes will be lost.

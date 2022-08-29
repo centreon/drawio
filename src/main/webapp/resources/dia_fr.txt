@@ -1212,4 +1212,4 @@ private=Privé
 createMapFromContainer=Créer une carte à partir d'un conteneur
 editContent=Modifier le contenu
 proceed=Procéder
-proceedMessage=Vous avez des changements non enregistrés. Si vous continuez, toutes les modifications seront perdues.
+proceedMessage=Vous avez des changements non enregistrés.\nSi vous continuez, toutes les modifications seront perdues.
