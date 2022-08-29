@@ -2529,7 +2529,6 @@
 
 					var SaveAllFn = function()
 					{
-						console.log('SaveAndExit');
 						editorUi.actions.get('save').funct(true);
 					}
 					
@@ -2539,10 +2538,8 @@
 					}
 					else
 					{
-						console.log('SaveAnd--------Exit');
-
-						editorUi.confirm('Proceed', SaveAllFn, discardChangesFn,
-							mxResources.get('saveAndExit'), mxResources.get('discardChanges'),true);
+						editorUi.confirm(mxResources.get('proceedMessage'), SaveAllFn, discardChangesFn,
+							mxResources.get('saveAndExit'), mxResources.get('proceed'),true);
 					}
 				}
 			});

@@ -119,6 +119,14 @@ async function main()
             editContent: {
               en: 'Edit content',
               fr: "Modifier le contenu",
+            },
+            proceed: {
+              en: 'Proceed',
+              fr: "Procéder",
+            },
+            proceedMessage: {
+              en: 'You have unsaved changes. If you proceed all changes will be lost.',
+              fr: "Vous avez des changements non enregistrés. Si vous continuez, toutes les modifications seront perdues.",
             }
           };
       
