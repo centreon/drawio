@@ -1276,10 +1276,10 @@ BaseFormatPanel.prototype.createRelativeOption = function(label, key, width, han
 	
 	var ui = this.editorUi;
 	var graph = ui.editor.graph;
-	var div = this.createPanel('BaseFormatPanel-createRelativeOption');
+	var div = this.createPanel('BaseFormatPanel-createRelativeOption-' + label);  
 	div.style.paddingTop = '10px';
 	div.style.paddingBottom = '10px';
-	mxUtils.write(div, label);
+	mxUtils.write(div, mxResources.get(label));
 	div.style.fontWeight = 'bold';
 	
 	var update = mxUtils.bind(this, function(evt)
@@ -3482,7 +3482,7 @@ TextFormatPanel.prototype.addFont = function(container)
 	if (!graph.cellEditor.isContentEditing())
 	{
 		container.appendChild(extraPanel);
-		container.appendChild(this.createRelativeOption(mxResources.get('opacity'), mxConstants.STYLE_TEXT_OPACITY));
+		container.appendChild(this.createRelativeOption('opacity', mxConstants.STYLE_TEXT_OPACITY));
 		container.appendChild(spacingPanel);
 	}
 	else
@@ -3490,7 +3490,7 @@ TextFormatPanel.prototype.addFont = function(container)
 		var selState = null;
 		var lineHeightInput = null;
 		
-		container.appendChild(this.createRelativeOption(mxResources.get('lineheight'), null, null, function(input)
+		container.appendChild(this.createRelativeOption('lineheight', null, null, function(input)
 		{
 			var value = (input.value == '') ? 120 : parseInt(input.value);
 			value = Math.max(0, (isNaN(value)) ? 120 : value);
@@ -4236,7 +4236,7 @@ StyleFormatPanel.prototype.init = function()
 	
 		this.container.appendChild(this.addStroke(this.createPanel('StyleFormatPanel-addStroke')));
 		// this.container.appendChild(this.addLineJumps(this.createPanel('StyleFormatPanel-addLineJumps')));
-		var opacityPanel = this.createRelativeOption(mxResources.get('opacity'), mxConstants.STYLE_OPACITY);
+		var opacityPanel = this.createRelativeOption('opacity', mxConstants.STYLE_OPACITY);
 		opacityPanel.style.paddingTop = '8px';
 		opacityPanel.style.paddingBottom = '8px';
 		this.container.appendChild(opacityPanel);
