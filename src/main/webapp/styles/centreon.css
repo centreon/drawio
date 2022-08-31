@@ -21,7 +21,7 @@ div.geFormatSection-ArrangePanel-addGroupOps {
 }
 
 div.geFormatSection-StyleFormatPanel-addProperties,
-/* div.geFormatSection-StyleFormatPanel-addEditOps, */
+div.geFormatSection-StyleFormatPanel-addEditOps,
 div.geFormatSection-StyleFormatPanel-addEffects {
   display: none;
 }
