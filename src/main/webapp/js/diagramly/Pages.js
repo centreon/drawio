@@ -63,6 +63,11 @@ DiagramPage.prototype.getViewId = function()
 	return this.node.getAttribute('viewId');
 };
 
+DiagramPage.prototype.getSaved = function()
+{
+	return this.node.getAttribute('saved');
+};
+
 
 /**
  * 
@@ -89,6 +94,18 @@ DiagramPage.prototype.setViewId = function(value)
 	else
 	{
 		this.node.setAttribute('viewId', value);
+	}
+};
+
+DiagramPage.prototype.setSaved = function(value)
+{
+	if (value == null)
+	{
+		this.node.removeAttribute('saved');
+	}
+	else
+	{
+		this.node.setAttribute('saved', value);
 	}
 };
 
@@ -533,13 +550,13 @@ EditorUi.prototype.initPages = function()
 				Editor.MathJaxClear();
 			}
 		});
-		
+
 		// Adds a graph model listener to update the view
 		this.editor.graph.model.addListener(mxEvent.CHANGE, mxUtils.bind(this, function(sender, evt)
 		{
 			var edit = evt.getProperty('edit');
 			var changes = edit.changes;
-			
+
 			for (var i = 0; i < changes.length; i++)
 			{
 				if (changes[i] instanceof SelectPage ||
@@ -550,6 +567,16 @@ EditorUi.prototype.initPages = function()
 					updateTabs();
 					break;	
 				}
+
+				if (changes[i] instanceof mxGeometryChange ||
+					changes[i] instanceof mxValueChange ||
+					changes[i] instanceof mxStyleChange ||
+					changes[i] instanceof mxChildChange)
+				{
+					this.currentPage.setSaved(false);
+					updateTabs();
+					break;	
+				}			
 			}
 		}));
 		
@@ -1345,10 +1372,10 @@ EditorUi.prototype.updateTabContainer = function()
 		wrapper.style.whiteSpace = 'nowrap';
 		wrapper.style.overflow = 'hidden';
 		wrapper.style.fontSize = '13px';
-		
+
 		// Allows for negative left margin of first tab
 		wrapper.style.marginLeft = '30px';
-		
+
 		// Automatic tab width to match available width
 		// TODO: Fix tabWidth in chromeless mode
 		var btnWidth = (this.editor.isChromelessView()) ? 29 : 59;
@@ -1369,7 +1396,23 @@ EditorUi.prototype.updateTabContainer = function()
 				{
 					tab.className = 'geInactivePage';
 				}
+
+				if(this.pages[index].getSaved() == 'false') 
+				{
+					var dot = document.createElement('span');
+					dot.style.height = '10px';
+					dot.style.width = '10px';
+					dot.style.marginRight = '5px';
+					dot.style.backgroundColor = '#FFA500';
+					dot.style.borderRadius = '50%';
+					dot.style.display = 'inline-block';
+					dot.style.position = 'absolute';
+					dot.style.top = '5px';
+					dot.style.right = '0px';
 				
+					tab.appendChild(dot);
+				}
+
 				tab.setAttribute('draggable', 'true');
 				
 				mxEvent.addListener(tab, 'dragstart', mxUtils.bind(this, function(evt)
@@ -1522,7 +1565,7 @@ EditorUi.prototype.createTab = function(hoverEnabled)
 			mxEvent.consume(evt);
 		}));
 	}
-	
+
 	return tab;
 };
 
@@ -1710,7 +1753,11 @@ EditorUi.prototype.createTabForPage = function(page, tabWidth, hoverEnabled, pag
 	var name = page.getName() || mxResources.get('untitled');
 	var id = page.getId();
 	tab.setAttribute('title', name + ((id != null) ? ' (' + id + ')' : '') + ' [' + pageNumber + ']');
-	mxUtils.write(tab, name);
+	
+	var p2 = document.createElement('span');
+	mxUtils.write(p2, name);
+	tab.appendChild(p2);
+	
 	tab.style.maxWidth = tabWidth + 'px';
 	tab.style.width = tabWidth + 'px';
 	this.addTabListeners(page, tab);
@@ -1719,7 +1766,7 @@ EditorUi.prototype.createTabForPage = function(page, tabWidth, hoverEnabled, pag
 	{
 		tab.style.textOverflow = 'ellipsis';
 	}
-	
+
 	return tab;
 };
 
