@@ -2472,14 +2472,14 @@
 					graph.stopEditing();
 				}
 				
-				var data = editorUi.editor.getGraphXml();
+				var data = (urlParams['pages'] != '0' || (editorUi.pages != null && editorUi.pages.length > 1)) ?
+				editorUi.getFileData(true) : mxUtils.getXml(editorUi.editor.getGraphXml());
 				
 				if (urlParams['proto'] == 'json')
 				{
 					var msg = editorUi.createLoadMessage('save');
-					msg.xml = mxUtils.getXml(data);
-					msg.viewId = editorUi.currentPage.getViewId();
-					
+					msg.xml = data;
+
 					if (exit)
 					{
 						msg.exit = true;
@@ -2491,16 +2491,6 @@
 				var parent = window.opener || window.parent;
 				parent.postMessage(data, '*');
 				
-				if (urlParams['modified'] != '0' && urlParams['keepmodified'] != '1')
-				{
-					editorUi.currentPage.setSaved(true);
-					const countOfNotSavedPage = editorUi.pages.filter((page) => page.getSaved() === null || page.getSaved() === 'false').length;
-
-					if(countOfNotSavedPage <= 0) {
-						editorUi.editor.modified = false;
-						editorUi.editor.setStatus('');
-					}
-				}
 				
 				//Add support to saving files if embedded mode is running with files
 				var file = editorUi.getCurrentFile();
@@ -2526,7 +2516,7 @@
 				}
 				else
 				{
-					var fn = function()
+					var discardChangesFn = function()
 					{
 						editorUi.editor.modified = false;
 						var msg = (urlParams['proto'] == 'json') ? JSON.stringify({event: 'exit',
@@ -2534,15 +2524,20 @@
 						var parent = window.opener || window.parent;
 						parent.postMessage(msg, '*');
 					}
+
+					var SaveAllFn = function()
+					{
+						editorUi.actions.get('save').funct(true);
+					}
 					
 					if (!editorUi.editor.modified)
 					{
-						fn();
+						discardChangesFn();
 					}
 					else
 					{
-						editorUi.confirm(mxResources.get('allChangesLost'), null, fn,
-							mxResources.get('cancel'), mxResources.get('discardChanges'));
+						editorUi.confirm(mxResources.get('proceedMessage'), SaveAllFn, discardChangesFn,
+							mxResources.get('saveAndExit'), mxResources.get('proceed'),true);
 					}
 				}
 			});

@@ -63,10 +63,6 @@ DiagramPage.prototype.getViewId = function()
 	return this.node.getAttribute('viewId');
 };
 
-DiagramPage.prototype.getSaved = function()
-{
-	return this.node.getAttribute('saved');
-};
 
 /**
  * 
@@ -83,17 +79,6 @@ DiagramPage.prototype.setName = function(value)
 	}
 };
 
-DiagramPage.prototype.setSaved = function(value)
-{
-	if (value == null)
-	{
-		this.node.removeAttribute('saved');
-	}
-	else
-	{
-		this.node.setAttribute('saved', value);
-	}
-};
 
 DiagramPage.prototype.setViewId = function(value)
 {

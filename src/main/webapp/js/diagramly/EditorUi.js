@@ -1751,7 +1751,9 @@
 	 */
 	EditorUi.prototype.setFileData = function(data)
 	{
+		const currentPageName = this.currentPage != undefined ? this.currentPage.getName() : null
 		data = this.validateFileData(data);
+
 		this.currentPage = null;
 		this.fileNode = null;
 		this.pages = null;
@@ -1801,7 +1803,7 @@
 						}
 						
 						var page = new DiagramPage(nodes[i]);
-						
+
 						// Checks for invalid page names
 						if (page.getName() == null)
 						{
@@ -1809,8 +1811,13 @@
 						}
 						
 						this.pages.push(page);
-						
+
 						if (urlParams['page-id'] != null && page.getId() == urlParams['page-id'])
+						{
+							selectedPage = page;
+						}
+
+						if (currentPageName === page.getName())
 						{
 							selectedPage = page;
 						}
@@ -1835,8 +1842,8 @@
 					this.currentPage.setViewId(node.getAttribute('viewId'));
 					node.removeAttribute('viewId');
 				}
+
 		 	 	this.pages = [this.currentPage];
-				this.savedPages = 0;
 			}
 			
 			// Avoids scroll offset when switching page
@@ -4211,7 +4218,7 @@
 			}
 		}, okLabel, cancelLabel, null, null, null, null, height);
 		
-		this.showDialog(dlg.container, 340, 46 + height, true, closable);
+		this.showDialog(dlg.container, 400, 46 + height, true, closable);
 		dlg.init();
 	};
 	
@@ -12891,6 +12898,19 @@
 							data = data.xml;
 						}					
 					} 
+					else if(data.action == 'testingLoad')
+					{
+						var node = (data.xml != null && data.xml.length > 0) ? mxUtils.parseXml(data.xml).documentElement : null;
+						var cause = Editor.extractParserError(node, mxResources.get('invalidOrMissingFile'));
+						if (!cause)
+						{
+							this.setFileData(data.xml);
+							this.editor.modified = false;
+							this.editor.setStatus('');
+						} 
+
+						return;
+					}
 					else if (data.action == 'loadFromContainer')
 					{
 
@@ -16300,15 +16320,20 @@ var ConfirmDialog = function(editorUi, message, okFn, cancelFn, okLabel, cancelL
 	div.style.textAlign = 'center';
 	maxHeight = (maxHeight != null) ? maxHeight : 44;
 	
-	var p2 = document.createElement('div');
-	p2.style.padding = '6px';
-	p2.style.overflow = 'auto';
-	p2.style.maxHeight = maxHeight + 'px';
-	p2.style.lineHeight = '1.2em';
-	
-	mxUtils.write(p2, message);
-	div.appendChild(p2);
-	
+	const messages = message.split(/\\n/);
+	messages.forEach((msg) => {
+		if(msg != '') 
+		{
+			const p2 = document.createElement('div');
+			p2.style.padding = '6px';
+			p2.style.overflow = 'auto';
+			p2.style.maxHeight = maxHeight + 'px';
+			p2.style.lineHeight = '1.2em';
+			mxUtils.write(p2, msg);
+			div.appendChild(p2);
+		}
+	})
+
 	if (imgSrc != null)
 	{
 		var p3 = document.createElement('div');
@@ -16403,7 +16428,7 @@ var ConfirmDialog = function(editorUi, message, okFn, cancelFn, okLabel, cancelL
 	}
 	else
 	{
-		btns.style.marginTop = '12px';
+		btns.style.marginTop = '15px';
 	}
 
 	this.init = function()
