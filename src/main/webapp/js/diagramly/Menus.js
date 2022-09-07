@@ -2477,8 +2477,6 @@
 				
 				if (urlParams['proto'] == 'json')
 				{
-
-					console.log(editorUi.editor.getGraphXml())
 					var msg = editorUi.createLoadMessage('save');
 					msg.xml = data;
 

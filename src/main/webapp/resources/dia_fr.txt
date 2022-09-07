@@ -1211,5 +1211,5 @@ chooseDrawioPsgesFile=Choose pages with draw.io diagrams csv file
 private=Privé
 createMapFromContainer=Créer une carte à partir d'un conteneur
 editContent=Modifier le contenu
-proceed=Procéder
+proceed=Continuer
 proceedMessage=Vous avez des changements non enregistrés.\nSi vous continuez, toutes les modifications seront perdues.

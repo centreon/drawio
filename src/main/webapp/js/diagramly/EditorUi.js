@@ -1817,7 +1817,7 @@
 							selectedPage = page;
 						}
 
-						if (currentPageName != null && currentPageName == page.getName())
+						if (currentPageName === page.getName())
 						{
 							selectedPage = page;
 						}

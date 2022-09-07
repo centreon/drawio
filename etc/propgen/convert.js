@@ -122,10 +122,10 @@ async function main()
             },
             proceed: {
               en: 'Proceed',
-              fr: "Procéder",
+              fr: "Continuer",
             },
             proceedMessage: {
-                en: String.raw`You have unsaved changes.\nIf you proceed all changes will be lost.`,
+                en: String.raw`You have unsaved changes.\nIf you proceed, all changes will be lost`,
                 fr: String.raw`Vous avez des changements non enregistrés.\nSi vous continuez, toutes les modifications seront perdues.`,
             }
           };
