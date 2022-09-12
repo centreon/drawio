@@ -5,8 +5,7 @@ div.format-option-mathematical-typesetting {
 
 div.geFormatSection-DiagramFormatPanel-addView,
 div.geFormatSection-DiagramFormatPanel-addOptions,
-div.geFormatSection-DiagramFormatPanel-addPaperSize,
-div.geFormatSection-DiagramFormatPanel-addStyleOps {
+div.geFormatSection-DiagramFormatPanel-addPaperSize {
   display: none;
 }
 div.geFormatSection-DiagramStylePanel-addView {
@@ -38,7 +37,7 @@ div.TextFormatPanel-writingDirection {
   display: none;
 }
 div.geFormatSection-TextFormatPanel-addFont-extraPanel,
-div.geFormatSection-BaseFormatPanel-createRelativeOption,
+div.geFormatSection-BaseFormatPanel-createRelativeOption-lineheight,
 div.geFormatSection-TextFormatPanel-addFont-spacingPanel {
   display: none;
 }
