@@ -725,7 +725,7 @@ Actions.prototype.init = function()
 			'chartFillLines', 'chartNbPoints', 'chartPeriod', 'chartShowGrid',
 			'chartStack', 'displayLegend', 'hiddenLine', 'metric1Max', 'metric1Min',
 			'metricName1', 'metric2Max', 'metric2Min', 'metricName2',
-			'metricsColorStart', 'metricsColorEnd', 'parentName', 'parentType', 'parentId',
+			'metricsColorStart', 'metricsColorEnd', 'parentName', 'parentType', 'parentId', 'serviceType',
 			'resourceName', 'orientation',
 		];
 		const containerProps = ['type', 'modelId', 'viewId', 'imageName', 'centreonImageId', 'label'];
