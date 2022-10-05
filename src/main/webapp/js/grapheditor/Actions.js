@@ -716,7 +716,7 @@ Actions.prototype.init = function()
 			'resourceName', 'modelId', 'viewId', 'parentName', 'parentType', 'parentId'];
 		const linkProps = ['type', 'linkType', 'parentName', 'parentType', 'parentId',
 			'resourceType', 'resourceId', 'resourceName', 'modelId','metric1Min',
-			'metric1Max',	'metric2Min', 'metric2Max', 'metricName1', 'metricName2'];
+			'metric1Max',	'metric2Min', 'metric2Max', 'metricName1', 'metricName2', 'displayPercent'];
 		const mediaProps = ['type', 'mediaType', 'newTab', 'elementUrl',
 			'imageName', 'centreonImageId'];
 		const widgetProps = [
