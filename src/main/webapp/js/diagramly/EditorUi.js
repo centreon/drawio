@@ -13031,6 +13031,12 @@
 							Object.entries(data.data).forEach(([attribute, value]) => {
 								cellValue.setAttribute(attribute, value);
 							})
+
+							if(cellValue.getAttribute('type') === 'WIDGET' && cellValue.getAttribute('widgetType') === 'OUTPUT' && cellValue.getAttribute('serviceType') === 'Metaservice')
+							{
+								cellValue.removeAttribute('parentId');
+								cellValue.removeAttribute('parentName');
+							}
 						};
 
 						if(cell.getAttribute('type') === 'CONTAINER')
