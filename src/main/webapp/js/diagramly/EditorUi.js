@@ -13024,28 +13024,36 @@
 						var graph = this.editor.graph;
 
 						var cell = graph.getSelectionCell();
-						var cellValue = graph.getModel().getValue(cell);
-						cellValue = cellValue.cloneNode(true);
 
-						if  (data !== undefined && data.data !== undefined) {
+						if  (data !== undefined && data.data !== undefined) 
+						{
+							var cellValue = graph.getModel().getValue(cell);
+							cellValue = cellValue.cloneNode(true);
+
 							Object.entries(data.data).forEach(([attribute, value]) => {
 								cellValue.setAttribute(attribute, value);
 							})
-						};
 
-						if(cell.getAttribute('type') === 'CONTAINER')
-						{
-							const isOpenInTab = this.pages.filter((page) => page.getName() === cell.getAttribute('label')).length > 0;
-							
-							if(isOpenInTab && (cell.getAttribute('label') !== cellValue.getAttribute('label')))
+							if(cellValue.getAttribute('type') === 'WIDGET' && cellValue.getAttribute('widgetType') === 'OUTPUT' && cellValue.getAttribute('resourceType') === 'META_SERVICE')
 							{
-								this.showError(mxResources.get('warning'), 'you can\'t change container Name if it open in the Tab', mxResources.get('ok'))
-								return;
+								cellValue.removeAttribute('parentId');
+								cellValue.removeAttribute('parentName');
+							}
+		
+							if(cell.getAttribute('type') === 'CONTAINER')
+							{
+								const isOpenInTab = this.pages.filter((page) => page.getName() === cell.getAttribute('label')).length > 0;
+								
+								if(isOpenInTab && (cell.getAttribute('label') !== cellValue.getAttribute('label')))
+								{
+									this.showError(mxResources.get('warning'), 'you can\'t change container Name if it open in the Tab', mxResources.get('ok'))
+									return;
+								}
+
 							}
 
-						}
-
-						graph.getModel().setValue(cell, cellValue);
+							graph.getModel().setValue(cell, cellValue);
+						};
 
 						if (graph.model.isEdge(cell) && cell.source && cell.target) {
 							graph.setCellStyles(mxConstants.STYLE_DASHED, '0', [cell]);
