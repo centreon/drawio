@@ -13852,7 +13852,6 @@ if (typeof mxVertexHandler !== 'undefined')
 			
 			this.constraintHandler.isEnabled = mxUtils.bind(this, function()
 			{
-				// return this.graph.connectionHandler.isEnabled();
 				return false;
 			});
 		};
