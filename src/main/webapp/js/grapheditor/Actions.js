@@ -718,7 +718,7 @@ Actions.prototype.init = function()
 			'resourceType', 'resourceId', 'resourceName', 'modelId','metric1Min',
 			'metric1Max',	'metric2Min', 'metric2Max', 'metricName1', 'metricName2','displayPercent'];
 		const mediaProps = ['type', 'mediaType', 'newTab', 'elementUrl',
-			'imageName', 'centreonImageId'];
+			'imageName', 'centreonImageId', 'label'];
 		const widgetProps = [
 			'type', 'widgetType', 'resourceType', 'resourceId', 'pieChartInnerRadius',
 			'pieChartDisplayLabel', 'outputWidgetFormat', 'chartDisplayThreshold',
