@@ -31,16 +31,16 @@ div.FormatPanel-perimeterPanel {
   display: none;
 }
 
-div.TextFormatPanel-addFont-stylePanel, 
+/* div.TextFormatPanel-addFont-stylePanel, 
 div.TextFormatPanel-LabelPosition,
 div.TextFormatPanel-writingDirection {
   display: none;
-}
-div.geFormatSection-TextFormatPanel-addFont-extraPanel,
+} */
+/* div.geFormatSection-TextFormatPanel-addFont-extraPanel,
 div.geFormatSection-BaseFormatPanel-createRelativeOption-lineheight,
 div.geFormatSection-TextFormatPanel-addFont-spacingPanel {
   display: none;
-}
+} */
 
 div.BaseFormatPanel-colorOption-background-color,
 div.BaseFormatPanel-colorOption-border-color {
