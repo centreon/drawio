@@ -762,7 +762,7 @@ Actions.prototype.init = function()
 			event: 'setShowWizardShapeProperties',
 		}), '*');	
 
-	}, null, null, Editor.ctrlKey + '+M');
+	}, null, null,  Editor.ctrlKey + '+E');
 	this.addAction('createMapFromContainer', function()
 {
 	var cell = graph.getSelectionCell() || graph.getModel().getRoot();
