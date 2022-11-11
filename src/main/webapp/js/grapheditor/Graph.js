@@ -6185,7 +6185,6 @@ HoverIcons.prototype.getState = function(state)
 HoverIcons.prototype.update = function(state, x, y)
 {
 	// This Function is blocked by Centreon
-	censole.log('HoverIcons.prototype.update Is Blocked');
 	return;
 
 	if (!this.graph.connectionArrowsEnabled ||
