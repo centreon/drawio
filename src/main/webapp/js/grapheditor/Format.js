@@ -1357,7 +1357,7 @@ BaseFormatPanel.prototype.createRelativeOption = function(label, key, width, han
 			if (state != null && value != mxUtils.getValue(state.style, key, 100))
 			{
 				// Removes entry in style (assumes 100 is default for relative values)
-				if (value == 100)
+				if (value == 100 && label !== 'opacity')
 				{
 					value = null;
 				}
