@@ -3489,9 +3489,6 @@ TextFormatPanel.prototype.addFont = function(container)
 	}
 	
 	container.appendChild(colorPanel);
-	var extraPanel = this.createPanel('TextFormatPanel-addFont-extraPanel');
-	extraPanel.style.paddingTop = '2px';
-	extraPanel.style.paddingBottom = '4px';
 	
 	var wwCells = graph.filterSelectionCells(mxUtils.bind(this, function(cell)
 	{
@@ -3501,22 +3498,6 @@ TextFormatPanel.prototype.addFont = function(container)
 			graph.getModel().isEdge(cell) || (!graph.isTableRow(cell) &&
 			!graph.isTableCell(cell) && !graph.isCellResizable(cell));
 	}));
-	
-	var wwOpt = this.createCellOption(mxResources.get('wordWrap'), mxConstants.STYLE_WHITE_SPACE,
-		null, 'wrap', 'null', null, null, true, wwCells);
-	wwOpt.style.fontWeight = 'bold';
-	
-	// Word wrap in edge labels only supported via labelWidth style
-	if (wwCells.length > 0)
-	{
-		extraPanel.appendChild(wwOpt);
-	}
-	
-	// Delegates switch of style to formattedText action as it also convertes newlines
-	var htmlOpt = this.createCellOption(mxResources.get('formattedText'), 'html', 0,
-		null, null, null, ui.actions.get('formattedText'));
-	htmlOpt.style.fontWeight = 'bold';
-	extraPanel.appendChild(htmlOpt);
 	
 	var spacingPanel = this.createPanel('TextFormatPanel-addFont-spacingPanel');
 	spacingPanel.style.paddingTop = '10px';
@@ -3567,7 +3548,6 @@ TextFormatPanel.prototype.addFont = function(container)
 	
 	if (!graph.cellEditor.isContentEditing())
 	{
-		container.appendChild(extraPanel);
 		container.appendChild(this.createRelativeOption('opacity', mxConstants.STYLE_TEXT_OPACITY));
 		container.appendChild(spacingPanel);
 	}
