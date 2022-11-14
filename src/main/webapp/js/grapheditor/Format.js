@@ -3631,13 +3631,6 @@ TextFormatPanel.prototype.addFont = function(container)
 		this.styleButtons(insertBtns);
 		this.styleButtons(btns);
 		
-		var wrapper2 = this.createPanel('TextFormatPanel-addFont-wrapper2');
-		wrapper2.style.paddingTop = '10px';
-		wrapper2.style.paddingBottom = '10px';
-		wrapper2.appendChild(this.createTitle(mxResources.get('insert')));
-		wrapper2.appendChild(insertPanel);
-		container.appendChild(wrapper2);
-		
 		var tablePanel = stylePanel.cloneNode(false);
 		tablePanel.style.paddingLeft = '0px';
 		
