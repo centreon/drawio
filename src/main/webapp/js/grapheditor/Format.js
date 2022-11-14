@@ -3139,46 +3139,10 @@ TextFormatPanel.prototype.addFont = function(container)
 	}
 
 	stylePanel4.appendChild(positionSelect);
-	
-	// Writing direction
-	var stylePanel5 = stylePanel.cloneNode(false);
-	stylePanel5.style.marginLeft = '0px';
-	stylePanel5.style.paddingTop = '4px';
-	stylePanel5.style.paddingBottom = '4px';
-	stylePanel5.style.fontWeight = 'normal';
-	stylePanel5.className = 'TextFormatPanel-writingDirection';
-
-	mxUtils.write(stylePanel5, mxResources.get('writingDirection'));
-	
-	// Adds writing direction options
-	// LATER: Handle reselect of same option in all selects (change event
-	// is not fired for same option so have opened state on click) and
-	// handle multiple different styles for current selection
-	var dirSelect = document.createElement('select');
-	dirSelect.style.position = 'absolute';
-	dirSelect.style.border = '1px solid rgb(160, 160, 160)';
-	dirSelect.style.left = '126px';
-	dirSelect.style.width = '98px';
-	dirSelect.style.borderRadius = '4px';
-	dirSelect.style.marginTop = '-2px';
 
 	// NOTE: For automatic we use the value null since automatic
 	// requires the text to be non formatted and non-wrapped
-	var dirs = ['automatic', 'leftToRight', 'rightToLeft'];
-	var dirSet = {'automatic': null,
-			'leftToRight': mxConstants.TEXT_DIRECTION_LTR,
-			'rightToLeft': mxConstants.TEXT_DIRECTION_RTL};
 
-	for (var i = 0; i < dirs.length; i++)
-	{
-		var dirOption = document.createElement('option');
-		dirOption.setAttribute('value', dirs[i]);
-		mxUtils.write(dirOption, mxResources.get(dirs[i]));
-		dirSelect.appendChild(dirOption);
-	}
-
-	stylePanel5.appendChild(dirSelect);
-	
 	if (!graph.isEditing())
 	{
 		// container.appendChild(stylePanel4);
@@ -3205,16 +3169,7 @@ TextFormatPanel.prototype.addFont = function(container)
 			
 			mxEvent.consume(evt);
 		});
-
-		// LATER: Update dir in text editor while editing and update style with label
-		// NOTE: The tricky part is handling and passing on the auto value
-		container.appendChild(stylePanel5);
 		
-		mxEvent.addListener(dirSelect, 'change', function(evt)
-		{
-			graph.setCellStyles(mxConstants.STYLE_TEXT_DIRECTION, dirSet[dirSelect.value], ss.cells);
-			mxEvent.consume(evt);
-		});
 	}
 
 	// Fontsize
@@ -3534,7 +3489,6 @@ TextFormatPanel.prototype.addFont = function(container)
 	}
 	
 	container.appendChild(colorPanel);
-
 	var extraPanel = this.createPanel('TextFormatPanel-addFont-extraPanel');
 	extraPanel.style.paddingTop = '2px';
 	extraPanel.style.paddingBottom = '4px';
@@ -4015,22 +3969,7 @@ TextFormatPanel.prototype.addFont = function(container)
 		else
 		{
 			positionSelect.value = 'center';
-		}
-		
-		var dir = mxUtils.getValue(ss.style, mxConstants.STYLE_TEXT_DIRECTION, mxConstants.DEFAULT_TEXT_DIRECTION);
-		
-		if (dir == mxConstants.TEXT_DIRECTION_RTL)
-		{
-			dirSelect.value = 'rightToLeft';
-		}
-		else if (dir == mxConstants.TEXT_DIRECTION_LTR)
-		{
-			dirSelect.value = 'leftToRight';
-		}
-		else if (dir == mxConstants.TEXT_DIRECTION_AUTO)
-		{
-			dirSelect.value = 'automatic';
-		}
+		}		
 		
 		if (force || document.activeElement != globalSpacing)
 		{
