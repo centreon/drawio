@@ -3548,7 +3548,6 @@ TextFormatPanel.prototype.addFont = function(container)
 	
 	if (!graph.cellEditor.isContentEditing())
 	{
-		container.appendChild(this.createRelativeOption('opacity', mxConstants.STYLE_TEXT_OPACITY));
 		container.appendChild(spacingPanel);
 	}
 	else
