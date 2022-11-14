@@ -2939,12 +2939,9 @@ TextFormatPanel.prototype.addFont = function(container)
 	fontStyleItems[1].setAttribute('title', mxResources.get('italic') + ' (' + this.editorUi.actions.get('italic').shortcut + ')');
 	fontStyleItems[2].setAttribute('title', mxResources.get('underline') + ' (' + this.editorUi.actions.get('underline').shortcut + ')');
 	
-	var verticalItem = this.editorUi.toolbar.addItems(['vertical'], stylePanel2, true)[0];
-	
 	container.appendChild(stylePanel2);
 
 	this.styleButtons(fontStyleItems);
-	this.styleButtons([verticalItem]);
 	
 	var stylePanel3 = stylePanel.cloneNode(false);
 	stylePanel3.style.marginLeft = '-3px';
@@ -3033,7 +3030,6 @@ TextFormatPanel.prototype.addFont = function(container)
 		top.style.display = 'none';
 		middle.style.display = 'none';
 		bottom.style.display = 'none';
-		verticalItem.style.display = 'none';
 		
 		full = this.editorUi.toolbar.addButton('geSprite-justifyfull', mxResources.get('block'),
 			function()
@@ -3185,7 +3181,7 @@ TextFormatPanel.prototype.addFont = function(container)
 	
 	if (!graph.isEditing())
 	{
-		container.appendChild(stylePanel4);
+		// container.appendChild(stylePanel4);
 		
 		mxEvent.addListener(positionSelect, 'change', function(evt)
 		{
@@ -3964,8 +3960,6 @@ TextFormatPanel.prototype.addFont = function(container)
 		setSelected(fontStyleItems[1], (fontStyle & mxConstants.FONT_ITALIC) == mxConstants.FONT_ITALIC);
 		setSelected(fontStyleItems[2], (fontStyle & mxConstants.FONT_UNDERLINE) == mxConstants.FONT_UNDERLINE);
 		fontMenu.firstChild.nodeValue = mxUtils.getValue(ss.style, mxConstants.STYLE_FONTFAMILY, Menus.prototype.defaultFont);
-
-		setSelected(verticalItem, mxUtils.getValue(ss.style, mxConstants.STYLE_HORIZONTAL, '1') == '0');
 		
 		if (force || document.activeElement != input)
 		{
