@@ -1007,32 +1007,14 @@ EditorUi.initMinimalTheme = function()
 			before = menubar.firstChild;
 			iw = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 			var small = iw < 1000;
-			var appElt = null;
-	
-			if (!small)
-			{
-				appElt = addMenu('diagram');
-			}
 
-			var temp = (small) ? addMenu('diagram', null, Editor.menuImage) : null;
-
-			if (temp != null)
-			{
-				appElt = temp;
-			}
-
-			createGroup([appElt, addMenuItem(mxResources.get('shapes'), ui.actions.get('toggleShapes').funct, null,
+			createGroup([addMenuItem(mxResources.get('shapes'), ui.actions.get('toggleShapes').funct, null,
 				mxResources.get('shapes'), ui.actions.get('image'), (small) ? Editor.shapesImage : null),
 				addMenuItem(mxResources.get('format'), ui.actions.get('format').funct, null,
 				mxResources.get('format') + ' (' + ui.actions.get('format').shortcut + ')', ui.actions.get('image'),
 				(small) ? Editor.formatImage : null)],
 				(small) ? 60 : null);
 		
-			var elt = addMenu('insert', true, (small) ? insertImage : null);
-			createGroup([elt, addMenuItem(mxResources.get('delete'), ui.actions.get('delete').funct,
-				null, mxResources.get('delete'), ui.actions.get('delete'),
-				(small) ? Editor.trashImage : null)], (small) ? 60 : null);
-
 			if (iw >= 411)
 			{
 				createGroup([undoElt, redoElt], 60);
