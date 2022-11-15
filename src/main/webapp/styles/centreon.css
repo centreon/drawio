@@ -37,9 +37,12 @@ div.TextFormatPanel-writingDirection {
   display: none;
 } */
 
+div.TextFormatPanel-addFont-stylePanel-ContentEditing {
+  display: none;
+}
+
 /*
-div.geFormatSection-BaseFormatPanel-createRelativeOption-lineheight,
-div.geFormatSection-TextFormatPanel-addFont-spacingPanel {
+div.geFormatSection-BaseFormatPanel-createRelativeOption-lineheight {
   display: none;
 } */
 
