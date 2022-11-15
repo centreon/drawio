@@ -2894,6 +2894,12 @@ TextFormatPanel.prototype.addFont = function(container)
 	stylePanel.style.borderWidth = '0px';
 	stylePanel.className = 'geToolbarContainer TextFormatPanel-addFont-stylePanel';
 	
+	
+	if (graph.cellEditor.isContentEditing())
+	{
+		stylePanel.className += '-ContentEditing';
+	}
+
 	if (graph.cellEditor.isContentEditing())
 	{
 		var cssPanel = stylePanel.cloneNode();
