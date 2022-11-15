@@ -3552,11 +3552,7 @@ TextFormatPanel.prototype.addFont = function(container)
 	this.addLabel(spacingPanel, mxResources.get('bottom'), 87);
 	this.addLabel(spacingPanel, mxResources.get('right'), 16);
 	
-	if (!graph.cellEditor.isContentEditing())
-	{
-		container.appendChild(spacingPanel);
-	}
-	else
+	if (graph.cellEditor.isContentEditing())
 	{
 		var selState = null;
 		var lineHeightInput = null;
