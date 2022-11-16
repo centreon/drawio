@@ -3150,9 +3150,7 @@ TextFormatPanel.prototype.addFont = function(container)
 	// requires the text to be non formatted and non-wrapped
 
 	if (!graph.isEditing())
-	{
-		// container.appendChild(stylePanel4);
-		
+	{		
 		mxEvent.addListener(positionSelect, 'change', function(evt)
 		{
 			graph.getModel().beginUpdate();

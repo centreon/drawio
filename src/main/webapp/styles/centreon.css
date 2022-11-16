@@ -8,6 +8,7 @@ div.geFormatSection-DiagramFormatPanel-addOptions,
 div.geFormatSection-DiagramFormatPanel-addPaperSize {
   display: none;
 }
+
 div.geFormatSection-DiagramStylePanel-addView {
   display: none;
 }
@@ -31,20 +32,9 @@ div.FormatPanel-perimeterPanel {
   display: none;
 }
 
-/* div.TextFormatPanel-addFont-stylePanel, 
-div.TextFormatPanel-LabelPosition,
-div.TextFormatPanel-writingDirection {
-  display: none;
-} */
-
 div.TextFormatPanel-addFont-stylePanel-ContentEditing {
   display: none;
 }
-
-/*
-div.geFormatSection-BaseFormatPanel-createRelativeOption-lineheight {
-  display: none;
-} */
 
 div.BaseFormatPanel-colorOption-background-color,
 div.BaseFormatPanel-colorOption-border-color {
