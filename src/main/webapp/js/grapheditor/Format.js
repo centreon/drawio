@@ -3146,9 +3146,6 @@ TextFormatPanel.prototype.addFont = function(container)
 
 	stylePanel4.appendChild(positionSelect);
 
-	// NOTE: For automatic we use the value null since automatic
-	// requires the text to be non formatted and non-wrapped
-
 	if (!graph.isEditing())
 	{		
 		mxEvent.addListener(positionSelect, 'change', function(evt)
