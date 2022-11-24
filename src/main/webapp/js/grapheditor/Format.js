@@ -1330,7 +1330,7 @@ BaseFormatPanel.prototype.addGenericInput = function(container, unit, left, widt
 /**
  * 
  */
-BaseFormatPanel.prototype.createRelativeOption = function(label, key, width, handler, init)
+BaseFormatPanel.prototype.createRelativeOption = function(label, key, width, handler, init, initValue = 100)
 {
 	width = (width != null) ? width : 52;
 	
@@ -1351,7 +1351,7 @@ BaseFormatPanel.prototype.createRelativeOption = function(label, key, width, han
 		else
 		{
 			var value = parseInt(input.value);
-			value = Math.min(100, Math.max(0, (isNaN(value)) ? 100 : value));
+			value = Math.min(100, Math.max(0, (isNaN(value)) ? initValue : value));
 			var state = graph.view.getState(ui.getSelectionState().cells[0]);
 			
 			if (state != null && value != mxUtils.getValue(state.style, key, 100))
@@ -1367,7 +1367,7 @@ BaseFormatPanel.prototype.createRelativeOption = function(label, key, width, han
 				this.editorUi.fireEvent(new mxEventObject('styleChanged', 'keys', [key],
 					'values', [value], 'cells', cells));
 			}
-	
+
 			input.value = ((value != null) ? value : '100') + ' %';
 		}
 		
@@ -1383,7 +1383,7 @@ BaseFormatPanel.prototype.createRelativeOption = function(label, key, width, han
 			if (force || input != document.activeElement)
 			{
 				var ss = ui.getSelectionState();
-				var tmp = parseInt(mxUtils.getValue(ss.style, key, 100));
+				var tmp = parseInt(mxUtils.getValue(ss.style, key, initValue));
 				input.value = (isNaN(tmp)) ? '' : tmp + ' %';
 			}
 		});
@@ -1413,6 +1413,8 @@ BaseFormatPanel.prototype.createRelativeOption = function(label, key, width, han
 	
 	if (init != null)
 	{
+		console.log('0 % -- init 9999');
+		console.log(input.value);
 		init(input);
 	}
 
@@ -4385,6 +4387,49 @@ StyleFormatPanel.prototype.init = function()
 		opacityPanel.style.paddingTop = '8px';
 		opacityPanel.style.paddingBottom = '8px';
 		this.container.appendChild(opacityPanel);
+
+		var cells = ss.cells;
+		const numberOfPieChartSelected = cells.filter((cell) => cell.getAttribute('type') === 'WIDGET' && cell.getAttribute('widgetType') === 'PIE_CHART').length;
+
+		if(numberOfPieChartSelected === cells.length)
+		{
+			
+			const viewerStyles =  this.createPanel('')
+			viewerStyles.style.paddingTop = '6px';
+			viewerStyles.style.paddingBottom = '8px';
+			// viewerStyles.appendChild(this.createTitle(mxResources.get('Viewer Styles')));
+			viewerStyles.appendChild(this.createTitle('Viewer Styles'));
+
+			const pieChartDisplayLabelPanel = this.createOption(mxResources.get('displayLabel'), function()
+			{
+				const value = parseInt(mxUtils.getValue(ss.style, 'pieChartDisplayLabel', 0));
+				return value !== 0;
+			}, function(checked)
+			{
+				const value = checked ? 1 : null;
+				graph.setCellStyles('pieChartDisplayLabel', value, ss.cells);
+				ui.fireEvent(new mxEventObject('styleChanged', 'keys', ['pieChartDisplayLabel'],
+					'values', [value], 'cells', ss.cells));
+			});
+
+			pieChartDisplayLabelPanel.style.paddingLeft = '14px';
+			pieChartDisplayLabelPanel.style.paddingTop = '8px';
+			pieChartDisplayLabelPanel.style.paddingBottom = '8px';
+			viewerStyles.appendChild(pieChartDisplayLabelPanel);
+
+			var pieChartExplosionPanel = this.createRelativeOption('explosion', 'pieChartExplosion', null, null, null, 0);
+			pieChartExplosionPanel.style.paddingTop = '8px';
+			pieChartExplosionPanel.style.paddingBottom = '8px';
+			viewerStyles.appendChild(pieChartExplosionPanel);
+
+			var pieChartExplosionPanel = this.createRelativeOption('innerRadius', 'pieChartInnerRadius', null, null, null, 80);
+			pieChartExplosionPanel.style.paddingTop = '8px';
+			pieChartExplosionPanel.style.paddingBottom = '8px';
+			viewerStyles.appendChild(pieChartExplosionPanel);
+
+			this.container.appendChild(viewerStyles);
+		}
+		
 		this.container.appendChild(this.addEffects(this.createPanel('StyleFormatPanel-addEffects')));
 	}
 	

@@ -127,7 +127,19 @@ async function main()
             proceedMessage: {
                 en: String.raw`You have unsaved changes.\nIf you proceed, all changes will be lost`,
                 fr: String.raw`Vous avez des changements non enregistrés.\nSi vous continuez, toutes les modifications seront perdues.`,
-            }
+            },
+            explosion: {
+                en: 'Explosion',
+                fr: "Explosion",
+            },
+            innerRadius: {
+                en: 'Inner Radius',
+                fr: "Rayon intérieur",
+            },
+            displayLabel: {
+                en: 'Display Label',
+                fr: "Afficher label",
+            },
           };
       
           const indexI18 = codes.indexOf('i18n');
