@@ -1239,3 +1239,6 @@ createMapFromContainer=createMapFromContainer
 editContent=editContent
 proceed=proceed
 proceedMessage=proceedMessage
+explosion=explosion
+innerRadius=innerRadius
+displayLabel=displayLabel
