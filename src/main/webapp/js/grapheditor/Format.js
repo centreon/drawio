@@ -4397,7 +4397,6 @@ StyleFormatPanel.prototype.init = function()
 			const viewerStyles =  this.createPanel('')
 			viewerStyles.style.paddingTop = '6px';
 			viewerStyles.style.paddingBottom = '8px';
-			// viewerStyles.appendChild(this.createTitle(mxResources.get('Viewer Styles')));
 			viewerStyles.appendChild(this.createTitle('Viewer Styles'));
 
 			const pieChartDisplayLabelPanel = this.createOption(mxResources.get('displayLabel'), function()
