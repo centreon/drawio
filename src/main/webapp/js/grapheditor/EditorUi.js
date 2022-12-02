@@ -5972,14 +5972,8 @@ EditorUi.prototype.createKeyHandler = function(editor)
 	// enter keystroke to stop editing. N, W, T are reserved.
 	keyHandler.enter = function() {};
 	
-	keyHandler.bindControlShiftKey(36, function() { graph.exitGroup(); }); // Ctrl+Shift+Home
-	keyHandler.bindControlShiftKey(35, function() { graph.enterGroup(); }); // Ctrl+Shift+End
-	keyHandler.bindShiftKey(36, function() { graph.home(); }); // Ctrl+Shift+Home
-	keyHandler.bindKey(35, function() { graph.refresh(); }); // End
 	keyHandler.bindAction(107, true, 'zoomIn'); // Ctrl+Plus
 	keyHandler.bindAction(109, true, 'zoomOut'); // Ctrl+Minus
-	keyHandler.bindAction(80, true, 'print'); // Ctrl+P
-	keyHandler.bindAction(79, true, 'outline', true); // Ctrl+Shift+O
 
 	if (!this.editor.chromeless || this.editor.editable)
 	{
@@ -6013,8 +6007,6 @@ EditorUi.prototype.createKeyHandler = function(editor)
 		keyHandler.bindAction(69, true, 'editData'); // Ctrl+E
 		keyHandler.bindAction(71, true, 'grid', true); // Ctrl+Shift+G
 		keyHandler.bindAction(73, true, 'italic'); // Ctrl+I
-		keyHandler.bindAction(76, true, 'lockUnlock'); // Ctrl+L
-		keyHandler.bindAction(76, true, 'layers', true); // Ctrl+Shift+L
 		keyHandler.bindAction(80, true, 'format', true); // Ctrl+Shift+P
 		keyHandler.bindAction(85, true, 'underline'); // Ctrl+U
 		keyHandler.bindAction(85, true, 'ungroup', true); // Ctrl+Shift+U
