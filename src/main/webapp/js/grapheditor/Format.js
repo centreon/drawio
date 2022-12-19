@@ -4387,7 +4387,7 @@ StyleFormatPanel.prototype.init = function()
 		this.container.appendChild(opacityPanel);
 		this.container.appendChild(this.addEffects(this.createPanel('StyleFormatPanel-addEffects')));
 	}
-	
+
 	var opsPanel = this.addEditOps(this.createPanel('StyleFormatPanel-addEditOps'));
 	
 	if (opsPanel.firstChild != null)
@@ -4396,8 +4396,83 @@ StyleFormatPanel.prototype.init = function()
 	}
 	
 	this.container.appendChild(this.addStyleOps(opsPanel));
+	const resourceCells = ss.cells.filter((cell) => cell.getAttribute('type') === 'RESOURCE');
+	console.log(resourceCells);
+	if (resourceCells.length >= 1)
+	{
+		this.addCentreonStylesSelector(this.container, resourceCells);
+	}
 };
 
+StyleFormatPanel.prototype.addCentreonStylesSelector = function(container, resourceCells)
+{
+
+	var ui = this.editorUi;
+	var editor = ui.editor;
+	var graph = editor.graph;
+	var ss = ui.getSelectionState();
+
+	var resourceStylesPanel = this.createPanel('StyleFormatPanel-LabelResourceStyles');
+	resourceStylesPanel.style.marginLeft = '0px';
+	resourceStylesPanel.style.paddingTop = '8px';
+	resourceStylesPanel.style.paddingBottom = '4px';
+	resourceStylesPanel.style.fontWeight = 'bold';
+
+	mxUtils.write(resourceStylesPanel, 'Resource Style');
+	
+	// Adds label position options
+	var resourceStyleSelect = document.createElement('select');
+	resourceStyleSelect.style.position = 'absolute';
+	resourceStyleSelect.style.left = '126px';
+	resourceStyleSelect.style.width = '98px';
+	resourceStyleSelect.style.border = '1px solid rgb(160, 160, 160)';
+	resourceStyleSelect.style.borderRadius = '4px';
+	resourceStyleSelect.style.marginTop = '-2px';
+	resourceStyleSelect.className = 'TextFormatPanel-resourceStyleSelect';
+	
+	var resourceStyles = ['ICON', 'WEATHER', 'GEOMETRIC'];
+
+	for (var i = 0; i < resourceStyles.length; i++)
+	{
+		var resourceStyleOption = document.createElement('option');
+		resourceStyleOption.setAttribute('value', resourceStyles[i]);
+		mxUtils.write(resourceStyleOption, resourceStyles[i]);
+		resourceStyleSelect.appendChild(resourceStyleOption);
+	}
+
+	resourceStylesPanel.appendChild(resourceStyleSelect);
+
+	container.appendChild(resourceStylesPanel);
+
+	if (ss.cells.length === 1)
+	{
+		const style = graph.getCellStyle(ss.cells[0]);
+		resourceStyleSelect.value = style['style'];
+	}
+	
+	mxEvent.addListener(resourceStyleSelect, 'change', function(evt)
+	{
+		console.log(resourceStyleSelect.value);
+
+		graph.getModel().beginUpdate();
+		try
+		{				
+			var val = resourceStyleSelect.value;
+			console.log(val);
+			
+			if (val != null)
+			{
+				graph.setCellStyles('style', val, resourceCells);
+			}
+		}
+		finally
+		{
+			graph.getModel().endUpdate();
+		}
+		
+		mxEvent.consume(evt);
+	});
+}
 /**
  * Use browser for parsing CSS.
  */
