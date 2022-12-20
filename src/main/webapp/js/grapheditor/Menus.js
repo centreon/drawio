@@ -1200,7 +1200,7 @@ Menus.prototype.styleChange = function(menu, label, keys, values, sprite, parent
 /**
  * 
  */
-Menus.prototype.createStyleChangeFunction = function(keys, values)
+Menus.prototype.createStyleChangeFunction = function(keys, values, filteredCells)
 {
 	return mxUtils.bind(this, function(post)
 	{
@@ -1210,7 +1210,7 @@ Menus.prototype.createStyleChangeFunction = function(keys, values)
 		graph.getModel().beginUpdate();
 		try
 		{
-			var cells = graph.getEditableCells(graph.getSelectionCells());
+			var cells = filteredCells ? filteredCells : graph.getEditableCells(graph.getSelectionCells());
 			var autoSizeCells = false;
 			
 			for (var i = 0; i < keys.length; i++)

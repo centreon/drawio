@@ -1480,7 +1480,10 @@ BaseFormatPanel.prototype.styleButtons = function(elts)
 		elts[i].style.marginRight = '2px';
 		elts[i].style.width = '24px';
 		elts[i].style.height = '20px';
-		elts[i].className += ' geColorBtn';
+		if(!elts[i].className.includes('mxDisabled'))
+		{
+			elts[i].className += ' geColorBtn';
+		}
 	}
 };
 
@@ -2961,6 +2964,10 @@ TextFormatPanel.prototype.addFont = function(container)
 			return fn();
 		};
 	};
+
+	
+	const cells = graph.getEditableCells(graph.getSelectionCells());
+	const basicShapeCells = cells.filter((cell) => cell.getAttribute('type') === 'SHAPE');
 	
 	var left = this.editorUi.toolbar.addButton('geSprite-left', mxResources.get('left'),
 		(graph.cellEditor.isContentEditing()) ?
@@ -2971,7 +2978,8 @@ TextFormatPanel.prototype.addFont = function(container)
 				'keys', [mxConstants.STYLE_ALIGN],
 				'values', [mxConstants.ALIGN_LEFT],
 				'cells', ss.cells));
-		} : callFn(this.editorUi.menus.createStyleChangeFunction([mxConstants.STYLE_ALIGN], [mxConstants.ALIGN_LEFT])), stylePanel3);
+		} : callFn(this.editorUi.menus.createStyleChangeFunction([mxConstants.STYLE_ALIGN], [mxConstants.ALIGN_LEFT], basicShapeCells)), stylePanel3, basicShapeCells.length === 0);
+	
 	var center = this.editorUi.toolbar.addButton('geSprite-center', mxResources.get('center'),
 		(graph.cellEditor.isContentEditing()) ?
 		function(evt)
@@ -2981,8 +2989,9 @@ TextFormatPanel.prototype.addFont = function(container)
 				'keys', [mxConstants.STYLE_ALIGN],
 				'values', [mxConstants.ALIGN_CENTER],
 				'cells', ss.cells));
-		} : callFn(this.editorUi.menus.createStyleChangeFunction([mxConstants.STYLE_ALIGN], [mxConstants.ALIGN_CENTER])), stylePanel3);
-	var right = this.editorUi.toolbar.addButton('geSprite-right', mxResources.get('right'),
+		} : callFn(this.editorUi.menus.createStyleChangeFunction([mxConstants.STYLE_ALIGN], [mxConstants.ALIGN_CENTER], basicShapeCells)), stylePanel3, basicShapeCells.length === 0);
+	
+		var right = this.editorUi.toolbar.addButton('geSprite-right', mxResources.get('right'),
 		(graph.cellEditor.isContentEditing()) ?
 		function(evt)
 		{
@@ -2991,7 +3000,7 @@ TextFormatPanel.prototype.addFont = function(container)
 				'keys', [mxConstants.STYLE_ALIGN],
 				'values', [mxConstants.ALIGN_RIGHT],
 				'cells', ss.cells));
-		} : callFn(this.editorUi.menus.createStyleChangeFunction([mxConstants.STYLE_ALIGN], [mxConstants.ALIGN_RIGHT])), stylePanel3);
+		} : callFn(this.editorUi.menus.createStyleChangeFunction([mxConstants.STYLE_ALIGN], [mxConstants.ALIGN_RIGHT], basicShapeCells)), stylePanel3, basicShapeCells.length === 0);
 
 	this.styleButtons([left, center, right]);
 	
@@ -3012,16 +3021,16 @@ TextFormatPanel.prototype.addFont = function(container)
 
 		this.styleButtons([strike]);
 	}
-	
+
 	var top = this.editorUi.toolbar.addButton('geSprite-top', mxResources.get('top'),
 		callFn(this.editorUi.menus.createStyleChangeFunction([mxConstants.STYLE_VERTICAL_ALIGN],
-			[mxConstants.ALIGN_TOP])), stylePanel3);
+			[mxConstants.ALIGN_TOP], basicShapeCells)), stylePanel3, basicShapeCells.length === 0);
 	var middle = this.editorUi.toolbar.addButton('geSprite-middle', mxResources.get('middle'),
 		callFn(this.editorUi.menus.createStyleChangeFunction([mxConstants.STYLE_VERTICAL_ALIGN],
-			[mxConstants.ALIGN_MIDDLE])), stylePanel3);
+			[mxConstants.ALIGN_MIDDLE], basicShapeCells)), stylePanel3, basicShapeCells.length === 0);
 	var bottom = this.editorUi.toolbar.addButton('geSprite-bottom', mxResources.get('bottom'),
 		callFn(this.editorUi.menus.createStyleChangeFunction([mxConstants.STYLE_VERTICAL_ALIGN],
-			[mxConstants.ALIGN_BOTTOM])), stylePanel3);
+			[mxConstants.ALIGN_BOTTOM], basicShapeCells)), stylePanel3, basicShapeCells.length === 0);
 	
 	this.styleButtons([top, middle, bottom]);
 	
@@ -3877,6 +3886,8 @@ TextFormatPanel.prototype.addFont = function(container)
 
 	var listener = mxUtils.bind(this, function(sender, evt, force)
 	{
+		var editor = ui.editor;
+		var graph = editor.graph;
 		ss = ui.getSelectionState();
 		var fontStyle = mxUtils.getValue(ss.style, mxConstants.STYLE_FONTSTYLE, 0);
 		setSelected(fontStyleItems[0], (fontStyle & mxConstants.FONT_BOLD) == mxConstants.FONT_BOLD);
@@ -3889,16 +3900,24 @@ TextFormatPanel.prototype.addFont = function(container)
 			var tmp = parseFloat(mxUtils.getValue(ss.style, mxConstants.STYLE_FONTSIZE, Menus.prototype.defaultFontSize));
 			input.value = (isNaN(tmp)) ? '' : tmp  + ' pt';
 		}
+
+		const basicShapeCells = ss.cells.filter((cell) => cell.getAttribute('type') === 'SHAPE');
 		
-		var align = mxUtils.getValue(ss.style, mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER);
-		setSelected(left, align == mxConstants.ALIGN_LEFT);
-		setSelected(center, align == mxConstants.ALIGN_CENTER);
-		setSelected(right, align == mxConstants.ALIGN_RIGHT);
-		
-		var valign = mxUtils.getValue(ss.style, mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE);
-		setSelected(top, valign == mxConstants.ALIGN_TOP);
-		setSelected(middle, valign == mxConstants.ALIGN_MIDDLE);
-		setSelected(bottom, valign == mxConstants.ALIGN_BOTTOM);
+		if(basicShapeCells.length !== 0)
+		{
+			const styles = basicShapeCells.map((cell) => graph.getCellStyle(cell));
+			styles.forEach(style => {
+				var align = mxUtils.getValue(style, mxConstants.STYLE_ALIGN, mxConstants.ALIGN_CENTER);
+				setSelected(left, align == mxConstants.ALIGN_LEFT);
+				setSelected(center, align == mxConstants.ALIGN_CENTER);
+				setSelected(right, align == mxConstants.ALIGN_RIGHT);
+
+				var valign = mxUtils.getValue(style, mxConstants.STYLE_VERTICAL_ALIGN, mxConstants.ALIGN_MIDDLE);
+				setSelected(top, valign == mxConstants.ALIGN_TOP);
+				setSelected(middle, valign == mxConstants.ALIGN_MIDDLE);
+				setSelected(bottom, valign == mxConstants.ALIGN_BOTTOM);
+			});
+		}
 		
 		var pos = mxUtils.getValue(ss.style, mxConstants.STYLE_LABEL_POSITION, mxConstants.ALIGN_CENTER);
 		var vpos = mxUtils.getValue(ss.style, mxConstants.STYLE_VERTICAL_LABEL_POSITION, mxConstants.ALIGN_MIDDLE);
