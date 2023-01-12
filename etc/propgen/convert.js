@@ -127,6 +127,9 @@ async function main()
             proceedMessage: {
                 en: String.raw`You have unsaved changes.\nIf you proceed, all changes will be lost`,
                 fr: String.raw`Vous avez des changements non enregistrés.\nSi vous continuez, toutes les modifications seront perdues.`,
+            editCentreonStyle: {
+              en: 'Edit Centreon Style',
+              fr: "Modifier le style Centreon",
             }
           };
       
