@@ -770,6 +770,47 @@ Actions.prototype.init = function()
 		}), '*');	
 
 	}, null, null,  Editor.ctrlKey + '+E');
+	this.addAction('editCentreonStyle', function()
+	{
+		var cells = graph.getSelectionCells() || graph.getModel().getRoot();
+
+		if(!cells) {
+			return;
+		}
+
+		const contextualMenuCellType = ['RESOURCE','CONTAINER']
+
+		const FilteredCells = cells.filter((cell) => {
+			const typeCell = cell.getAttribute('type');
+			return contextualMenuCellType.includes(typeCell)
+		})
+
+		if (FilteredCells.length < 1) {
+			return;
+		}
+
+		if(FilteredCells.length === 1)
+		{
+			const FilteredCell = FilteredCells[0];
+			const styles = graph.getCellStyle(FilteredCell);
+			const centreonStyle = styles['style'];
+
+			parent.postMessage(JSON.stringify({
+				mxObject: [{type: 'RESOURCE_AND_CONTAINER'}],
+				mxStyle: centreonStyle || 'ICON',
+				event: 'setCentreonStyle',
+			}), '*');
+
+			return;
+		}
+
+		parent.postMessage(JSON.stringify({
+			mxObject: [{type: 'RESOURCE_AND_CONTAINER'}],
+			mxStyle: 'ICON',
+			event: 'setCentreonStyle',
+		}), '*');
+
+	}, null, null,  Editor.ctrlKey + '+E');
 	this.addAction('createMapFromContainer', function()
 {
 	var cell = graph.getSelectionCell() || graph.getModel().getRoot();
