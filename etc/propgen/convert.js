@@ -119,6 +119,10 @@ async function main()
             editContent: {
               en: 'Edit content',
               fr: "Modifier le contenu",
+            },
+            editCentreonStyle: {
+              en: 'Edit Centreon Style',
+              fr: "Modifier le style Centreon",
             }
           };
       
