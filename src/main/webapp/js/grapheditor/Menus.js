@@ -562,7 +562,7 @@ Menus.prototype.init = function()
 	this.put('edit', new Menu(mxUtils.bind(this, function(menu, parent)
 	{
 		this.addMenuItems(menu, ['undo', 'redo', '-', 'cut', 'copy', 'paste', 'delete', '-', 'duplicate', '-',
-			'editData', 'editTooltip', '-', 'editStyle', '-', 'edit', '-', 'editLink', 'openLink', '-',
+			'editData', 'editCentreonStyle', 'editTooltip', '-', 'editStyle', '-', 'edit', '-', 'editLink', 'openLink', '-',
 			'selectVertices', 'selectEdges', 'selectAll', 'selectNone', '-', 'lockUnlock']);
 	})));
 	this.put('extras', new Menu(mxUtils.bind(this, function(menu, parent)
@@ -1488,7 +1488,8 @@ Menus.prototype.createPopupMenu = function(menu, cell, evt)
 	if (!this.editorUi.editor.graph.isSelectionEmpty()) {
 		let showContextualMenu = true;
 
-		const contextualMenuCellType = ['LINK','MEDIA', 'RESOURCE', 'WIDGET','CONTAINER']
+		const contextualMenuCellType = ['LINK','MEDIA', 'RESOURCE', 'WIDGET','CONTAINER'];
+		const contextualMenuResourceAndContainerType = ['RESOURCE', 'CONTAINER'];
 		const typeCell = cell.getAttribute('type');
 
 		if (typeCell === 'WIDGET' && cell.getAttribute('widgetType') === 'LINK_LEGEND') {
@@ -1501,6 +1502,10 @@ Menus.prototype.createPopupMenu = function(menu, cell, evt)
 
 		if (showContextualMenu && contextualMenuCellType.includes(typeCell)) {
 			this.addMenuItems(menu, ['editData'], null, evt);
+		}
+
+		if (showContextualMenu && contextualMenuResourceAndContainerType.includes(typeCell)) {
+			this.addMenuItems(menu, ['editCentreonStyle'], null, evt);
 		}
 
 		if (cell.getAttribute('viewId') && cell.getAttribute('label') && typeCell === 'CONTAINER') {
