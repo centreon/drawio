@@ -728,7 +728,7 @@ Actions.prototype.init = function()
 			'imageName', 'centreonImageId', 'label'];
 		const widgetProps = [
 			'type', 'widgetType', 'resourceType', 'resourceId', 'pieChartInnerRadius',
-			'pieChartDisplayLabel', 'outputWidgetFormat', 'chartDisplayThreshold',
+			'pieChartDisplayLabel', 'pieChartExplosion', 'outputWidgetFormat', 'chartDisplayThreshold',
 			'chartFillLines', 'chartNbPoints', 'chartPeriod', 'chartShowGrid',
 			'chartStack', 'displayLegend', 'hiddenLine', 'metric1Max', 'metric1Min',
 			'metricName1', 'metric2Max', 'metric2Min', 'metricName2',
