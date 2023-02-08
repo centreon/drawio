@@ -1010,8 +1010,7 @@ App.main = function(callback, createUi)
 			else
 			{
 				mxStencilRegistry.allowEval = false;
-				App.loadScripts(['js/shapes-14-6-5.min.js', 'js/stencils.min.js',
-					'js/extensions.min.js'], realMain);
+				App.loadScripts(['js/shapes-14-6-5.min.js', 'js/stencils.min.js'], realMain);
 			}
 		}, function(xhr)
 		{

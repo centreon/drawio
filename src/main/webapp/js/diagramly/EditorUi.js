@@ -7560,7 +7560,7 @@
 		if (!this.doImportVisio && !this.loadingExtensions && !this.isOffline(true))
 		{
 			this.loadingExtensions = true;
-			mxscript('js/extensions.min.js', delayed);
+			// mxscript('js/extensions.min.js', delayed);
 		}
 		else
 		{
@@ -7604,7 +7604,7 @@
 		if (!this.doImportGraphML && !this.loadingExtensions && !this.isOffline(true))
 		{
 			this.loadingExtensions = true;
-			mxscript('js/extensions.min.js', delayed);
+			// mxscript('js/extensions.min.js', delayed);
 		}
 		else
 		{
@@ -7647,7 +7647,7 @@
 		if (typeof VsdxExport === 'undefined' && !this.loadingExtensions && !this.isOffline(true))
 		{
 			this.loadingExtensions = true;
-			mxscript('js/extensions.min.js', delayed);
+			// mxscript('js/extensions.min.js', delayed);
 		}
 		else
 		{
@@ -7728,27 +7728,27 @@
 		{
 			this.loadingExtensions = true;
 			
-			if (urlParams['dev'] == '1')
-			{
-				//Lucid org chart requires orgChart layout, in production, it is part of the extemsions.min.js
-				mxscript('js/diagramly/Extensions.js', function()
-				{
-					mxscript('js/orgchart/bridge.min.js', function()
-					{
-						mxscript('js/orgchart/bridge.collections.min.js', function()
-						{
-							mxscript('js/orgchart/OrgChart.Layout.min.js', function()
-							{
-								mxscript('js/orgchart/mxOrgChartLayout.js', delayed);											
-							});		
-						});	
-					});
-				});
-			}
-			else
-			{
-				mxscript('js/extensions.min.js', delayed);
-			}
+			// if (urlParams['dev'] == '1')
+			// {
+			// 	//Lucid org chart requires orgChart layout, in production, it is part of the extemsions.min.js
+			// 	mxscript('js/diagramly/Extensions.js', function()
+			// 	{
+			// 		mxscript('js/orgchart/bridge.min.js', function()
+			// 		{
+			// 			mxscript('js/orgchart/bridge.collections.min.js', function()
+			// 			{
+			// 				mxscript('js/orgchart/OrgChart.Layout.min.js', function()
+			// 				{
+			// 					mxscript('js/orgchart/mxOrgChartLayout.js', delayed);											
+			// 				});		
+			// 			});	
+			// 		});
+			// 	});
+			// }
+			// else
+			// {
+			// 	// mxscript('js/extensions.min.js', delayed);
+			// }
 		}
 		else
 		{
@@ -7845,7 +7845,7 @@
 			}
 			else
 			{
-				mxscript('js/extensions.min.js', delayed);
+				// mxscript('js/extensions.min.js', delayed);
 			}
 		}
 		else
@@ -8538,7 +8538,7 @@
 		if (typeof JSZip === 'undefined' && !this.loadingExtensions && !this.isOffline(true))
 		{
 			this.loadingExtensions = true;
-			mxscript('js/extensions.min.js', delayed);
+			// mxscript('js/extensions.min.js', delayed);
 		}
 		else
 		{
