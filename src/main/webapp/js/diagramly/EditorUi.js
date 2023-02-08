@@ -15313,6 +15313,7 @@
 					// Attaches XML to response
 					resp.xml = data;
 					
+					var parent = window.opener || window.parent;
 					parent.postMessage(JSON.stringify(resp), '*');
 				}
 
