@@ -6430,12 +6430,17 @@ mxUtils.extend(DiagramFormatPanel, BaseFormatPanel);
 /**
  * Switch to disable page view.
  */
-DiagramFormatPanel.showPageView = true;
+DiagramFormatPanel.showPageView = false;
+
+/**
+ * Switch to disable grid option.
+ */
+DiagramFormatPanel.showGridOption = false;
 
 /**
  * Specifies if the background image option should be shown. Default is true.
  */
-DiagramFormatPanel.prototype.showBackgroundImageOption = true;
+DiagramFormatPanel.prototype.showBackgroundImageOption = false;
 
 /**
  * Adds the label menu items to the given menu and parent.
@@ -6468,7 +6473,10 @@ DiagramFormatPanel.prototype.addView = function(div)
 	div.appendChild(this.createTitle(mxResources.get('view')));
 	
 	// Grid
-	this.addGridOption(div);
+	if (DiagramFormatPanel.showGridOption)
+	{
+		this.addGridOption(div);
+	}
 	
 	// Page View
 	if (DiagramFormatPanel.showPageView)
