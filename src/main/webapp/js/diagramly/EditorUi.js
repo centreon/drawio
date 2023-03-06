@@ -15163,6 +15163,11 @@
 
 						for (const [key, value] of Object.entries(data.data)) {
 							if (cellStyle.includes(key)) {
+								if(key === 'style')
+								{
+									this.handleCentreonStyleChange(cell, cellStyle, value);
+								}
+
 								var search = new RegExp(`${key}=(.+?);`, 'g');
 								cellStyle = cellStyle.replace(search, `${key}=${value};`);
 							}
@@ -18691,3 +18696,39 @@ var ConfirmDialog = function(editorUi, message, okFn, cancelFn, okLabel, cancelL
 	
 	this.container = div;
 };
+
+EditorUi.prototype.setCellDimensions = function(cell, width, height)
+{
+	var graph = this.editor.graph;
+	var geo = graph.getCellGeometry(cell);
+						
+	if (geo != null)
+	{
+		geo = geo.clone();
+		if(width)
+		{
+			geo.width = width;
+		}
+
+		if(height)
+		{
+			geo.height = height;
+		}
+		
+		
+		graph.getModel().setGeometry(cell, geo);
+	}
+}
+
+EditorUi.prototype.handleCentreonStyleChange = function(cell, cellStyle, value)
+{
+	if(value === 'GEOMETRIC' && !cellStyle.includes('style=GEOMETRIC;'))
+	{
+		this.setCellDimensions(cell, null, 20);
+	}
+
+	if(value !== 'GEOMETRIC' && cellStyle.includes('style=GEOMETRIC;'))
+	{
+		this.setCellDimensions(cell, null, 84);
+	}
+}
