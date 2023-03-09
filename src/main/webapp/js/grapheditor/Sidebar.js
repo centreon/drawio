@@ -3007,7 +3007,7 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 			{
 				return graph.isContainer(state.cell);
 			}) : null;
-		
+
 		// Uses connectable parent vertex if one exists
 		if (cell != null && !this.graph.isCellConnectable(cell) &&
 			!this.graph.model.isEdge(cell))
@@ -3357,6 +3357,11 @@ Sidebar.prototype.createDragSource = function(elt, dropHandler, preview, cells, 
 		
 		if (target != null)
 		{
+			if (graph.model.isEdge(target))
+			{
+				return null;
+			}
+
 			if (activeArrow != null || !graph.isSplitTarget(target, cells, evt))
 			{
 				// Selects parent group as drop target
