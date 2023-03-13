@@ -7035,7 +7035,7 @@ TableLayout.prototype.execute = function(parent)
 	{
 		recurse = (recurse != null) ? recurse : true;
 		var state = this.getState(cell);
-		
+
 		// Forces repaint if jumps change on a valid edge
 		if (state != null && recurse && this.graph.model.isEdge(state.cell) &&
 			state.style != null && state.style[mxConstants.STYLE_CURVED] != 1 &&
@@ -7049,7 +7049,7 @@ TableLayout.prototype.execute = function(parent)
 		// Adds to the list of edges that may intersect with later edges
 		if (state != null && recurse && this.graph.model.isEdge(state.cell) &&
 			state.style != null && state.style[mxConstants.STYLE_CURVED] != 1)
-		{
+		{			
 			// LATER: Reuse jumps for valid edges
 			this.validEdges.push(state);
 		}
@@ -9419,7 +9419,7 @@ if (typeof mxVertexHandler !== 'undefined')
 		Graph.prototype.getDropTarget = function(cells, evt, cell, clone)
 		{
 			var model = this.getModel();
-			
+
 			// Disables drop into group if alt is pressed
 			if (mxEvent.isAltDown(evt))
 			{
@@ -9439,6 +9439,11 @@ if (typeof mxVertexHandler !== 'undefined')
 			
 			var target = graphGetDropTarget.apply(this, arguments);
 			
+			if (model.isEdge(target))
+			{
+				return null;
+			}
+
 			// Always drops rows to tables
 			var rows = true;
 			
@@ -9464,7 +9469,7 @@ if (typeof mxVertexHandler !== 'undefined')
 					target = null;
 				}
 			}
-			
+
 			return target;
 		};
 	
