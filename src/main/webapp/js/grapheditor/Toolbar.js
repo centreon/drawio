@@ -907,13 +907,16 @@ Toolbar.prototype.addItem = function(sprite, key, c, ignoreDisabled)
 /**
  * Adds a button to the toolbar.
  */
-Toolbar.prototype.addButton = function(classname, tooltip, funct, c)
+Toolbar.prototype.addButton = function(classname, tooltip, funct, c, disabled)
 {
-	var elt = this.createButton(classname);
+	var elt = this.createButton(classname, disabled);
 	c = (c != null) ? c : this.container;
 	
 	this.initElement(elt, tooltip);
-	this.addClickHandler(elt, funct);
+	if(!disabled)
+	{
+		this.addClickHandler(elt, funct);
+	}
 	c.appendChild(elt);
 	
 	return elt;
@@ -986,10 +989,16 @@ Toolbar.prototype.addClickHandler = function(elt, funct)
 /**
  * Creates and returns a new button.
  */
-Toolbar.prototype.createButton = function(classname)
+Toolbar.prototype.createButton = function(classname, disabled)
 {
 	var elt = document.createElement('a');
-	elt.className = 'geButton';
+
+	if(disabled)
+	{
+		elt.className = 'geButton mxDisabled';
+	} else {
+		elt.className = 'geButton';
+	}
 
 	var inner = document.createElement('div');
 	

@@ -366,7 +366,6 @@ div.mxWindow .geButton {
 	border:1px solid transparent;
 }
 .geToolbarContainer .mxDisabled:hover {
-	border:1px solid transparent !important;
 	opacity:0.2 !important;
 	filter:alpha(opacity=20) !important;
 }
