@@ -15195,7 +15195,6 @@
 						var cellValue = graph.getModel().getValue(cell);
 						cellValue = cellValue.cloneNode(true);
 
-						console.log(Object.entries(data.data));
 						if  (data !== undefined && data.data !== undefined) {
 							Object.entries(data.data).forEach(([attribute, value]) => {
 								cellValue.setAttribute(attribute, value);
