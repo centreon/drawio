@@ -15169,7 +15169,19 @@
 								}
 
 								var search = new RegExp(`${key}=(.+?);`, 'g');
-								cellStyle = cellStyle.replace(search, `${key}=${value};`);
+								if(key === 'style')
+								{
+									this.handleCentreonStyleChange(cell, cellStyle, value);
+								}
+
+								if(key == 'image')
+								{
+									cellStyle = cellStyle.replace(search, `${key}=${window.location.origin}${value};`);
+								}else {
+									cellStyle = cellStyle.replace(search, `${key}=${value};`);
+								}
+
+								
 							}
 						}
 						graph.getModel().setStyle(cell, cellStyle);
@@ -15183,6 +15195,7 @@
 						var cellValue = graph.getModel().getValue(cell);
 						cellValue = cellValue.cloneNode(true);
 
+						console.log(Object.entries(data.data));
 						if  (data !== undefined && data.data !== undefined) {
 							Object.entries(data.data).forEach(([attribute, value]) => {
 								cellValue.setAttribute(attribute, value);
