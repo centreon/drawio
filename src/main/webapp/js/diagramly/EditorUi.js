@@ -15145,7 +15145,12 @@
 						for (const [key, value] of Object.entries(data.data)) {
 							if (cellStyle.includes(key)) {
 								var search = new RegExp(`${key}=(.+?);`, 'g');
-								cellStyle = cellStyle.replace(search, `${key}=${value};`);
+								if (key == 'image')
+								{
+									cellStyle = cellStyle.replace(search, `${key}=${window.location.origin}${value};`);
+								} else {
+									cellStyle = cellStyle.replace(search, `${key}=${value};`);
+								}
 							}
 						}
 						graph.getModel().setStyle(cell, cellStyle);
