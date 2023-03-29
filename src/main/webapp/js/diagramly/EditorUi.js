@@ -15167,7 +15167,6 @@
 								return contextualMenuCellType.includes(typeCell)
 							})
 
-							console.log(FilteredCells);
 							for (const [key, value] of Object.entries(data.data)) {
 								graph.setCellStyles(key,value,FilteredCells);
 							}
