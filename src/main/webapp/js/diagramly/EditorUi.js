@@ -15113,6 +15113,23 @@
 						this.actions.get('save').funct();
 						return;
 					}
+					else if (data.action == 'Preview')
+					{
+						var data = mxUtils.getXml(this.editor.getGraphXml());
+												
+						if (urlParams['proto'] == 'json')
+						{
+							var msg = this.createLoadMessage('preview');
+							msg.xml = data;
+
+							data = JSON.stringify(msg);
+							console.log(data);
+						}
+						
+						parent.postMessage(data, '*');
+
+						return;
+					}
 					else if (data.action == 'Exit')
 					{
 						this.actions.get('exit').funct();
