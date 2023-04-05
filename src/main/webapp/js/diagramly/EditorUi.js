@@ -15144,6 +15144,11 @@
 
 						for (const [key, value] of Object.entries(data.data)) {
 							if (cellStyle.includes(key)) {
+								if(key === 'style')
+								{
+									this.handleCentreonStyleChange(cell, cellStyle, value);
+								}
+
 								var search = new RegExp(`${key}=(.+?);`, 'g');
 								if (key == 'image')
 								{
@@ -18670,3 +18675,65 @@ var ConfirmDialog = function(editorUi, message, okFn, cancelFn, okLabel, cancelL
 	
 	this.container = div;
 };
+
+EditorUi.prototype.getCentrenMapImagePath = function(image)
+{
+	return `${window.localStorage.getItem('centreon-url')}/modules/centreon-map4-web-client/img/${image}`
+}
+
+EditorUi.prototype.setCellDimensions = function(cell, width, height)
+{
+	var graph = this.editor.graph;
+	var geo = graph.getCellGeometry(cell);
+						
+	if (geo != null)
+	{
+		geo = geo.clone();
+		if(width)
+		{
+			geo.width = width;
+		}
+
+		if(height)
+		{
+			geo.height = height;
+		}
+		
+		
+		graph.getModel().setGeometry(cell, geo);
+	}
+}
+
+EditorUi.prototype.handleCentreonStyleChange = function(cell, cellStyle, value)
+{
+	if(value === 'GEOMETRIC' && !cellStyle.includes('style=GEOMETRIC;'))
+	{
+		this.setCellDimensions(cell, 20, 20);
+	}
+	else if(value !== 'GEOMETRIC' && cellStyle.includes('style=GEOMETRIC;'))
+	{
+		this.setCellDimensions(cell, 84, 84);
+	}
+	
+	if(value === 'WEATHER' && !cellStyle.includes('style=WEATHER;'))
+	{
+		this.addWeatherIconToResource(cell);
+	}
+	else if(value !== 'WEATHER' && cellStyle.includes('style=WEATHER;'))
+	{
+		this.removeWeatherIconToResource(cell);
+	}
+}
+
+EditorUi.prototype.addWeatherIconToResource = function(cell)
+{
+	const src = this.getCentrenMapImagePath('weather/weather.svg');
+	const img = new mxImage(src, 30, 30);
+	var overlay = new mxCellOverlay(img, 'Weather', null, mxConstants.ALIGN_TOP);
+	this.editor.graph.addCellOverlay(cell, overlay);
+}
+
+EditorUi.prototype.removeWeatherIconToResource = function(cell)
+{
+	this.editor.graph.removeCellOverlay(cell);
+}
