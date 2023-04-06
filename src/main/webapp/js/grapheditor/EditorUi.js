@@ -978,6 +978,21 @@ EditorUi = function(editor, container, lightbox)
 		{
 			this.resetScrollbars();
 		}));
+
+		this.editor.addListener('resetGraphView', mxUtils.bind(this, function()
+		{
+			const graph = this.editor.graph;
+			var parent = graph.getDefaultParent();
+			var vertices = graph.getChildVertices(parent);
+
+			vertices.forEach((cell) => {
+				const style = graph.getCellStyle(cell)['style'];
+				if(style === 'WEATHER')
+				{
+					this.addWeatherIconToResource(cell);
+				}
+			})
+		}));
 		
 		/**
 		 * Repaints the grid.

@@ -15179,11 +15179,6 @@
 
 						for (const [key, value] of Object.entries(data.data)) {
 							if (cellStyle.includes(key)) {
-								if(key === 'style')
-								{
-									this.handleCentreonStyleChange(cell, cellStyle, value);
-								}
-
 								var search = new RegExp(`${key}=(.+?);`, 'g');
 								if(key === 'style')
 								{
