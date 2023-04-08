@@ -15139,6 +15139,22 @@
 					else if (data.action === 'setStyleProperties') {
 						var graph = this.editor.graph;
 
+						if(data.shapes === 'ResourcesAndContainer')
+						{
+							const cells = graph.getSelectionCells();
+							const contextualMenuCellType = ['RESOURCE','CONTAINER']
+							const FilteredCells = cells.filter((cell) => {
+								const typeCell = cell.getAttribute('type');
+								return contextualMenuCellType.includes(typeCell)
+							})
+
+							for (const [key, value] of Object.entries(data.data)) {
+								graph.setCellStyles(key,value,FilteredCells);
+							}
+
+							return;
+						}
+
 						var cell = graph.getSelectionCell();
 						var cellStyle = graph.getModel().getStyle(cell);
 
