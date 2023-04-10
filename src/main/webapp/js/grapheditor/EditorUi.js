@@ -989,7 +989,7 @@ EditorUi = function(editor, container, lightbox)
 				const style = graph.getCellStyle(cell)['style'];
 				if(style === 'WEATHER')
 				{
-					this.addWeatherIconToResource(cell);
+					graph.addWeatherIconToResource(cell);
 				}
 			})
 		}));
