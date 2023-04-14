@@ -1241,6 +1241,29 @@ Graph = function(container, model, renderHint, stylesheet, themes, standalone)
 
 			var cells = this.getSelectionCells();
 
+			cells.forEach((cell) => {
+				const style = this.getCellStyle(cell)['style'];
+				if(style && style === 'WEATHER' && !this.getCellOverlays(cell))
+				{
+					this.addWeatherIconToResource(cell);
+				}
+				else if(style && style !== 'WEATHER' && this.getCellOverlays(cell))
+				{
+					this.removeWeatherIconToResource(cell);
+				}
+
+				var geo = this.getCellGeometry(cell);
+
+				if(style && style === 'GEOMETRIC' && geo.width !== 20)
+				{
+					this.setCellDimensions(cell, 20, 20);
+				}
+				else if(style && style !== 'GEOMETRIC' && geo.width === 20)
+				{
+					this.setCellDimensions(cell, 84, 84);
+				}
+			})
+
 			if (cells != null && cells.length > 0)
 			{
 				cells.forEach((cell) => {
@@ -11533,6 +11556,76 @@ if (typeof mxVertexHandler !== 'undefined')
 		        sel.createRange().pasteHTML(html);
 		    }
 		};
+
+		Graph.prototype.getCentrenMapImagePath = function(image)
+		{
+			return `${window.localStorage.getItem('centreon-url')}/modules/centreon-map4-web-client/img/${image}`
+		}
+
+		Graph.prototype.setCellDimensions = function(cell, width, height)
+		{
+			var geo = this.getCellGeometry(cell);
+								
+			if (geo != null)
+			{
+				geo = geo.clone();
+				if(width)
+				{
+					geo.width = width;
+				}
+
+				if(height)
+				{
+					geo.height = height;
+				}
+				
+				
+				this.getModel().setGeometry(cell, geo);
+			}
+		}
+
+		Graph.prototype.handleCentreonStyleChangeForCells = function(cells, value)
+		{
+			cells.forEach((cell) => {
+				var cellStyle = this.getModel().getStyle(cell);
+				this.handleCentreonStyleChange(cell, cellStyle, value)
+			})
+		}
+
+		Graph.prototype.handleCentreonStyleChange = function(cell, cellStyle, value)
+		{
+			if(value === 'GEOMETRIC' && !cellStyle.includes('style=GEOMETRIC;'))
+			{
+				this.setCellDimensions(cell, 20, 20);
+			}
+			else if(value !== 'GEOMETRIC' && cellStyle.includes('style=GEOMETRIC;'))
+			{
+				this.setCellDimensions(cell, 84, 84);
+			}
+			
+			if(value === 'WEATHER' && !cellStyle.includes('style=WEATHER;'))
+			{
+				this.addWeatherIconToResource(cell);
+			}
+			else if(value !== 'WEATHER' && cellStyle.includes('style=WEATHER;'))
+			{
+				this.removeWeatherIconToResource(cell);
+			}
+		}
+
+		Graph.prototype.addWeatherIconToResource = function(cell)
+		{
+			const src = this.getCentrenMapImagePath('weather/weather.svg');
+			const img = new mxImage(src, 30, 30);
+			var overlay = new mxCellOverlay(img, 'Weather', null, mxConstants.ALIGN_TOP);
+			this.addCellOverlay(cell, overlay);
+		}
+
+		Graph.prototype.removeWeatherIconToResource = function(cell)
+		{
+			this.removeCellOverlay(cell);
+		}
+
 	
 		/**
 		 * Creates an anchor elements for handling the given link in the
