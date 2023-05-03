@@ -15110,6 +15110,11 @@
 					}
 					else if (data.action == 'Save')
 					{
+						// when loading perspective using scale, translation, scrollLeft / scrollTop ( in saveScrollState )
+						// console.log(this.saveScrollState());
+						// console.log(this.editor.graph.getView().getScale());
+						// console.log(this.editor.graph.getView().getTranslate());
+						
 						this.actions.get('save').funct();
 						return;
 					}
@@ -15400,6 +15405,11 @@
 			{
 				data = extractDiagramXml(data);
 				doLoad(data, evt);
+				// when loading perspective using scale, translation, scrollLeft / scrollTop
+				// this.editor.graph.getView().setScale(4.25);
+				// this.editor.graph.getView().setTranslate(259, 156);
+				// this.diagramContainer.scrollLeft = 2980;
+				// this.diagramContainer.scrollTop = 2015; //615
 			}
 		}));
 		
