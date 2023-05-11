@@ -1208,7 +1208,13 @@
 		
 		// Generats graph model XML node for single page export
 		var node = this.editor.getGraphXml(ignoreSelection, resolveReferences);
-		
+		const scroll = this.saveScrollState();
+		node.setAttribute('scale', this.editor.graph.getView().getScale());
+		node.setAttribute('top', this.editor.graph.getView().backgroundPageShape.node.style.top);
+		node.setAttribute('left', this.editor.graph.getView().backgroundPageShape.node.style.left);
+		node.setAttribute('scrollLeft', scroll.x);
+		node.setAttribute('scrollTop', scroll.y);
+
 		if (ignoreSelection && this.fileNode != null && this.currentPage != null)
 		{
 			// Updates current page XML if selection is ignored
@@ -1316,7 +1322,7 @@
 				}
 			}
 		}
-		
+	
 		return node;
 	};
 	
@@ -1794,7 +1800,8 @@
 		this.currentPage = null;
 		this.fileNode = null;
 		this.pages = null;
-
+		var scroll = null;
+		var scale = null; 
 		var node = (data != null && data.length > 0) ? mxUtils.parseXml(data).documentElement : null;
 		
 		// Checks for parser errors
@@ -1812,7 +1819,7 @@
 			// Some nodes must be extracted here to find the mxfile node
 			// LATER: Remove duplicate call to extractGraphModel in overridden setGraphXml
 			var tmp = (node != null) ? this.editor.extractGraphModel(node, true) : null;
-			
+
 			if (tmp != null)
 			{
 				node = tmp;
@@ -1856,6 +1863,9 @@
 
 						if (currentPageName === page.getName())
 						{
+							const mxGraphNode = (nodes[i] != null && node.nodeName != 'mxlibrary') ? this.editor.extractGraphModel(nodes[i]) : null;
+							scroll = {x: parseFloat(mxGraphNode.getAttribute('scrollLeft')), y: parseFloat(mxGraphNode.getAttribute('scrollTop')), tx: parseFloat(mxGraphNode.getAttribute('dx')), ty: parseFloat(mxGraphNode.getAttribute('dy'))};
+							scale = mxGraphNode.getAttribute('scale');
 							selectedPage = page;
 						}
 					}
@@ -1881,6 +1891,9 @@
 					node.removeAttribute('viewId');
 				}
 
+				scroll = {x: parseFloat(node.getAttribute('scrollLeft')), y: parseFloat(node.getAttribute('scrollTop')), tx: parseFloat(node.getAttribute('dx')), ty: parseFloat(node.getAttribute('dy'))};
+				scale = node.getAttribute('scale');
+
 		 	 	this.pages = [this.currentPage];
 			}
 			
@@ -1892,7 +1905,13 @@
 			{
 				this.currentPage.root = this.editor.graph.model.root;
 			}
-			
+
+			if(scroll !== null && scale !== null)
+			{
+				this.editor.graph.getView().setScale(scale);
+				this.restoreScrollState(scroll);
+			}
+
 			if (urlParams['layer-ids'] != null)
 			{
 				try
@@ -15060,7 +15079,7 @@
 							this.editor.modified = false;
 							this.editor.setStatus('');
 						} 
-
+			
 						return;
 					}
 					else if (data.action == 'loadFromContainer')
@@ -15110,11 +15129,6 @@
 					}
 					else if (data.action == 'Save')
 					{
-						// when loading perspective using scale, translation, scrollLeft / scrollTop ( in saveScrollState )
-						// console.log(this.saveScrollState());
-						// console.log(this.editor.graph.getView().getScale());
-						// console.log(this.editor.graph.getView().getTranslate());
-						
 						this.actions.get('save').funct();
 						return;
 					}
@@ -15405,11 +15419,6 @@
 			{
 				data = extractDiagramXml(data);
 				doLoad(data, evt);
-				// when loading perspective using scale, translation, scrollLeft / scrollTop
-				// this.editor.graph.getView().setScale(4.25);
-				// this.editor.graph.getView().setTranslate(259, 156);
-				// this.diagramContainer.scrollLeft = 2980;
-				// this.diagramContainer.scrollTop = 2015; //615
 			}
 		}));
 		
