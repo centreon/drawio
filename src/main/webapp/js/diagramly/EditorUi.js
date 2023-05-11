@@ -1210,8 +1210,10 @@
 		var node = this.editor.getGraphXml(ignoreSelection, resolveReferences);
 		const scroll = this.saveScrollState();
 		node.setAttribute('scale', this.editor.graph.getView().getScale());
-		node.setAttribute('top', this.editor.graph.getView().backgroundPageShape.node.style.top);
-		node.setAttribute('left', this.editor.graph.getView().backgroundPageShape.node.style.left);
+		const top = this.editor.graph.getView().backgroundPageShape.node.style.top
+		const left = this.editor.graph.getView().backgroundPageShape.node.style.left
+		node.setAttribute('marginTop', top.replace('px',''));
+		node.setAttribute('marginLeft', left.replace('px',''));
 		node.setAttribute('scrollLeft', scroll.x);
 		node.setAttribute('scrollTop', scroll.y);
 
@@ -1864,8 +1866,11 @@
 						if (currentPageName === page.getName())
 						{
 							const mxGraphNode = (nodes[i] != null && node.nodeName != 'mxlibrary') ? this.editor.extractGraphModel(nodes[i]) : null;
-							scroll = {x: parseFloat(mxGraphNode.getAttribute('scrollLeft')), y: parseFloat(mxGraphNode.getAttribute('scrollTop')), tx: parseFloat(mxGraphNode.getAttribute('dx')), ty: parseFloat(mxGraphNode.getAttribute('dy'))};
-							scale = mxGraphNode.getAttribute('scale');
+							if(mxGraphNode.hasAttribute('scrollLeft') && mxGraphNode.getAttribute('scrollTop') && mxGraphNode.getAttribute('dx') && mxGraphNode.getAttribute('dy') && mxGraphNode.getAttribute('scale'))
+							{
+								scroll = {x: parseFloat(mxGraphNode.getAttribute('scrollLeft')), y: parseFloat(mxGraphNode.getAttribute('scrollTop')), tx: parseFloat(mxGraphNode.getAttribute('dx')), ty: parseFloat(mxGraphNode.getAttribute('dy'))};
+								scale = mxGraphNode.getAttribute('scale');
+							}
 							selectedPage = page;
 						}
 					}
@@ -1891,8 +1896,11 @@
 					node.removeAttribute('viewId');
 				}
 
-				scroll = {x: parseFloat(node.getAttribute('scrollLeft')), y: parseFloat(node.getAttribute('scrollTop')), tx: parseFloat(node.getAttribute('dx')), ty: parseFloat(node.getAttribute('dy'))};
-				scale = node.getAttribute('scale');
+				if(node.hasAttribute('scrollLeft') && node.getAttribute('scrollTop') && node.getAttribute('dx') && node.getAttribute('dy') && node.getAttribute('scale'))
+				{
+					scroll = {x: parseFloat(node.getAttribute('scrollLeft')), y: parseFloat(node.getAttribute('scrollTop')), tx: parseFloat(node.getAttribute('dx')), ty: parseFloat(node.getAttribute('dy'))};
+					scale = node.getAttribute('scale');
+				}
 
 		 	 	this.pages = [this.currentPage];
 			}
