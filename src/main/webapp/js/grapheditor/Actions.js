@@ -719,7 +719,7 @@ Actions.prototype.init = function()
 			return;
 		}
 
-		const resourceCentreonProps = ['type', 'resourceType', 'resourceId',
+		const resourceCentreonProps = ['type', 'resourceType', 'resourceId', 'displayLabel',
 			'resourceName', 'modelId', 'viewId', 'parentName', 'parentType', 'parentId'];
 		const linkProps = ['type', 'linkType', 'parentName', 'parentType', 'parentId',
 			'resourceType', 'resourceId', 'resourceName', 'modelId','metric1Min',
