@@ -5881,6 +5881,22 @@
 		}
 	};
 
+	var mxCellRendererRedraw = mxCellRenderer.prototype.redraw;
+	mxCellRenderer.prototype.redraw = function()
+	{
+		mxCellRendererRedraw.apply(this, arguments);
+		const state = arguments[0];
+		if(state.text && state.cell.getAttribute('displayLabel') == 'false')
+		{
+			state.text.node.style.display = 'none';
+		}
+
+		if(state.text && state.text.node.style.display == 'none' && state.cell.getAttribute('displayLabel') == 'true')
+		{
+			state.text.node.style.display = '';
+		}
+	};
+
 	/**
 	 * Creates the tags dialog.
 	 */
