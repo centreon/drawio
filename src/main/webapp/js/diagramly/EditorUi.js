@@ -13382,6 +13382,7 @@
 					if(tmp)
 					{
 						tmp = tmp.replace(/modelId="\d+"/g, 'modelId=""')
+						tmp = tmp.replace(/viewId="\d+"/g, 'viewId=""')
 					}
 					
 					if (tmp && (this.isCompatibleString(tmp) || 
