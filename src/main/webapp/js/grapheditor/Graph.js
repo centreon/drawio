@@ -12745,6 +12745,195 @@ if (typeof mxVertexHandler !== 'undefined')
 				mxEvent.isMetaDown(me.getEvent());
 		};
 
+
+		mxVertexHandler.prototype.resizeVertex = function(me)
+		{
+			var geo = this.graph.getCellGeometry(this.state.cell);
+			// [CENTREON] - added logic to disable the sizing for GEOMETRIC centreon RESOURCE
+			const typeCell = this.state.cell.getAttribute('type');
+			const style = this.graph.getCellStyle(this.state.cell)['style'];
+			if(typeCell === 'RESOURCE' && style && style === 'GEOMETRIC')
+			{
+				return;
+			}
+
+			var ct = new mxPoint(this.state.getCenterX(), this.state.getCenterY());
+			var alpha = mxUtils.toRadians(this.state.style[mxConstants.STYLE_ROTATION] || '0');
+			var point = new mxPoint(me.getGraphX(), me.getGraphY());
+			var tr = this.graph.view.translate;
+			var scale = this.graph.view.scale;
+			var cos = Math.cos(-alpha);
+			var sin = Math.sin(-alpha);
+			
+			var dx = point.x - this.startX;
+			var dy = point.y - this.startY;
+		
+			// Rotates vector for mouse gesture
+			var tx = cos * dx - sin * dy;
+			var ty = sin * dx + cos * dy;
+			
+			dx = tx;
+			dy = ty;
+		
+			this.unscaledBounds = this.union(geo, dx / scale, dy / scale, this.index,
+				this.graph.isGridEnabledEvent(me.getEvent()), 1,
+				new mxPoint(0, 0), this.isConstrainedEvent(me),
+				this.isCenteredEvent(this.state, me));
+
+			// [CENTREON] - added logic to limit the size to a minimum of 84h and 84w for all exept basic shapes
+			if(typeCell !== 'SHAPE' && this.unscaledBounds.width < 84)
+			{
+				this.unscaledBounds.width = 84;
+			}
+
+			if(typeCell !== 'SHAPE' && this.unscaledBounds.height < 84)
+			{
+				this.unscaledBounds.height = 84;
+			}
+
+			
+			// Keeps vertex within maximum graph or parent bounds
+			if (!geo.relative)
+			{
+				var max = this.graph.getMaximumGraphBounds();
+				
+				// Handles child cells
+				if (max != null && this.parentState != null)
+				{
+					max = mxRectangle.fromRectangle(max);
+					
+					max.x -= (this.parentState.x - tr.x * scale) / scale;
+					max.y -= (this.parentState.y - tr.y * scale) / scale;
+				}
+				
+				if (this.graph.isConstrainChild(this.state.cell))
+				{
+					var tmp = this.graph.getCellContainmentArea(this.state.cell);
+					
+					if (tmp != null)
+					{
+						var overlap = this.graph.getOverlap(this.state.cell);
+						
+						if (overlap > 0)
+						{
+							tmp = mxRectangle.fromRectangle(tmp);
+							
+							tmp.x -= tmp.width * overlap;
+							tmp.y -= tmp.height * overlap;
+							tmp.width += 2 * tmp.width * overlap;
+							tmp.height += 2 * tmp.height * overlap;
+						}
+						
+						if (max == null)
+						{
+							max = tmp;
+						}
+						else
+						{
+							max = mxRectangle.fromRectangle(max);
+							max.intersect(tmp);
+						}
+					}
+				}
+			
+				if (max != null)
+				{
+					if (this.unscaledBounds.x < max.x)
+					{
+						this.unscaledBounds.width -= max.x - this.unscaledBounds.x;
+						this.unscaledBounds.x = max.x;
+					}
+					
+					if (this.unscaledBounds.y < max.y)
+					{
+						this.unscaledBounds.height -= max.y - this.unscaledBounds.y;
+						this.unscaledBounds.y = max.y;
+					}
+					
+					if (this.unscaledBounds.x + this.unscaledBounds.width > max.x + max.width)
+					{
+						this.unscaledBounds.width -= this.unscaledBounds.x +
+							this.unscaledBounds.width - max.x - max.width;
+					}
+					
+					if (this.unscaledBounds.y + this.unscaledBounds.height > max.y + max.height)
+					{
+						this.unscaledBounds.height -= this.unscaledBounds.y +
+							this.unscaledBounds.height - max.y - max.height;
+					}
+				}
+			}
+			
+			var old = this.bounds;
+			this.bounds = new mxRectangle(((this.parentState != null) ? this.parentState.x : tr.x * scale) +
+				(this.unscaledBounds.x) * scale, ((this.parentState != null) ? this.parentState.y : tr.y * scale) +
+				(this.unscaledBounds.y) * scale, this.unscaledBounds.width * scale, this.unscaledBounds.height * scale);
+		
+			if (geo.relative && this.parentState != null)
+			{
+				this.bounds.x += this.state.x - this.parentState.x;
+				this.bounds.y += this.state.y - this.parentState.y;
+			}
+		
+			cos = Math.cos(alpha);
+			sin = Math.sin(alpha);
+			
+			var c2 = new mxPoint(this.bounds.getCenterX(), this.bounds.getCenterY());
+		
+			var dx = c2.x - ct.x;
+			var dy = c2.y - ct.y;
+			
+			var dx2 = cos * dx - sin * dy;
+			var dy2 = sin * dx + cos * dy;
+			
+			var dx3 = dx2 - dx;
+			var dy3 = dy2 - dy;
+			
+			var dx4 = this.bounds.x - this.state.x;
+			var dy4 = this.bounds.y - this.state.y;
+			
+			var dx5 = cos * dx4 - sin * dy4;
+			var dy5 = sin * dx4 + cos * dy4;
+			
+			this.bounds.x += dx3;
+			this.bounds.y += dy3;
+			
+			// Rounds unscaled bounds to int
+			this.unscaledBounds.x = this.roundLength(this.unscaledBounds.x + dx3 / scale);
+			this.unscaledBounds.y = this.roundLength(this.unscaledBounds.y + dy3 / scale);
+			this.unscaledBounds.width = this.roundLength(this.unscaledBounds.width);
+			this.unscaledBounds.height = this.roundLength(this.unscaledBounds.height);
+			
+			// Shifts the children according to parent offset
+			if (!this.graph.isCellCollapsed(this.state.cell) && (dx3 != 0 || dy3 != 0))
+			{
+				this.childOffsetX = this.state.x - this.bounds.x + dx5;
+				this.childOffsetY = this.state.y - this.bounds.y + dy5;
+			}
+			else
+			{
+				this.childOffsetX = 0;
+				this.childOffsetY = 0;
+			}
+					
+			if (!old.equals(this.bounds))
+			{	
+				if (this.livePreviewActive)
+				{
+					this.updateLivePreview(me);
+				}
+				
+				if (this.preview != null)
+				{
+					this.drawPreview();
+				}
+				else
+				{
+					this.updateParentHighlight();
+				}
+			}
+		}
+
 		/**
 		 * Hides rotation handle for table cells and rows.
 		 */
