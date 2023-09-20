@@ -131,6 +131,10 @@ async function main()
             editCentreonStyle: {
               en: 'Edit Centreon Style',
               fr: "Modifier le style Centreon",
+            },
+            editContainerDataToOpen: {
+              en: 'To be able to edit the container, name it and then save the view.',
+              fr: "Pour pouvoir modifier le conteneur, nommez-le et enregistrez la vue.",
             }
           };
       
