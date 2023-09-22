@@ -209,6 +209,12 @@ Actions.prototype.init = function()
 		{
 			if (cells != null)
 			{
+				
+				for (var i = 0; i < cells.length; i++)
+				{
+					cells[i].setAttribute('modelId', "");
+				}
+
 				var includeEdges = true;
 				
 				for (var i = 0; i < cells.length && includeEdges; i++)

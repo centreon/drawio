@@ -9986,7 +9986,12 @@ if (typeof mxVertexHandler !== 'undefined')
 				var cloneMap = new Object();
 				var lookup = this.createCellLookup(cells);
 				var clones = this.cloneCells(cells, false, cloneMap, true);
-				
+
+				for (var i = 0; i < clones.length; i++)
+				{
+					clones[i].setAttribute('modelId', "");
+				}
+
 				for (var i = 0; i < cells.length; i++)
 				{
 					var parent = model.getParent(cells[i]);
