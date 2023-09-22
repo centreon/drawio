@@ -15273,6 +15273,30 @@
 						graph.getModel().setStyle(cell, cellStyle);
 						return;
 					}
+					else if (data.action === 'addShape') {
+						let graph = this.editor.graph;
+
+						const cells = data.data.map(({xml}) => {
+							let cells = this.stringToCells(Graph.decompress(xml))
+							return cells[0];
+						})
+
+						const cellsMatrix = graph.getMatrixOfCellsData(cells);
+
+						for(let i = 0; i < cellsMatrix.length; i++)
+						{
+							for(let j = 0; j < cellsMatrix[i].length; j++)
+							{
+								graph.setCellStyles(mxConstants.STYLE_IMAGE_BORDER, Editor.isDarkMode() ? '#ffffff' : '#000000', [cellsMatrix[i][j]]);
+
+								let pt = graph.getHeightxWidthInsertPoint(i, j);
+								let select = graph.importCells([cellsMatrix[i][j]], pt.x, pt.y, null);
+								graph.fireEvent(new mxEventObject('cellsInserted', 'cells', select));
+							}					
+						}
+
+						return;
+					}
 					else
 					{
 						// Unknown message must stop execution
