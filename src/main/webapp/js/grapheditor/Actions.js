@@ -733,7 +733,8 @@ Actions.prototype.init = function()
 		const mediaProps = ['type', 'mediaType', 'newTab', 'elementUrl',
 			'imageName', 'centreonImageId', 'label'];
 		const widgetProps = [
-			'type', 'widgetType', 'resourceType', 'resourceId', 'pieChartInnerRadius', 'useFontStatusColor',
+			'type', 'widgetType', 'resourceType', 'resourceId', 'pieChartInnerRadius', 
+			'useFontStatusColor', 'useBackgroundStatusColor', 'applyStatusColor',
 			'pieChartDisplayLabel', 'pieChartExplosion', 'outputWidgetFormat', 'chartDisplayThreshold',
 			'chartFillLines', 'chartNbPoints', 'chartPeriod', 'chartShowGrid',
 			'chartStack', 'displayLegend', 'hiddenLine', 'metric1Max', 'metric1Min',
