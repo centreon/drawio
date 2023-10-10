@@ -9591,6 +9591,35 @@ if (typeof mxVertexHandler !== 'undefined')
 			
 			return new mxPoint(x, y);
 		};
+
+		Graph.prototype.getHeightxWidthInsertPoint = function(h, w)
+		{
+			var pt = this.getCenterInsertPoint();
+			var x = this.snap(Math.round( pt.x + 100 * w));
+			var y = this.snap(Math.round(pt.y + 100 * h));
+
+			return new mxPoint(x, y);
+			
+			// to start in the edge use
+			// var x = this.snap(Math.round(( 1310.5 + 100 * w) / view.scale - view.translate.x ));
+			// var y = this.snap(Math.round((658.5 + 100 * h) / view.scale - view.translate.y ));
+		};
+
+		Graph.prototype.getMatrixOfCellsData = function(cells)
+		{
+			let cellsMatrix = [], i, k;
+
+			for (i = 0, k = -1; i < cells.length; i++) {
+				if (i % 3 === 0) {
+					k++;
+					cellsMatrix[k] = [];
+				}
+		
+				cellsMatrix[k].push(cells[i]);
+			}
+
+			return cellsMatrix;
+		};
 				
 		/**
 		 * 
@@ -9957,7 +9986,12 @@ if (typeof mxVertexHandler !== 'undefined')
 				var cloneMap = new Object();
 				var lookup = this.createCellLookup(cells);
 				var clones = this.cloneCells(cells, false, cloneMap, true);
-				
+
+				for (var i = 0; i < clones.length; i++)
+				{
+					clones[i].setAttribute('modelId', "");
+				}
+
 				for (var i = 0; i < cells.length; i++)
 				{
 					var parent = model.getParent(cells[i]);
