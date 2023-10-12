@@ -855,12 +855,12 @@ this.addAction('editContent', function()
 					label: cell.getAttribute('label'),
 				}), '*');						
 			}else {
-				ui.showError(mxResources.get('warning'), 'the Tab for this Container is already open!', mxResources.get('ok'))
+				ui.showError(mxResources.get('warning'), mxResources.get('alreadyOpen'), mxResources.get('ok'))
 			}
 		}else if(!cell.getAttribute('viewId') && cell.getAttribute('label') && cell.getAttribute('type') === 'CONTAINER') {
-			ui.showError(mxResources.get('warning'), 'Please Save to see the contents of the container', mxResources.get('ok'))
+			ui.showError(mxResources.get('warning'), mxResources.get('saveToSeeContainer'), mxResources.get('ok'))
 		}else if(cell.getAttribute('viewId') && !cell.getAttribute('label') && cell.getAttribute('type') === 'CONTAINER') {
-			ui.showError(mxResources.get('warning'), 'Please Edit Container Data to see the contents of the container', mxResources.get('ok'))
+			ui.showError(mxResources.get('warning'), mxResources.get('editToSeeContainer'), mxResources.get('ok'))
 		}else {
 			ui.showError(mxResources.get('warning'), mxResources.get('editContainerDataToOpen'), mxResources.get('ok'))
 		}

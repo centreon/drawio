@@ -1135,7 +1135,7 @@ EditorUi.prototype.removePage = function(page)
 {
 	if (this.pages.length <= 1)
 	{
-		this.showError(mxResources.get('warning'), 'Sorry you can\'t delete The last Tab', mxResources.get('ok'))
+		this.showError(mxResources.get('warning'), mxResources.get('canNotDeleteContainer'), mxResources.get('ok'))
 		return;
 	}
 	try
@@ -1896,12 +1896,12 @@ EditorUi.prototype.createPageMenu = function(page, label)
 	// Centreon: makeSure
 	return mxUtils.bind(this, function(menu, parent)
 	{
-		menu.addItem(mxResources.get('delete'), null, mxUtils.bind(this, function()
+		menu.addItem(mxResources.get('close'), null, mxUtils.bind(this, function()
 		{
 			this.removePage(page);
 		}), parent);
 
-		menu.addItem('delete Others', null, mxUtils.bind(this, function()
+		menu.addItem(mxResources.get('closeOthers'), null, mxUtils.bind(this, function()
 		{
 			const currentPageViewId = this.currentPage.getViewId();
 			const pagesToDelete = this.pages.filter((page) => page.getViewId() !== currentPageViewId);
