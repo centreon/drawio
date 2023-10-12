@@ -1270,15 +1270,15 @@ googleFonts=Google Fonts
 diagDupl=Duplicate Diagram Detected
 diagDuplMsg=This diagram is used in multiple places, which can result in unexpected results when edited. We've created an independent copy. Please open the editor again.
 diagDuplNoEditMsg=This diagram is used in multiple places. Please edit it within its own page.
-alreadyOpen=the Tab for this Container is already open!
+alreadyOpen=The tab for this container is already open!
 closeOthers=Close others
-createMapFromContainer=Create Map From Container
-editCentreonStyle=Edit Centreon Style
+createMapFromContainer=Create map from container
+editCentreonStyle=Edit Centreon style
 editContainerDataToOpen=To be able to edit the container, name it and then save the view.
 editContent=Edit content
-editToSeeContainer=Please Edit Container Data to see the contents of the container
+editToSeeContainer=Please edit container data to see the content of the container.
 proceed=Proceed
 proceedMessage=You have unsaved changes.
-If you proceed, all changes will be lost
-saveToSeeContainer=Please Save to see the contents of the container
-canNotDeleteContainer=Sorry you can't delete The last Tab
+If you proceed, all changes will be lost.
+saveToSeeContainer=To be able to see the content of the container, save it.
+canNotDeleteContainer=You are not allowed to close the last tab.

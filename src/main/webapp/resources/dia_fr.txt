@@ -1270,7 +1270,7 @@ googleFonts=Google Fonts
 diagDupl=Duplicate Diagram Detected
 diagDuplMsg=This diagram is used in multiple places, which can result in unexpected results when edited. We've created an independent copy. Please open the editor again.
 diagDuplNoEditMsg=This diagram is used in multiple places. Please edit it within its own page.
-alreadyOpen=L'onglet pour ce conteneur est déjà ouvert!
+alreadyOpen=L'onglet pour ce conteneur est déjà ouvert !
 closeOthers=Fermer les autres onglets
 createMapFromContainer=Créer une carte à partir d'un conteneur
 editCentreonStyle=Modifier le style Centreon
@@ -1280,5 +1280,5 @@ editToSeeContainer=Veuillez modifier les données du conteneur pour voir le cont
 proceed=Continuer
 proceedMessage=Vous avez des changements non enregistrés.
 Si vous continuez, toutes les modifications seront perdues.
-saveToSeeContainer=Veuillez sauvegarder pour voir le contenu du conteneur.
-canNotDeleteContainer=Désolé, vous ne pouvez pas supprimer le dernier onglet
+saveToSeeContainer=Pour pouvoir voir le contenu du conteneur, sauvegardez-le.
+canNotDeleteContainer=Vous ne pouvez pas fermer le dernier onglet.

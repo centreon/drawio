@@ -113,19 +113,19 @@ async function main()
 
         const termsToTranslate = {
           alreadyOpen: {
-            en: 'the Tab for this Container is already open!',
-            fr: "L'onglet pour ce conteneur est déjà ouvert!",
+            en: 'The tab for this container is already open!',
+            fr: "L'onglet pour ce conteneur est déjà ouvert !",
           },
           closeOthers: {
             en: 'Close others',
             fr: 'Fermer les autres onglets',
           },
           createMapFromContainer: {
-            en: 'Create Map From Container',
+            en: 'Create map from container',
             fr: "Créer une carte à partir d'un conteneur",
           },
           editCentreonStyle: {
-            en: 'Edit Centreon Style',
+            en: 'Edit Centreon style',
             fr: 'Modifier le style Centreon',
           },
           editContainerDataToOpen: {
@@ -137,7 +137,7 @@ async function main()
             fr: 'Modifier le contenu',
           },
           editToSeeContainer: {
-            en: 'Please Edit Container Data to see the contents of the container',
+            en: 'Please edit container data to see the content of the container.',
             fr: 'Veuillez modifier les données du conteneur pour voir le contenu du conteneur.',
           },
           proceed: {
@@ -145,16 +145,16 @@ async function main()
             fr: 'Continuer',
           },
           proceedMessage: {
-            en: `You have unsaved changes.\nIf you proceed, all changes will be lost`,
+            en: `You have unsaved changes.\nIf you proceed, all changes will be lost.`,
             fr: `Vous avez des changements non enregistrés.\nSi vous continuez, toutes les modifications seront perdues.`,
           },
           saveToSeeContainer: {
-            en: 'Please Save to see the contents of the container',
-            fr: 'Veuillez sauvegarder pour voir le contenu du conteneur.',
+            en: 'To be able to see the content of the container, save it.',
+            fr: 'Pour pouvoir voir le contenu du conteneur, sauvegardez-le.',
           },
           canNotDeleteContainer: {
-            en: "Sorry you can't delete The last Tab",
-            fr: 'Désolé, vous ne pouvez pas supprimer le dernier onglet',
+            en: "You are not allowed to close the last tab.",
+            fr: 'Vous ne pouvez pas fermer le dernier onglet.',
           },
         };
       
