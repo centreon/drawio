@@ -2854,13 +2854,15 @@ ArrangePanel.prototype.addEdgeGeometry = function(container)
 };
 
 /**
- * Adds the label menu items to the given menu and parent.
+ * Adds the label menu items to the given menu and parent. ---- input
  */
 TextFormatPanel = function(format, editorUi, container)
 {
 	BaseFormatPanel.call(this, format, editorUi, container);
 	this.init();
 };
+
+
 
 mxUtils.extend(TextFormatPanel, BaseFormatPanel);
 
@@ -3181,165 +3183,6 @@ TextFormatPanel.prototype.addFont = function(container)
 		});
 		
 	}
-
-	// Fontsize
-	var input = document.createElement('input');
-	input.style.position = 'absolute';
-	input.style.border = '1px solid rgb(160, 160, 160)';
-	input.style.textAlign = 'right';
-	input.style.marginTop = '4px';
-	input.style.left = '161px';
-	input.style.width = '53px';
-	input.style.borderRadius = '4px';
-	input.style.height = '23px';
-	input.style.boxSizing = 'border-box';
-	stylePanel2.appendChild(input);
-	
-	// Workaround for font size 4 if no text is selected is update font size below
-	// after first character was entered (as the font element is lazy created)
-	var pendingFontSize = null;
-
-	var inputUpdate = this.installInputHandler(input, mxConstants.STYLE_FONTSIZE, Menus.prototype.defaultFontSize, 1, 999, ' pt',
-	function(fontSize)
-	{
-		// IE does not support containsNode
-		// KNOWN: Fixes font size issues but bypasses undo
-		if (window.getSelection && !mxClient.IS_IE && !mxClient.IS_IE11)
-		{
-			var selection = window.getSelection();
-			var container = (selection.rangeCount > 0) ? selection.getRangeAt(0).commonAncestorContainer :
-				graph.cellEditor.textarea;
-
-			function updateSize(elt, ignoreContains)
-			{
-				if (graph.cellEditor.textarea != null && elt != graph.cellEditor.textarea &&
-					graph.cellEditor.textarea.contains(elt) &&
-					(ignoreContains || selection.containsNode(elt, true)))
-				{
-					if (elt.nodeName == 'FONT')
-					{
-						elt.removeAttribute('size');
-						elt.style.fontSize = fontSize + 'px';
-					}
-					else
-					{
-						var css = mxUtils.getCurrentStyle(elt);
-						
-						if (css.fontSize != fontSize + 'px')
-						{
-							if (mxUtils.getCurrentStyle(elt.parentNode).fontSize != fontSize + 'px')
-							{
-								elt.style.fontSize = fontSize + 'px';
-							}
-							else
-							{
-								elt.style.fontSize = '';
-							}
-						}
-					}
-				}
-
-				ui.fireEvent(new mxEventObject('styleChanged',
-					'keys', [mxConstants.STYLE_FONTSIZE],
-					'values', [fontSize], 'cells', ss.cells));
-			};
-			
-			// Wraps text node or mixed selection with leading text in a font element
-			if (container == graph.cellEditor.textarea ||
-				container.nodeType != mxConstants.NODETYPE_ELEMENT)
-			{
-				document.execCommand('fontSize', false, '1');
-			}
-
-			if (container != graph.cellEditor.textarea)
-			{
-				container = container.parentNode;
-			}
-			
-			if (container != null && container.nodeType == mxConstants.NODETYPE_ELEMENT)
-			{
-				var elts = container.getElementsByTagName('*');
-				updateSize(container);
-				
-				for (var i = 0; i < elts.length; i++)
-				{
-					updateSize(elts[i]);
-				}
-			}
-
-			input.value = fontSize + ' pt';
-		}
-		else if (window.getSelection || document.selection)
-		{
-			// Checks selection
-			var par = null;
-			
-			if (document.selection)
-			{
-				par = document.selection.createRange().parentElement();
-			}
-			else
-			{
-				var selection = window.getSelection();
-				
-				if (selection.rangeCount > 0)
-				{
-					par = selection.getRangeAt(0).commonAncestorContainer;
-				}
-			}
-			
-			// Node.contains does not work for text nodes in IE11
-			function isOrContains(container, node)
-			{
-			    while (node != null)
-			    {
-			        if (node === container)
-			        {
-			            return true;
-			        }
-			        
-			        node = node.parentNode;
-			    }
-			    
-			    return false;
-			};
-			
-			if (par != null && isOrContains(graph.cellEditor.textarea, par))
-			{
-				pendingFontSize = fontSize;
-				
-				// Workaround for can't set font size in px is to change font size afterwards
-				document.execCommand('fontSize', false, '4');
-				var elts = graph.cellEditor.textarea.getElementsByTagName('font');
-				
-				for (var i = 0; i < elts.length; i++)
-				{
-					if (elts[i].getAttribute('size') == '4')
-					{
-						elts[i].removeAttribute('size');
-						elts[i].style.fontSize = pendingFontSize + 'px';
-			
-						// Overrides fontSize in input with the one just assigned as a workaround
-						// for potential fontSize values of parent elements that don't match
-						window.setTimeout(function()
-						{
-							input.value = pendingFontSize + ' pt';
-							pendingFontSize = null;
-						}, 0);
-						
-						break;
-					}
-				}
-			}
-		}
-	}, true);
-	
-	var stepper = this.createStepper(input, inputUpdate, 1, 10, true, Menus.prototype.defaultFontSize);
-	stepper.style.display = input.style.display;
-	stepper.style.marginTop = '4px';
-	stepper.style.left = '214px';
-	
-	stylePanel2.appendChild(stepper);
 	
 	var arrow = fontMenu.getElementsByTagName('div')[0];
 	arrow.style.cssFloat = 'right';
@@ -3793,12 +3636,6 @@ TextFormatPanel.prototype.addFont = function(container)
 		setSelected(fontStyleItems[2], (fontStyle & mxConstants.FONT_UNDERLINE) == mxConstants.FONT_UNDERLINE);
 		fontMenu.firstChild.nodeValue = mxUtils.getValue(ss.style, mxConstants.STYLE_FONTFAMILY, Menus.prototype.defaultFont);
 		
-		if (force || document.activeElement != input)
-		{
-			var tmp = parseFloat(mxUtils.getValue(ss.style, mxConstants.STYLE_FONTSIZE, Menus.prototype.defaultFontSize));
-			input.value = (isNaN(tmp)) ? '' : tmp  + ' pt';
-		}
-
 		const basicShapeCells = ss.cells.filter((cell) => cell.getAttribute('type') === 'SHAPE');
 		
 		if(basicShapeCells.length !== 0)
@@ -3894,7 +3731,6 @@ TextFormatPanel.prototype.addFont = function(container)
 	bottomUpdate = this.installInputHandler(bottomSpacing, mxConstants.STYLE_SPACING_BOTTOM, 0, -999, 999, ' pt');
 	leftUpdate = this.installInputHandler(leftSpacing, mxConstants.STYLE_SPACING_LEFT, 0, -999, 999, ' pt');
 
-	this.addKeyHandler(input, listener);
 	this.addKeyHandler(globalSpacing, listener);
 	this.addKeyHandler(topSpacing, listener);
 	this.addKeyHandler(rightSpacing, listener);
@@ -4069,32 +3905,6 @@ TextFormatPanel.prototype.addFont = function(container)
 							tableCell = (currentTable == null) ? null : graph.getParentByNames(node, ['TD', 'TH'], currentTable);
 							tableWrapper.style.display = (currentTable != null) ? '' : 'none';
 							
-							if (document.activeElement != input)
-							{
-								if (node.nodeName == 'FONT' && node.getAttribute('size') == '4' &&
-									pendingFontSize != null)
-								{
-									node.removeAttribute('size');
-									node.style.fontSize = pendingFontSize + ' pt';
-									pendingFontSize = null;
-								}
-								else
-								{
-									input.value = (isNaN(fontSize)) ? '' : fontSize + ' pt';
-								}
-								
-								var lh = parseFloat(lineHeight);
-								
-								if (!isNaN(lh))
-								{
-									lineHeightInput.value = Math.round(lh * 100) + ' %';
-								}
-								else
-								{
-									lineHeightInput.value = '100 %';
-								}
-							}
-							
 							// Updates the color picker for the current font
 							if (fontColorApply != null)
 							{
@@ -4158,6 +3968,10 @@ TextFormatPanel.prototype.addFont = function(container)
 
 	return container;
 };
+
+/**
+ * Adds the label menu items to the given menu and parent. ---- input
+ */
 
 /**
  * Adds the label menu items to the given menu and parent.
