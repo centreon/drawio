@@ -5863,9 +5863,179 @@
 	mxSvgCanvas2D.prototype.updateTextNodes = function(x, y, w, h, align, valign, wrap, overflow, clip, rotation, g)
 	{
 		mxSvgCanvas2DUpdateTextNodes.apply(this, arguments);
-		Graph.processFontAttributes(g);
+
+		var fo = g.firstChild;
+		var div = fo.firstChild;
+		var box = div.firstChild;
+		var text = box.firstChild;
+
+		const style = text.getAttribute('style');
+		const newStyle = style.replace('font-size: 12px;', 'font-size: 16px;')
+
+		text.setAttribute('style', newStyle); //  overflow-wrap: anywhere; 
 	};
 	
+	/**
+	 * Function: plainText
+	 * 
+	 * Paints the given text. Possible values for format are empty string for
+	 * plain text and html for HTML markup.
+	 */
+	mxSvgCanvas2D.prototype.plainText = function(x, y, w, h, str, align, valign, wrap, overflow, clip, rotation, dir)
+	{
+		rotation = (rotation != null) ? rotation : 0;
+		var s = this.state;
+		var size = 16; // s.fontSize;
+		var node = this.createElement('g');
+		var tr = s.transform || '';
+		this.updateFont(node);
+					
+		// Ignores pointer events
+		if (!this.pointerEvents && this.originalRoot == null)
+		{
+			node.setAttribute('pointer-events', 'none');
+		}
+			
+		// Non-rotated text
+		if (rotation != 0)
+		{
+			tr += 'rotate(' + rotation  + ',' + this.format(x * s.scale) + ',' + this.format(y * s.scale) + ')';
+		}
+		
+		if (dir != null)
+		{
+			node.setAttribute('direction', dir);
+		}
+
+		if (clip && w > 0 && h > 0)
+		{
+			var cx = x;
+			var cy = y;
+			
+			if (align == mxConstants.ALIGN_CENTER)
+			{
+				cx -= w / 2;
+			}
+			else if (align == mxConstants.ALIGN_RIGHT)
+			{
+				cx -= w;
+			}
+			
+			if (overflow != 'fill')
+			{
+				if (valign == mxConstants.ALIGN_MIDDLE)
+				{
+					cy -= h / 2;
+				}
+				else if (valign == mxConstants.ALIGN_BOTTOM)
+				{
+					cy -= h;
+				}
+			}
+			
+			// LATER: Remove spacing from clip rectangle
+			var c = this.createClip(cx * s.scale - 2, cy * s.scale - 2, w * s.scale + 4, h * s.scale + 4);
+			
+			if (this.defs != null)
+			{
+				this.defs.appendChild(c);
+			}
+			else
+			{
+				// Makes sure clip is removed with referencing node
+				this.root.appendChild(c);
+			}
+			
+			if (!mxClient.IS_CHROMEAPP && !mxClient.IS_IE && !mxClient.IS_IE11 &&
+				!mxClient.IS_EDGE && this.root.ownerDocument == document)
+			{
+				// Workaround for potential base tag
+				var base = this.getBaseUrl().replace(/([\(\)])/g, '\\$1');
+				node.setAttribute('clip-path', 'url(' + base + '#' + c.getAttribute('id') + ')');
+			}
+			else
+			{
+				node.setAttribute('clip-path', 'url(#' + c.getAttribute('id') + ')');
+			}
+		}
+
+		// Default is left
+		var anchor = (align == mxConstants.ALIGN_RIGHT) ? 'end' :
+						(align == mxConstants.ALIGN_CENTER) ? 'middle' :
+						'start';
+
+		// Text-anchor start is default in SVG
+		if (anchor != 'start')
+		{
+			node.setAttribute('text-anchor', anchor);
+		}
+		
+		if (!this.styleEnabled || size != mxConstants.DEFAULT_FONTSIZE)
+		{
+			node.setAttribute('font-size', (size * s.scale) + 'px');
+		}
+		
+		if (tr.length > 0)
+		{
+			node.setAttribute('transform', tr);
+		}
+		
+		if (s.alpha < 1)
+		{
+			node.setAttribute('opacity', s.alpha);
+		}
+		
+		var lines = str.split('\n');
+		var lh = Math.round(size * mxConstants.LINE_HEIGHT);
+		var textHeight = size + (lines.length - 1) * lh;
+
+		var cy = y + size - 1;
+
+		if (valign == mxConstants.ALIGN_MIDDLE)
+		{
+			if (overflow == 'fill')
+			{
+				cy -= h / 2;
+			}
+			else
+			{
+				var dy = ((this.matchHtmlAlignment && clip && h > 0) ? Math.min(textHeight, h) : textHeight) / 2;
+				cy -= dy;
+			}
+		}
+		else if (valign == mxConstants.ALIGN_BOTTOM)
+		{
+			if (overflow == 'fill')
+			{
+				cy -= h;
+			}
+			else
+			{
+				var dy = (this.matchHtmlAlignment && clip && h > 0) ? Math.min(textHeight, h) : textHeight;
+				cy -= dy + 1;
+			}
+		}
+
+		for (var i = 0; i < lines.length; i++)
+		{
+			// Workaround for bounding box of empty lines and spaces
+			if (lines[i].length > 0 && mxUtils.trim(lines[i]).length > 0)
+			{
+				var text = this.createElement('text');
+				// LATER: Match horizontal HTML alignment
+				text.setAttribute('x', this.format(x * s.scale) + this.textOffset);
+				text.setAttribute('y', this.format(cy * s.scale) + this.textOffset);
+		
+				mxUtils.write(text, lines[i]);
+				node.appendChild(text);
+			}
+
+			cy += lh;
+		}
+
+		this.root.appendChild(node);
+		this.addTextBackground(node, str, x, y, w, (overflow == 'fill') ? h : textHeight, align, valign, overflow);
+	};
 	/**
 	 * Handles custom fonts in labels.
 	 */
