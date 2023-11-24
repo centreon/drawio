@@ -4187,18 +4187,28 @@ StyleFormatPanel.prototype.init = function()
 	
 	if (!ss.containsLabel && ss.cells.length > 0)
 	{
+		const CellType = ['RESOURCE', 'CONTAINER'];
+		const centreonResourceCells = ss.cells.filter(cell => {
+			const typeCell = cell.getAttribute('type');
+			return CellType.includes(typeCell);
+		})
+
 		if (ss.containsImage && ss.vertices.length == 1 && ss.style.shape == 'image' &&
 			ss.style.image != null && ss.style.image.substring(0, 19) == 'data:image/svg+xml;')
 		{
 			this.container.appendChild(this.addSvgStyles(this.createPanel('StyleFormatPanel-addSvgStyles')));
 		}
 
-		if (ss.fill)
+		if (ss.fill && centreonResourceCells.length === 0 )
 		{
 			this.container.appendChild(this.addFill(this.createPanel('StyleFormatPanel-addFill')));
 		}
+
+		if ( centreonResourceCells.length === 0 )
+		{
+			this.container.appendChild(this.addStroke(this.createPanel('StyleFormatPanel-addStroke')));
+		}
 	
-		this.container.appendChild(this.addStroke(this.createPanel('StyleFormatPanel-addStroke')));
 		// this.container.appendChild(this.addLineJumps(this.createPanel('StyleFormatPanel-addLineJumps')));
 		var opacityPanel = this.createRelativeOption('opacity', mxConstants.STYLE_OPACITY);
 		opacityPanel.style.paddingTop = '8px';
