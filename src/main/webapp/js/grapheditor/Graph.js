@@ -12062,8 +12062,9 @@ if (typeof mxVertexHandler !== 'undefined')
 			else
 			{
 				this.textarea.className = 'mxCellEditor mxPlainTextEditor';
-				this.textarea.style.fontSize = '16px';
 			}
+
+			this.textarea.style.fontSize = '16px';
 			
 			// Toggles markup vs wysiwyg mode
 			this.codeViewMode = false;
