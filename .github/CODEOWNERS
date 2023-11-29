@@ -1,2 +1,9 @@
-/src/main/java          @centreon/centreon-java
-/src/main/webapp        @centreon/centreon-frontend
+.github/**          @centreon/owners-pipelines
+
+*.js                @centreon/owners-react
+packag*.json        @centreon/owners-react
+
+*.xml               @centreon/owners-java
+
+src/main/java       @centreon/owners-java
+src/main/webapp     @centreon/owners-react
