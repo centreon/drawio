@@ -3998,14 +3998,34 @@ StyleFormatPanel.prototype.init = function()
 	var editor = ui.editor;
 	var graph = editor.graph;
 	var ss = ui.getSelectionState();
+	const cells = ss.cells;
 	
-	if (!ss.containsLabel && ss.cells.length > 0)
+	if (!ss.containsLabel && cells.length > 0)
 	{
 		const CellType = ['RESOURCE', 'CONTAINER'];
-		const centreonResourceCells = ss.cells.filter(cell => {
-			const typeCell = cell.getAttribute('type');
-			return CellType.includes(typeCell);
-		})
+		let hasCentreonResource = false;
+		let hasCentreonWidget = false;
+
+		for (var i = 0; i < cells.length; i++)
+		{
+			const typeCell = cells[i].getAttribute('type');
+			if(!hasCentreonResource && CellType.includes(typeCell))
+			{
+				hasCentreonResource = true;
+			}
+
+			if(!hasCentreonWidget && typeCell === 'WIDGET' && cells[i].getAttribute('widgetType') === 'OUTPUT')
+			{
+				const useBackgroundStatusColor = cells[i].getAttribute('useBackgroundStatusColor') === 'true';
+				const useFontStatusColor = cells[i].getAttribute('useFontStatusColor') === 'true';
+				hasCentreonWidget = useBackgroundStatusColor || useFontStatusColor
+			}
+
+			if(hasCentreonWidget && hasCentreonResource)
+			{
+				break;
+			}
+		}
 
 		if (ss.containsImage && ss.vertices.length == 1 && ss.style.shape == 'image' &&
 			ss.style.image != null && ss.style.image.substring(0, 19) == 'data:image/svg+xml;')
@@ -4013,12 +4033,12 @@ StyleFormatPanel.prototype.init = function()
 			this.container.appendChild(this.addSvgStyles(this.createPanel('StyleFormatPanel-addSvgStyles')));
 		}
 
-		if (ss.fill && centreonResourceCells.length === 0 )
+		if (ss.fill && !hasCentreonResource && !hasCentreonWidget )
 		{
 			this.container.appendChild(this.addFill(this.createPanel('StyleFormatPanel-addFill')));
 		}
 
-		if ( centreonResourceCells.length === 0 )
+		if (!hasCentreonResource)
 		{
 			this.container.appendChild(this.addStroke(this.createPanel('StyleFormatPanel-addStroke')));
 		}
