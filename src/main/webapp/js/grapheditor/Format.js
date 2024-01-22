@@ -4279,14 +4279,9 @@ StyleFormatPanel.prototype.addFill = function(container)
 	gradientSelect.style.border = '1px solid rgb(160, 160, 160)';
 	gradientSelect.style.boxSizing = 'border-box';
 	
-	var fillStyleSelect = gradientSelect.cloneNode(false);
 	
 	// Stops events from bubbling to color option event handler
 	mxEvent.addListener(gradientSelect, 'click', function(evt)
-	{
-		mxEvent.consume(evt);
-	});
-	mxEvent.addListener(fillStyleSelect, 'click', function(evt)
 	{
 		mxEvent.consume(evt);
 	});
@@ -4337,41 +4332,6 @@ StyleFormatPanel.prototype.addFill = function(container)
 	}
 	
 	gradientPanel.appendChild(gradientSelect);
-	
-	var curFillStyle;
-
-	function populateFillStyle()
-	{
-		fillStyleSelect.innerHTML = '';
-		curFillStyle = 1;
-		
-		for (var i = 0; i < Editor.fillStyles.length; i++)
-		{
-			var fillStyleOption = document.createElement('option');
-			fillStyleOption.setAttribute('value', Editor.fillStyles[i].val);
-			mxUtils.write(fillStyleOption, Editor.fillStyles[i].dispName);
-			fillStyleSelect.appendChild(fillStyleOption);
-		}
-	};
-
-	function populateRoughFillStyle()
-	{
-		fillStyleSelect.innerHTML = '';
-		curFillStyle = 2;
-
-		for (var i = 0; i < Editor.roughFillStyles.length; i++)
-		{
-			var fillStyleOption = document.createElement('option');
-			fillStyleOption.setAttribute('value', Editor.roughFillStyles[i].val);
-			mxUtils.write(fillStyleOption, Editor.roughFillStyles[i].dispName);
-			fillStyleSelect.appendChild(fillStyleOption);
-		}
-
-		fillStyleSelect.value = 'auto';
-	};
-
-	populateFillStyle();
-	fillPanel.appendChild(fillStyleSelect);
 
 	var listener = mxUtils.bind(this, function()
 	{
@@ -4394,34 +4354,10 @@ StyleFormatPanel.prototype.addFill = function(container)
 		if (!ss.fill || fillColor == null || fillColor == mxConstants.NONE ||
 			ss.style.shape == 'filledEdge')
 		{
-			fillStyleSelect.style.display = 'none';
 			gradientPanel.style.display = 'none';
 		}
 		else
 		{
-			if (ss.style.sketch == '1')
-			{
-				if (curFillStyle != 2)
-				{
-					populateRoughFillStyle()
-				}
-			}
-			else if (curFillStyle != 1)
-			{
-				populateFillStyle();
-			}
-			
-			fillStyleSelect.value = fillStyle;
-
-			//In case of switching from sketch to regular and fill type is not there
-			if (!fillStyleSelect.value)
-			{
-				fillStyle = 'auto';
-				fillStyleSelect.value = fillStyle;
-			}
-
-			fillStyleSelect.style.display = ss.style.sketch == '1' ||
-				gradientSelect.style.display == 'none'? '' : 'none';
 			gradientPanel.style.display = (!ss.containsImage && (ss.style.sketch != '1' ||
 				fillStyle == 'solid' || fillStyle == 'auto')) ? '' : 'none';
 		}
@@ -4436,14 +4372,6 @@ StyleFormatPanel.prototype.addFill = function(container)
 		graph.setCellStyles(mxConstants.STYLE_GRADIENT_DIRECTION, gradientSelect.value, ss.cells);
 		ui.fireEvent(new mxEventObject('styleChanged', 'keys', [mxConstants.STYLE_GRADIENT_DIRECTION],
 			'values', [gradientSelect.value], 'cells', ss.cells));
-		mxEvent.consume(evt);
-	});
-	
-	mxEvent.addListener(fillStyleSelect, 'change', function(evt)
-	{
-		graph.setCellStyles('fillStyle', fillStyleSelect.value, ss.cells);
-		ui.fireEvent(new mxEventObject('styleChanged', 'keys', ['fillStyle'],
-			'values', [fillStyleSelect.value], 'cells', ss.cells));
 		mxEvent.consume(evt);
 	});
 
