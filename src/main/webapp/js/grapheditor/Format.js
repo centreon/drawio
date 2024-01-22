@@ -4017,8 +4017,7 @@ StyleFormatPanel.prototype.init = function()
 			if(!hasCentreonWidget && typeCell === 'WIDGET' && cells[i].getAttribute('widgetType') === 'OUTPUT')
 			{
 				const useBackgroundStatusColor = cells[i].getAttribute('useBackgroundStatusColor') === 'true';
-				const useFontStatusColor = cells[i].getAttribute('useFontStatusColor') === 'true';
-				hasCentreonWidget = useBackgroundStatusColor || useFontStatusColor
+				hasCentreonWidget = useBackgroundStatusColor;
 			}
 
 			if(hasCentreonWidget && hasCentreonResource)
