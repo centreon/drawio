@@ -5863,30 +5863,9 @@
 	mxSvgCanvas2D.prototype.updateTextNodes = function(x, y, w, h, align, valign, wrap, overflow, clip, rotation, g)
 	{
 		mxSvgCanvas2DUpdateTextNodes.apply(this, arguments);
-
-		var fo = g.firstChild;
-		var div = fo.firstChild;
-		var box = div.firstChild;
-		var text = box.firstChild;
-
-		const style = text.getAttribute('style');
-		const newStyle = style.replace('font-size: 12px;', 'font-size: 16px;')
-
-		text.setAttribute('style', newStyle); //  overflow-wrap: anywhere; 
+		Graph.processFontAttributes(g);
 	};
 	
-	/**
-	 * Function: plainText
-	 * 
-	 * Paints the given text. Possible values for format are empty string for
-	 * plain text and html for HTML markup.
-	 */
-	var mxSvgCanvas2DPlainText = mxSvgCanvas2D.prototype.plainText;
-	mxSvgCanvas2D.prototype.plainText = function(x, y, w, h, str, align, valign, wrap, overflow, clip, rotation, dir)
-	{
-		this.state.fontSize = 16;
-		mxSvgCanvas2DPlainText.apply(this, arguments);
-	};
 	/**
 	 * Handles custom fonts in labels.
 	 */

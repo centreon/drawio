@@ -12063,8 +12063,6 @@ if (typeof mxVertexHandler !== 'undefined')
 			{
 				this.textarea.className = 'mxCellEditor mxPlainTextEditor';
 			}
-
-			this.textarea.style.fontSize = '16px';
 			
 			// Toggles markup vs wysiwyg mode
 			this.codeViewMode = false;
@@ -12284,7 +12282,7 @@ if (typeof mxVertexHandler !== 'undefined')
 				    
 					content = Graph.sanitizeHtml((nl2Br) ? content.replace(/\n/g, '<br/>') : content, true)
 					this.textarea.className = 'mxCellEditor geContentEditable';
-
+					
 					var size = mxUtils.getValue(state.style, mxConstants.STYLE_FONTSIZE, mxConstants.DEFAULT_FONTSIZE);
 					var family = mxUtils.getValue(state.style, mxConstants.STYLE_FONTFAMILY, mxConstants.DEFAULT_FONTFAMILY);
 					var align = mxUtils.getValue(state.style, mxConstants.STYLE_ALIGN, mxConstants.ALIGN_LEFT);
