@@ -1,0 +1,30 @@
+name: drawio
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 1 2 * *'
+  pull_request:
+    paths:
+      - "**"
+  push:
+    branches:
+      - dev
+    paths:
+      - "**"
+
+jobs:
+  veracode-analysis:
+    uses: ./.github/workflows/veracode-analysis.yml
+    with:
+      module_name: drawio
+    secrets:
+      veracode_api_id: ${{ secrets.VERACODE_API_ID_BUILD }}
+      veracode_api_key: ${{ secrets.VERACODE_API_KEY_BUILD }}
+      veracode_srcclr_token: ${{ secrets.VERACODE_SRCCLR_TOKEN }}
+      jira_base_url: ${{ secrets.JIRA_BASE_URL }}
+      jira_user_email: ${{ secrets.XRAY_JIRA_USER_EMAIL }}
+      jira_api_token: ${{ secrets.XRAY_JIRA_TOKEN }}
