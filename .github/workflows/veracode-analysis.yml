@@ -42,11 +42,11 @@ jobs:
         id: routing-mode
         run: |
           CHECK_BRANCH=`echo "${{ github.ref_name }}" | cut -d'/' -f2`
-          if [[ $CHECK_BRANCH != "merge" && '${{ github.event_name }}' != 'pull_request' && '${{ github.ref_name }}' == 'master' ]]; then
+          if [[ $CHECK_BRANCH != "merge" && '${{ github.event_name }}' != 'pull_request' && '${{ github.ref_name }}' == 'dev' ]]; then
             FAIL_BUILD="false"
             DEVELOPMENT_STAGE="Release"
             DISPLAY_SUMMARY="false"
-          elif [[ $CHECK_BRANCH != "merge" && '${{ github.event_name }}' != 'pull_request' && '${{ github.ref_name }}' == 'develop' ]]; then
+          elif [[ $CHECK_BRANCH != "merge" && '${{ github.event_name }}' != 'pull_request' && '${{ github.ref_name }}' == 'dev' ]]; then
             FAIL_BUILD="${{ vars.VERACODE_QUALITY_GATE }}"
             DEVELOPMENT_STAGE="Testing"
             DISPLAY_SUMMARY="false"
@@ -103,7 +103,7 @@ jobs:
           if [[ "${{ needs.build.outputs.development_stage }}" == "Release" ]]; then
             TARGETS=( "${{ github.base_ref || github.ref_name }}" master )
           else
-            TARGETS=( "${{ github.base_ref || github.ref_name }}" develop )
+            TARGETS=( "${{ github.base_ref || github.ref_name }}" dev )
           fi
 
           for TARGET in ${TARGETS[@]}; do
@@ -216,7 +216,7 @@ jobs:
         # only baseline files not generated from a development branch are saved
         if: success() && needs.build.outputs.development_stage != 'Development'
         run: |
-          BRANCHES=(develop master)
+          BRANCHES=(dev master)
           for BRANCH in "${BRANCHES[@]}"; do
             if [[ "${{ github.ref_name }}" == "$BRANCH" ]]; then
               mv *results.json /tmp
