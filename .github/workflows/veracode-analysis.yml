@@ -61,18 +61,6 @@ jobs:
           echo "display_summary=$DISPLAY_SUMMARY" >> $GITHUB_OUTPUT
           cat $GITHUB_OUTPUT
 
-      - name: Get PHP version
-        id: dep_manager
-        run: |
-          # from a '~5.4.*' or a '>=7.2.3' get a version like '5.4' or '7.2'
-          PHP_VERSION=`jq '.config.platform.php' "./analytics/configOnPremise/composer.json" | cut -d"." -f 1,2 |  tr -d '">=~'`
-          if [[ "$PHP_VERSION" == "null" ]]; then
-            PHP_VERSION="8.1"
-            echo "::error::PHP version required by SCA was not found. Using $PHP_VERSION as default"
-          fi
-          echo "php_version=$PHP_VERSION" >> $GITHUB_OUTPUT
-          cat $GITHUB_OUTPUT
-
   pipeline-scan:
     needs: [build]
     name: Run a pipeline scan
