@@ -136,7 +136,7 @@ jobs:
 
       - name: Backup analysis reports
         # debug step used to investigate support case
-        if: vars.VERACODE_BACKUP_DEBUG == 'true' || failure()
+        if: vars.VERACODE_BACKUP_DEBUG == 'true' || (failure() && github.event.pull_request.draft == false)
         run: |
           echo "[DEBUG] downloaded baseline details in /tmp"
           ls -la /tmp
@@ -202,7 +202,7 @@ jobs:
 
       - name: Save baseline files
         # only baseline files not generated from a development branch are saved
-        if: vars.VERACODE_BACKUP_DEBUG == 'true' || failure()
+        if: vars.VERACODE_BACKUP_DEBUG == 'true' || (failure() && github.event.pull_request.draft == false)
         run: |
           BRANCHES=(dev master)
           for BRANCH in "${BRANCHES[@]}"; do
