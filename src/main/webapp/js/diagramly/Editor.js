@@ -4545,7 +4545,7 @@
 		{
 			var sstate = this.editorUi.getSelectionState();
 
-			if (this.defaultColorSchemes != null && sstate.style.shape != 'image' &&
+			if (this.defaultColorSchemes != null && sstate.style.shape != 'image' && sstate.style.shape != 'connector' &&
 				!sstate.containsLabel && sstate.cells.length > 0)
 			{
 				this.container.appendChild(this.addStyles(this.createPanel('StyleFormatPanel-addStyles')));
