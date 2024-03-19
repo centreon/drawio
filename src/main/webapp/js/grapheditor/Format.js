@@ -5065,7 +5065,6 @@ StyleFormatPanel.prototype.addStroke = function(container)
 		container.appendChild(colorPanel);
 	}
 
-	// container.appendChild(altStylePanel);
 	container.appendChild(stylePanel);
 
 	var arrowPanel = stylePanel.cloneNode(false);
@@ -5143,13 +5142,6 @@ StyleFormatPanel.prototype.addStroke = function(container)
 	{
 		perimeterUpdate.apply(this, arguments);
 	});
-
-	// if (ss.edges.length == ss.cells.length)
-	// {
-	// 	container.appendChild(stylePanel2);
-	// 	container.appendChild(arrowPanel);
-	// }
-	// else 
 	
 	if (ss.vertices.length == ss.cells.length)
 	{
@@ -5266,16 +5258,8 @@ StyleFormatPanel.prototype.addStroke = function(container)
 			}
 		}
 		
-		// if (ss.edges.length == ss.cells.length)
-		// {
-		// 	altStylePanel.style.display = '';
-		// 	stylePanel.style.display = 'none';
-		// }
-		// else
-		// {
-			altStylePanel.style.display = 'none';
-			stylePanel.style.display = '';
-		// }
+		altStylePanel.style.display = 'none';
+		stylePanel.style.display = '';
 
 		if (Graph.lineJumpsEnabled && ss.edges.length > 0 &&
 			ss.vertices.length == 0 && ss.lineJumps)
