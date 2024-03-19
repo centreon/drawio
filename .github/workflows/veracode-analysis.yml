@@ -28,6 +28,7 @@ jobs:
       fail_build: ${{ steps.routing-mode.outputs.fail_build }}
       development_stage: ${{ steps.routing-mode.outputs.development_stage }}
       display_summary: ${{ steps.routing-mode.outputs.display_summary }}
+      enable_qg: ${{ steps.routing-mode.outputs.enable_qg }}
       php_version: ${{ steps.dep_manager.outputs.php_version }}
 
     steps:
@@ -41,24 +42,26 @@ jobs:
       - name: Set routing mode
         id: routing-mode
         run: |
-          CHECK_BRANCH=`echo "${{ github.ref_name }}" | cut -d'/' -f2`
-          if [[ $CHECK_BRANCH != "merge" && '${{ github.event_name }}' != 'pull_request' && '${{ github.ref_name }}' == 'dev' ]]; then
-            FAIL_BUILD="false"
-            DEVELOPMENT_STAGE="Release"
-            DISPLAY_SUMMARY="false"
-          elif [[ $CHECK_BRANCH != "merge" && '${{ github.event_name }}' != 'pull_request' && '${{ github.ref_name }}' == 'dev' ]]; then
-            FAIL_BUILD="${{ vars.VERACODE_QUALITY_GATE }}"
-            DEVELOPMENT_STAGE="Testing"
-            DISPLAY_SUMMARY="false"
-          else
-            FAIL_BUILD="${{ vars.VERACODE_QUALITY_GATE }}"
-            DEVELOPMENT_STAGE="Development"
-            DISPLAY_SUMMARY="true"
+          ENABLE_QG="true"
+          if [[ "${{ vars.VERACODE_QUALITY_GATE }}" == "false" ]] || [[ -n "${{ vars.VERACODE_EXCEPTION_ON_PR }}" && "${{ vars.VERACODE_EXCEPTION_ON_PR }}" == "${{ github.event.pull_request.number }}" ]]; then
+            ENABLE_QG="false"
           fi
 
-          echo "fail_build=$FAIL_BUILD" >> $GITHUB_OUTPUT
-          echo "development_stage=$DEVELOPMENT_STAGE" >> $GITHUB_OUTPUT
-          echo "display_summary=$DISPLAY_SUMMARY" >> $GITHUB_OUTPUT
+          CHECK_BRANCH=`echo "${{ github.ref_name }}" | cut -d'/' -f2`
+          if [[ $CHECK_BRANCH != "merge" && '${{ github.event_name }}' != 'pull_request' && '${{ github.ref_name }}' == 'dev' ]]; then
+            echo "fail_build=false" >> $GITHUB_OUTPUT
+            echo "development_stage=Release" >> $GITHUB_OUTPUT
+            echo "display_summary=false" >> $GITHUB_OUTPUT
+          elif [[ $CHECK_BRANCH != "merge" && '${{ github.event_name }}' != 'pull_request' && '${{ github.ref_name }}' == 'dev' ]]; then
+            echo "fail_build=$ENABLE_QG" >> $GITHUB_OUTPUT
+            echo "development_stage=Testing" >> $GITHUB_OUTPUT
+            echo "display_summary=false" >> $GITHUB_OUTPUT
+          else
+            echo "fail_build=$ENABLE_QG" >> $GITHUB_OUTPUT
+            echo "development_stage=Development" >> $GITHUB_OUTPUT
+            echo "display_summary=true" >> $GITHUB_OUTPUT
+          fi
+          echo "enable_qg=$ENABLE_QG" >> $GITHUB_OUTPUT
           cat $GITHUB_OUTPUT
 
   pipeline-scan:
@@ -136,7 +139,7 @@ jobs:
 
       - name: Backup analysis reports
         # debug step used to investigate support case
-        if: vars.VERACODE_BACKUP_DEBUG == 'true' || (failure() && github.event.pull_request.draft == false)
+        if: needs.build.outputs.enable_qg == 'false' || (failure() && github.event.pull_request.draft == false)
         run: |
           echo "[DEBUG] downloaded baseline details in /tmp"
           ls -la /tmp
@@ -192,7 +195,7 @@ jobs:
 
       - name: Create jira ticket
         # In case of QG failure, a ticket must be created
-        if: ( success() && vars.VERACODE_BACKUP_DEBUG == 'true' ) || failure()
+        if: needs.build.outputs.enable_qg == 'false' || (failure() && github.event.pull_request.draft == false)
         uses: ./.github/actions/veracode-create-jira-ticket
         with:
           jira_base_url: ${{ secrets.jira_base_url }}
@@ -202,7 +205,7 @@ jobs:
 
       - name: Save baseline files
         # only baseline files not generated from a development branch are saved
-        if: vars.VERACODE_BACKUP_DEBUG == 'true' || (failure() && github.event.pull_request.draft == false)
+        if: success() && needs.build.outputs.development_stage != 'Development'
         run: |
           BRANCHES=(dev master)
           for BRANCH in "${BRANCHES[@]}"; do
