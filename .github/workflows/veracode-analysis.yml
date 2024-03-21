@@ -263,7 +263,7 @@ jobs:
 
       - name: Promote Scan
         # only "master" branch will be promoted to policy scan
-        if: success() && github.ref_name == 'master'
+        if: success() && github.ref_name == 'dev'
         env:
           VERACODE_API_ID: "${{ secrets.veracode_api_id }}"
           VERACODE_API_SECRET: "${{ secrets.veracode_api_key }}"
