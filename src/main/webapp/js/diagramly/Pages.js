@@ -80,7 +80,7 @@ DiagramPage.prototype.setName = function(value)
 	}
 	else
 	{
-		this.node.setAttribute('name', value);
+		this.node.setAttribute('name', value.replace(/<br>/g, ' ').replace(/&nbsp;/g, ' '));
 	}
 };
 

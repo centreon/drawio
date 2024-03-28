@@ -745,10 +745,15 @@ Actions.prototype.init = function()
 		
 		let cellAttributes = [];
 
+		function deleteHtml(label) {
+			return label.replace(/<br>/g, ' ').replace(/&nbsp;/g, ' ');
+		}
+
 		function createAttributes(arrayProps) {
 			return arrayProps.map((key) => {
 				if (cell.getAttribute(key) !== undefined) {
-					return {[key]: cell.getAttribute(key)};
+					const value = cell.getAttribute(key);
+					return {[key]: key === 'label' ? deleteHtml(value) : value};
 				}
 			}).filter(prop => prop !== undefined);
 		};
@@ -823,10 +828,15 @@ Actions.prototype.init = function()
 
 	const containerProps = ['type', 'modelId', 'viewId', 'imageName', 'centreonImageId', 'label'];
 
+	function deleteHtml(label) {
+		return label.replace(/<br>/g, ' ').replace(/&nbsp;/g, ' ');
+	}
+
 	function createAttributes(arrayProps) {
 		return arrayProps.map((key) => {
 			if (cell.getAttribute(key) !== undefined) {
-				return {[key]: cell.getAttribute(key)};
+				const value = cell.getAttribute(key);
+				return {[key]: key === 'label' ? deleteHtml(value) : value};
 			}
 		}).filter(prop => prop !== undefined);
 	};
