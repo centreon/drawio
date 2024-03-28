@@ -5055,8 +5055,16 @@ StyleFormatPanel.prototype.addStroke = function(container)
 	lineEnd.style.marginLeft = '3px';
 	lineEnd.style.height = '17px';
 
-	container.appendChild(colorPanel);
-	container.appendChild(altStylePanel);
+	
+	const cells = ss.cells.filter((cell) => {
+		return graph.getModel().isEdge(cell) && cell.getAttribute('type') === 'LINK' && cell.getAttribute('linkType') !== 'SIMPLE';
+	});
+
+	if(cells.length === 0)
+	{
+		container.appendChild(colorPanel);
+	}
+
 	container.appendChild(stylePanel);
 
 	var arrowPanel = stylePanel.cloneNode(false);
@@ -5134,13 +5142,8 @@ StyleFormatPanel.prototype.addStroke = function(container)
 	{
 		perimeterUpdate.apply(this, arguments);
 	});
-
-	if (ss.edges.length == ss.cells.length)
-	{
-		container.appendChild(stylePanel2);
-		container.appendChild(arrowPanel);
-	}
-	else if (ss.vertices.length == ss.cells.length)
+	
+	if (ss.vertices.length == ss.cells.length)
 	{
 		container.appendChild(perimeterPanel);
 	}
@@ -5255,16 +5258,8 @@ StyleFormatPanel.prototype.addStroke = function(container)
 			}
 		}
 		
-		if (ss.edges.length == ss.cells.length)
-		{
-			altStylePanel.style.display = '';
-			stylePanel.style.display = 'none';
-		}
-		else
-		{
-			altStylePanel.style.display = 'none';
-			stylePanel.style.display = '';
-		}
+		altStylePanel.style.display = 'none';
+		stylePanel.style.display = '';
 
 		if (Graph.lineJumpsEnabled && ss.edges.length > 0 &&
 			ss.vertices.length == 0 && ss.lineJumps)
