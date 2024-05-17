@@ -741,7 +741,7 @@ Actions.prototype.init = function()
 			'metricsColorStart', 'metricsColorEnd', 'parentName', 'parentType', 'parentId',
 			'resourceName', 'orientation',
 		];
-		const containerProps = ['type', 'modelId', 'viewId', 'imageName', 'centreonImageId', 'label'];
+		const containerProps = ['type', 'modelId', 'viewId', 'imageName', 'centreonImageId', 'label', 'displayLabel'];
 		
 		let cellAttributes = [];
 
