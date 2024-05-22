@@ -9790,7 +9790,7 @@
 		if (this.menus != null)
 		{
 			var menusAddPopupMenuEditItems = Menus.prototype.addPopupMenuEditItems;
-			
+
 			// Inserts copyAsImage into popup menu
 			this.menus.addPopupMenuEditItems = function(menu, cell, evt)
 			{
@@ -9809,23 +9809,9 @@
 					{
 						this.addPopupMenuArrangeItems(menu, cell, evt);
 					}
-			
+
 					this.addMenuItems(menu, ['-', 'cut', 'copy', 'copyAsImage',
 						'duplicate', 'lockUnlock'], null, evt);
-					
-					// Shows crop option for images
-					if (!this.isShowCellEditItems() && graph.getSelectionCount() == 1 &&
-						graph.isCellEditable(cell) && graph.getModel().isVertex(cell))
-					{
-						var state = graph.view.getState(cell);
-					
-						if (state != null && mxUtils.getValue(state.style,
-							mxConstants.STYLE_IMAGE, null) != null)
-						{
-							menu.addSeparator();
-							this.addMenuItem(menu, 'crop', null, evt);
-						}
-					}
 				}
 			};
 

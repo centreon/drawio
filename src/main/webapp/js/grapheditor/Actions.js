@@ -1975,29 +1975,9 @@ this.addAction('editContent', function()
 			}, graph.cellEditor.isContentEditing(), !graph.cellEditor.isContentEditing(), true, clipPath);
 		}
 	}).isEnabled = isGraphEnabled;
-	
-	this.addAction('crop...', function()
-	{
-		var cell = graph.getSelectionCell();
 
-		if (graph.isEnabled() && !graph.isCellLocked(graph.getDefaultParent()) && cell != null)
-		{
-			var style = graph.getCurrentCellStyle(cell);
-
-	    	var value = style[mxConstants.STYLE_IMAGE], shape = style[mxConstants.STYLE_SHAPE];
-	    	
-			if (!value || shape != 'image')
-			{
-				return; //Can only process an existing image
-			}
-			
-			var dlg = new CropImageDialog(ui, value, style[mxConstants.STYLE_CLIP_PATH], function(clipPath, width, height)
-	    	{
-				applyClipPath(cell, clipPath, width, height, graph);
-	    	});
-	    	
-	    	ui.showDialog(dlg.container, 300, 390, true, true);
-		}
+	this.addAction('crop...', function () {
+		return;
 	}).isEnabled = isGraphEnabled;
 	action = this.addAction('layers', mxUtils.bind(this, function()
 	{
