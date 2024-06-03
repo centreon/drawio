@@ -81,6 +81,7 @@ jobs:
   pipeline-scan:
     needs: [build]
     name: Run a pipeline scan
+    if: needs.build.outputs.skip_analysis == 'false'
     runs-on: [self-hosted, common]
 
     steps:
@@ -150,6 +151,7 @@ jobs:
           development_stage: '${{ needs.build.outputs.development_stage }}'
           summary_display: '${{ needs.build.outputs.display_summary }}'
           issue_details: '${{ needs.build.outputs.display_summary }}'
+          use_upgraded_version: 'true'
 
       - name: Backup analysis reports
         # debug step used to investigate support case
