@@ -164,7 +164,7 @@
 	/**
 	 * Specifies if web fonts are enabled.
 	 */
-	Editor.enableWebFonts = urlParams['safe-style-src'] != '1';
+	Editor.enableWebFonts = false; // urlParams['safe-style-src'] != '1';
 
 	/**
 	 * Disables the shadow option in the format panel.

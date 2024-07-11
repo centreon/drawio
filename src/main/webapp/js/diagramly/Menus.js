@@ -5221,7 +5221,7 @@
 						}
 					}
 				}));
-				this.editorUi.showDialog(dlg.container, 380, Editor.enableWebFonts ? 250 : 180, true, true);
+				this.editorUi.showDialog(dlg.container, 380, Editor.enableWebFonts ? 250 : 100, true, true);
 				dlg.init();
 			}), parent, null, true);
 		})));
