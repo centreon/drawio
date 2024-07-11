@@ -20,7 +20,7 @@ Menus = function(editorUi)
 /**
  * Sets the default font family.
  */
-Menus.prototype.defaultFont = 'Helvetica';
+Menus.prototype.defaultFont = 'Roboto';
 
 /**
  * Sets the default font size.

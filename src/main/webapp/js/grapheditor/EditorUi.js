@@ -894,7 +894,7 @@ EditorUi = function(editor, container, lightbox)
 		{
 			var update = mxUtils.bind(this, function()
 			{
-				var ff = graph.currentVertexStyle['fontFamily'] || 'Helvetica';
+				var ff = graph.currentVertexStyle['fontFamily'] || 'Roboto';
 				var fs = String(graph.currentVertexStyle['fontSize'] || '12');
 			    	var state = graph.getView().getState(graph.getSelectionCell());
 			    	
