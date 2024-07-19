@@ -29,6 +29,11 @@ runs:
 #        fi
 #      shell: bash
 
+    - name: install ant
+      run : |
+        sudo apt update
+        sudo apt install -y ant
+
     - name: Set up JDK 1.8
       uses: actions/setup-java@387ac29b308b003ca37ba93a6cab5eb57c8f5f93 # v4.0.0
       with:
