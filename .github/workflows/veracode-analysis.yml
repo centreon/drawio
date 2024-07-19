@@ -152,86 +152,6 @@ jobs:
           summary_display: '${{ needs.build.outputs.display_summary }}'
           issue_details: '${{ needs.build.outputs.display_summary }}'
 
-      - name: Backup analysis reports
-        # debug step used to investigate support case
-        if: needs.build.outputs.enable_qg == 'false' || failure()
-        run: |
-          echo "[DEBUG] downloaded baseline details in /tmp"
-          ls -la /tmp
-          echo "[DEBUG] current location details of analysis results"
-          pwd
-          ls -la
-
-          function backup_baseline(){
-            echo "" # adding a blank line
-            if [[ -z $1 ]]; then
-              echo "[ERROR] Missing mandatory parameters to backup baseline file"
-              exit 0
-            fi
-            CURRENT_NAME=$1
-
-            # specific case for downloaded baseline file
-            if [[ -n $2 && "$2" != "downloaded" ]]; then
-              echo "[ERROR] Missing downloaded baseline mandatory parameter to continue"
-              exit 0
-            fi
-            [[ -n $2 ]] && TARGET=$BASE_BRANCH || TARGET=$CURRENT_PR
-            [[ -n $2 ]] && FILENAME="/tmp/$CURRENT_NAME" || FILENAME="$CURRENT_NAME"
-            [[ -n $2 ]] && NEW_NAME="baseline.json" || NEW_NAME=$CURRENT_NAME
-
-            echo "[DEBUG] FILENAME = $FILENAME"
-            if [[ -s "$FILENAME" ]]; then
-              FILE_DETAILS=$( stat -c '%s %y' "$FILENAME" )
-              DETAILS=(${FILE_DETAILS//\ / })
-
-              FILE_SIZE=${DETAILS[0]}
-              CREATION_DATE=${DETAILS[1]}
-              CREATION_TIME=$( echo "${DETAILS[2]}" | cut -d ':' -f1-2 | tr ':' 'h' )
-              cp "$FILENAME" "/tmp/backup/$TARGET.$CREATION_DATE.$CREATION_TIME.size$FILE_SIZE.$NEW_NAME"
-            else
-              echo "[WARN] - no $CURRENT_NAME found for FILENAME. Skipping it"
-            fi
-          }
-
-          CURRENT_DATE=$( date +"%Y-%m-%d" )
-          CURRENT_PR="PR-"$( echo "${{ github.ref_name }}" | cut -d '/' -f1 )
-          BASE_BRANCH=${{ github.base_ref || github.ref_name }}
-          BACKUP_LOCATION="s3://centreon-veracode-reports/${{ inputs.module_name }}/debug/$CURRENT_PR"
-
-          # saving all reports
-          mkdir /tmp/backup
-          backup_baseline "results.json" "downloaded"
-          backup_baseline "results.json"
-          backup_baseline "filtered_results.json"
-
-          ZIPNAME="$CURRENT_PR.$CURRENT_DATE.${{github.run_id}}.zip"
-          cd /tmp/backup && zip "$ZIPNAME" *
-          aws s3 cp "/tmp/backup/$ZIPNAME" "$BACKUP_LOCATION/$ZIPNAME"
-
-      - name: Create jira ticket
-        # In case of QG failure, a ticket must be created
-        if: needs.build.outputs.enable_qg == 'false' || ( needs.build.outputs.development_stage == 'Development' && failure() )
-        uses: ./.github/actions/veracode-create-jira-ticket
-        with:
-          jira_base_url: ${{ secrets.jira_base_url }}
-          jira_user_email: ${{ secrets.jira_user_email }}
-          jira_api_token: ${{ secrets.jira_api_token }}
-          module_name: ${{ inputs.module_name }}
-
-      - name: Save baseline files
-        # only baseline files not generated from a development branch are saved
-        if: success() && needs.build.outputs.development_stage != 'Development'
-        run: |
-          BRANCHES=(dev master)
-          for BRANCH in "${BRANCHES[@]}"; do
-            if [[ "${{ github.ref_name }}" == "$BRANCH" ]]; then
-              mv *results.json /tmp
-              BUCKET="s3://centreon-veracode-reports/${{ inputs.module_name }}/${{ github.base_ref || github.ref_name }}"
-              aws s3 cp "/tmp/filtered_results.json" "$BUCKET/filtered_results.json"
-              aws s3 cp "/tmp/results.json" "$BUCKET/results.json"
-            fi
-          done
-
   clean-artifact:
     needs: [pipeline-scan]
     name: Clean artifact
@@ -247,7 +167,7 @@ jobs:
     needs: [build]
     name: Run a sandbox scan
     # only stable and unstable maintenances branches will produce a report
-    if: needs.build.outputs.development_stage != 'Development'
+    #if: needs.build.outputs.development_stage != 'Development'
     runs-on: [self-hosted, common]
 
     steps:
@@ -262,34 +182,19 @@ jobs:
         uses: veracode/veracode-uploadandscan-action@f7e1fbf02c5c899fba9f12e3f537b62f2f1230e1 # 0.2.7
         continue-on-error: ${{ vars.VERACODE_CONTINUE_ON_ERROR == 'true' }}
         with:
-          appname: "${{ inputs.module_name }}"
+          appname: "support_${{ inputs.module_name }}"
           version: "${{ needs.build.outputs.development_stage }}_runId-${{ github.run_id }}"
           filepath: "${{ inputs.module_name }}-${{ github.sha }}-${{ github.run_id }}-veracode-binary.zip"
           vid: "vera01ei-${{ secrets.veracode_api_id }}"
           vkey: "vera01es-${{ secrets.veracode_api_key }}"
           createprofile: true
           createsandbox: true
-          sandboxname: "${{ github.ref_name }}"
+          sandboxname: "support_drawio_${{ github.ref_name }}"
           scantimeout: 120
           includenewmodules: true
           scanallnonfataltoplevelmodules: true
           deleteincompletescan: 1
           scanpollinginterval: 120  # time between two checks in seconds / [30 to 120]
-
-      - name: Promote Scan
-        # only stable branch will be promoted to policy scan
-        if: success() && github.ref_name == 'dev'
-        env:
-          VERACODE_API_ID: "${{ secrets.veracode_api_id }}"
-          VERACODE_API_SECRET: "${{ secrets.veracode_api_key }}"
-
-        # Action forked due to an API call hardcoding the '.com' route
-        uses: sc979/veracode-sandboxes-helper@616cfc1e3428691c30382dab33d569f00b14f664 # v0.3
-        with:
-          activity: "promote-latest-scan"
-          app-name: "${{ inputs.module_name }}"
-          sandbox-name: "${{ github.ref_name }}"
-          delete-on-promote: false
 
   sca-scan:
     needs: [build]
