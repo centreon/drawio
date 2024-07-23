@@ -12047,6 +12047,11 @@ if (typeof mxVertexHandler !== 'undefined')
 		var mxCellEditorStartEditing = mxCellEditor.prototype.startEditing;
 		mxCellEditor.prototype.startEditing = function(cell, trigger)
 		{
+			
+			if(cell.getAttribute('type') === 'WIDGET' && cell.getAttribute('widgetType') === 'OUTPUT') {
+				return;
+			}
+			
 			cell = this.graph.getStartEditingCell(cell, trigger);
 
 			mxCellEditorStartEditing.apply(this, arguments);
