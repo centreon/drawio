@@ -37,6 +37,8 @@ runs:
         fi
         cd src/main/webapp
         zip -rq "${{ inputs.cache_key }}.zip" *
+        cd -
+        mv src/main/webapp/${{ inputs.cache_key }}.zip ./
       shell: bash
 
     - uses: actions/cache/save@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
