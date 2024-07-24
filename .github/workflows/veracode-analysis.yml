@@ -247,7 +247,7 @@ jobs:
     needs: [build]
     name: Run a sandbox scan
     # only stable and unstable maintenances branches will produce a report
-    if: needs.build.outputs.development_stage != 'Development'
+    #if: needs.build.outputs.development_stage != 'Development'
     runs-on: [self-hosted, common]
 
     steps:
@@ -262,14 +262,14 @@ jobs:
         uses: veracode/veracode-uploadandscan-action@f7e1fbf02c5c899fba9f12e3f537b62f2f1230e1 # 0.2.7
         continue-on-error: ${{ vars.VERACODE_CONTINUE_ON_ERROR == 'true' }}
         with:
-          appname: "${{ inputs.module_name }}"
+          appname: "drawio-forced-${{ inputs.module_name }}"
           version: "${{ needs.build.outputs.development_stage }}_runId-${{ github.run_id }}"
           filepath: "${{ inputs.module_name }}-${{ github.sha }}-${{ github.run_id }}-veracode-binary.zip"
           vid: "vera01ei-${{ secrets.veracode_api_id }}"
           vkey: "vera01es-${{ secrets.veracode_api_key }}"
           createprofile: true
           createsandbox: true
-          sandboxname: "${{ github.ref_name }}"
+          sandboxname: "drawio-forced-${{ github.ref_name }}"
           scantimeout: 120
           includenewmodules: true
           scanallnonfataltoplevelmodules: true
