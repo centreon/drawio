@@ -35,6 +35,7 @@ runs:
           echo "[DEBUG] - cache key is missing. killing process"
           exit 1
         fi
+        cd src/main/webapp
         zip -rq "${{ inputs.cache_key }}.zip" *
       shell: bash
 
