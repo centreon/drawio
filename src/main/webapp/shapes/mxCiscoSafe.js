@@ -174,4 +174,4 @@ mxShapeCiscoSafeCompositeIcon.prototype.paintVertexShape = function(c, x, y, w, 
 
 };
 
-mxCellRenderer.registerShape(mxShapeCiscoSafeCompositeIcon.prototype.cst.SHAPE_COMPOSITE_ICON, mxShapeCiscoSafeCompositeIcon);
+mxCellRenderer.registerShape(mxShapeCiscoSafeCompositeIcon.prototype.cst.SHAPE_COMPOSITE_ICON, mxShapeCiscoSafeCompositeIcon); 

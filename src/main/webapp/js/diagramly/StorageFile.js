@@ -496,4 +496,4 @@ StorageFile.deleteFile = function(ui, title, success, error)
 			error();
 		}
 	}, ['files', 'filesInfo']);
-};
+}; 

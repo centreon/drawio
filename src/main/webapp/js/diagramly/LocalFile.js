@@ -331,3 +331,4 @@ LocalFile.prototype.open = function()
 	this.ui.setFileData(this.getData());
 	this.installListeners();
 };
+ 

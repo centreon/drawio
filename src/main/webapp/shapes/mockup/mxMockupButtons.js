@@ -1026,3 +1026,4 @@ mxShapeMockupLeftButton.prototype.paintVertexShape = function(c, x, y, w, h)
 
 mxCellRenderer.registerShape(mxShapeMockupLeftButton.prototype.cst.LEFT_BUTTON, mxShapeMockupLeftButton);
 
+ 

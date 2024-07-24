@@ -496,3 +496,4 @@ mxShapePidConveyor.prototype.background = function(c, x, y, w, h)
 };
 
 mxCellRenderer.registerShape(mxShapePidConveyor.prototype.cst.SHAPE_CONVEYOR, mxShapePidConveyor);
+ 

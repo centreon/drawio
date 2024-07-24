@@ -29,3 +29,4 @@ Draw.loadPlugin(function(ui)
 		ui.menus.addMenuItems(menu, ['-', 'extractText'], parent);
 	};
 });
+ 

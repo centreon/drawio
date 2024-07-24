@@ -1952,3 +1952,4 @@ EditorUi.prototype.createMenus = function()
 {
 	return new Menus(this);
 };
+ 

@@ -98,3 +98,4 @@ mxShapeIBMBox.prototype.paintVertexShape = function(c, x, y, w, h)
 };
 
 mxCellRenderer.registerShape(mxShapeIBMBox.prototype.cst.IBM_BOX, mxShapeIBMBox);
+ 

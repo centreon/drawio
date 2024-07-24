@@ -877,3 +877,4 @@ DriveFile.prototype.newComment = function(content, user)
 {
 	return new DriveComment(this, null, content, Date.now(), Date.now(), false, user);
 };
+ 

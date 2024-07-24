@@ -96,3 +96,4 @@ if (typeof(window.mxIntegrateCallback) === 'function')
 {
 	window.mxIntegrateCallback();
 }
+ 

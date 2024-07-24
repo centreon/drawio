@@ -1218,3 +1218,4 @@ mxArchiMateGap.prototype.getConstraints = function(style, w, h)
 
 	return (constr);
 };
+ 

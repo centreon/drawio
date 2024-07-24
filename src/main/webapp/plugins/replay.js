@@ -278,4 +278,4 @@ Draw.loadPlugin(function(ui) {
 			ui.menus.addMenuItems(menu, ['-', 'record', 'replay'], parent);
 		};
 	}
-});
+}); 

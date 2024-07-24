@@ -330,3 +330,4 @@ DropboxFile.prototype.rename = function(title, success, error)
 		}
 	}), error);
 };
+ 

@@ -23,4 +23,4 @@ EmbedFile.prototype.getTitle = function()
 	return this.desc.title || '';
 };
 
-//This class need to be implemented by integrations if some file features like real-time collaboration is needed
+//This class need to be implemented by integrations if some file features like real-time collaboration is needed 

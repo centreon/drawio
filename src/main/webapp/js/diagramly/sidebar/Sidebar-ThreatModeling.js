@@ -149,3 +149,4 @@
 		this.setCurrentSearchEntryLibrary();
 	};
 })();
+ 

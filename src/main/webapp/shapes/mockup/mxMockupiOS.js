@@ -6689,3 +6689,4 @@ mxShapeMockupFancyRRect.prototype.paintVertexShape = function(c, x, y, w, h)
 };
 
 mxCellRenderer.registerShape(mxShapeMockupFancyRRect.prototype.cst.FANCY_RRECT, mxShapeMockupFancyRRect);
+ 

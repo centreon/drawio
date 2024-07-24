@@ -2064,3 +2064,4 @@ mxShapeBpmn2Conversation.prototype.paintVertexShape = function(c, x, y, w, h)
 };
 
 mxCellRenderer.registerShape(mxShapeBpmn2Conversation.prototype.cst.CONVERSATION, mxShapeBpmn2Conversation);
+ 

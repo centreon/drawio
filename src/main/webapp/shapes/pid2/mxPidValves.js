@@ -1147,3 +1147,4 @@ mxShapePidAutoRecircValve.prototype.paintVertexShape = function(c, x, y, w, h)
 };
 
 mxCellRenderer.registerShape('mxgraph.pid2valves.autoRecircValve', mxShapePidAutoRecircValve);
+ 

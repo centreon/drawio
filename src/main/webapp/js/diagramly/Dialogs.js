@@ -13300,4 +13300,4 @@ var ConnectionPointsDialog = function(editorUi, cell)
 	this.destroy = destroy;
 
 	this.container = div;
-};
+}; 

@@ -824,4 +824,4 @@ DrawioViewerButton.prototype.enabled = true;
 DrawioViewerButton.prototype.icon = null;
 DrawioViewerButton.prototype.visible = true;
 DrawioViewerButton.prototype.linkButton = false;
-DrawioViewerButton.prototype.url = null;
+DrawioViewerButton.prototype.url = null; 

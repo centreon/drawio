@@ -540,4 +540,4 @@
 	    	this.guidesArrHor = null;
 	    }
 	};
-})();
+})(); 

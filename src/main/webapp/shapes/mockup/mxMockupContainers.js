@@ -2117,3 +2117,4 @@ mxShapeMockupContainersMarginRect2.prototype.background = function(c, x, y, w, h
 
 mxCellRenderer.registerShape(mxShapeMockupContainersMarginRect2.prototype.cst.SHAPE_MARGIN_RECT, mxShapeMockupContainersMarginRect2);
 
+ 

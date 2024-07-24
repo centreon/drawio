@@ -2633,3 +2633,4 @@ DrawioFile.prototype.newComment = function(content, user)
 {
 	return new DrawioComment(this, null, content, Date.now(), Date.now(), false, user);
 };
+ 

@@ -262,3 +262,4 @@
 		this.setCurrentSearchEntryLibrary();
 	};
 })();
+ 

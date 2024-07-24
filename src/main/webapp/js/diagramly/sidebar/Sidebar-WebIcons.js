@@ -767,3 +767,4 @@
 		this.setCurrentSearchEntryLibrary();
 	};
 })();
+ 

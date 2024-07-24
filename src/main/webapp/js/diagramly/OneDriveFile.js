@@ -592,3 +592,4 @@ OneDriveFile.prototype.move = function(folderId, success, error)
 		}
 	}), error);
 };
+ 

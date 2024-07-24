@@ -2611,4 +2611,4 @@ DriveClient.prototype.setPersistentToken = function(userAuthInfo, sessionOnly)
 	DrawioClient.prototype.setPersistentToken.call(this, JSON.stringify(authInfo), sessionOnly);
 };
 
-})();
+})(); 

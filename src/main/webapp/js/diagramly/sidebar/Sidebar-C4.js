@@ -308,3 +308,4 @@
 		this.setCurrentSearchEntryLibrary();
 	};
 })();
+ 

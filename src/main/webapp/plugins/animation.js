@@ -418,4 +418,4 @@ Draw.loadPlugin(function(editorUi)
 	{
 		// ignore
 	}
-});
+}); 

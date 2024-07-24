@@ -157,3 +157,4 @@ DrawioClient.prototype.setPersistentToken = function(token, sessionOnly)
 		this.ui.handleError(e);
 	}
 };
+ 

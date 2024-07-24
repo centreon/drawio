@@ -197,4 +197,4 @@ mxShapeMockupRedX.prototype.paintVertexShape = function(c, x, y, w, h)
 	c.fillAndStroke();
 };
 
-mxCellRenderer.registerShape(mxShapeMockupRedX.prototype.cst.SHAPE_RED_X, mxShapeMockupRedX);
+mxCellRenderer.registerShape(mxShapeMockupRedX.prototype.cst.SHAPE_RED_X, mxShapeMockupRedX); 

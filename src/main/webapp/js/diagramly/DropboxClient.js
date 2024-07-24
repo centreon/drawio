@@ -1011,4 +1011,4 @@ DropboxClient.prototype.createFile = function(file, success, error)
     }), error, binary);
 };
 
-})();
+})(); 

@@ -3133,3 +3133,4 @@ EditorUi.prototype.doImportGraphML = function(xmlData, done, onerror)
 	new mxGraphMlCodec().decode(xmlData, done, onerror);
 };
 
+ 

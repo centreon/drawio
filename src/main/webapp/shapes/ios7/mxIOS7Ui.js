@@ -1717,3 +1717,4 @@ Graph.handleFactory[mxShapeIOS7Slider2.prototype.cst.SHAPE_SLIDER] = function(st
 	return handles;
 };
 
+ 

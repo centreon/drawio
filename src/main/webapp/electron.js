@@ -2356,4 +2356,4 @@ ipcMain.on("rendererReq", async (event, args) =>
 	{
 		event.reply('mainResp', {error: true, msg: e.message, e: e, reqId: args.reqId});
 	}
-});
+}); 

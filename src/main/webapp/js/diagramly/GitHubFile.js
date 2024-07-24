@@ -366,3 +366,4 @@ GitHubFile.prototype.saveFile = function(title, revision, success, error, unload
 		error({code: App.ERROR_BUSY});
 	}
 };
+ 

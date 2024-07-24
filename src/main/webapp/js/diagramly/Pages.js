@@ -2117,4 +2117,4 @@ EditorUi.prototype.showPageLinkDialog = function(page)
 	};
 	
 	mxCodecRegistry.register(codec);
-})();
+})(); 

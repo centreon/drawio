@@ -1090,3 +1090,4 @@ Toolbar.prototype.destroy = function()
 		this.gestureHandler = null;
 	}
 };
+ 

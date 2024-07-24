@@ -499,3 +499,4 @@ Draw.loadPlugin(function(ui)
 		ui.menus.addMenuItems(menu, ['-', 'randomLabel', 'reorderChildren', 'swapChildren', 'placeChildren'], parent);
 	};
 });
+ 

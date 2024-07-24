@@ -2501,3 +2501,4 @@ mxShapeMockupFormsURect.prototype.paintVertexShape = function(c, x, y, w, h)
 
 mxCellRenderer.registerShape(mxShapeMockupFormsURect.prototype.cst.U_RECT, mxShapeMockupFormsURect);
 
+ 

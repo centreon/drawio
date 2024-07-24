@@ -1508,3 +1508,4 @@ mxCellRenderer.registerShape(mxShapeAndroidSpinner2.prototype.cst.SPINNER, mxSha
 
 mxShapeAndroidSpinner2.prototype.constraints = null;
 
+ 

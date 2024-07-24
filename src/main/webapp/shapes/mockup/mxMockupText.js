@@ -930,3 +930,4 @@ mxShapeMockupTextRRect.prototype.paintVertexShape = function(c, x, y, w, h)
 
 mxCellRenderer.registerShape(mxShapeMockupTextRRect.prototype.cst.RRECT, mxShapeMockupTextRRect);
 
+ 

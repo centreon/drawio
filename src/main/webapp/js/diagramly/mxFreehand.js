@@ -527,3 +527,4 @@ mxFreehand.prototype.NORMAL_SMOOTHING = 8;
 mxFreehand.prototype.VERY_SMOOTH_SMOOTHING = 12;
 mxFreehand.prototype.SUPER_SMOOTH_SMOOTHING = 16;
 mxFreehand.prototype.HYPER_SMOOTH_SMOOTHING = 20;
+ 

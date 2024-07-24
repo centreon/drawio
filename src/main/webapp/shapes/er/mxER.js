@@ -1496,3 +1496,4 @@ mxShapeERAnchor.prototype.paintVertexShape = function(c, x, y, w, h)
 
 mxCellRenderer.registerShape(mxShapeERAnchor.prototype.cst.ANCHOR, mxShapeERAnchor);
 
+ 

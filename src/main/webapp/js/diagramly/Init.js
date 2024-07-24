@@ -480,3 +480,4 @@ if ((window.location.hash == null || window.location.hash.length <= 1) &&
 {
 	window.location.hash = urlParams['open'];
 }
+ 

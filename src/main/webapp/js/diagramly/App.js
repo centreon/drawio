@@ -7868,3 +7868,4 @@ Editor.prototype.resetGraph = function()
 		this.graph.pageFormat = mxSettings.getPageFormat();
 	}
 };
+ 

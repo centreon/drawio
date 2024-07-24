@@ -84,3 +84,4 @@ Graph.handleFactory[mxShapeFlowchartDocument2.prototype.cst.DOCUMENT2] = functio
 			
 	return handles;
 };
+ 

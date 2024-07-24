@@ -2966,3 +2966,4 @@ var WrapperWindow = function(editorUi, title, x, y, w, h, fn)
 	};
 
 })();
+ 

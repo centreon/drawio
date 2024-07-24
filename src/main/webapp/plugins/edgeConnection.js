@@ -49,4 +49,4 @@ Draw.loadPlugin(function(ui) {
 	
 		return clone;		
 	};
-});
+}); 

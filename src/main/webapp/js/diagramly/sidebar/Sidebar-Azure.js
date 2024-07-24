@@ -102,3 +102,4 @@
 		this.setCurrentSearchEntryLibrary();
 	};
 })();
+ 

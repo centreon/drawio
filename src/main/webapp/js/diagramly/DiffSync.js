@@ -1270,3 +1270,4 @@ EditorUi.prototype.isObjectEqual = function(source, target, proto)
 		return JSON.stringify(source, replacer) == JSON.stringify(target, replacer);
 	}
 };
+ 

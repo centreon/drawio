@@ -49,4 +49,4 @@ DrawioFilePuller.prototype.stop = function()
 DrawioFilePuller.prototype.isConnected = function()
 {
     return this._isConnected;
-};
+}; 

@@ -255,3 +255,4 @@ mxCabinetsDimensionBottom.prototype.background = function(c, x, y, w, h)
 
 mxCellRenderer.registerShape(mxCabinetsDimensionBottom.prototype.cst.DIMENSION, mxCabinetsDimensionBottom);
 
+ 

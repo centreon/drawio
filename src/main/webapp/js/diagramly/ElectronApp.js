@@ -2260,3 +2260,4 @@ mxStencilRegistry.allowEval = false;
 		}), error, libPath);
 	};
 })();
+ 

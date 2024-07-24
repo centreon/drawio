@@ -683,3 +683,4 @@ mxShapePidLogic.prototype.constraints = [
                                             new mxConnectionConstraint(new mxPoint(0.75, 0.25), false),
                                             new mxConnectionConstraint(new mxPoint(0.75, 0.75), false)
                                             ];
+ 

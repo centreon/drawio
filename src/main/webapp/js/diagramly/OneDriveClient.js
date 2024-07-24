@@ -1548,4 +1548,4 @@ OneDriveClient.prototype.logout = function()
 	_token = null;
 };
 
-})();
+})(); 

@@ -2506,3 +2506,4 @@ GraphViewer.useResizeSensor = true;
 
     window.ResizeSensor = ResizeSensor;
 })();
+ 

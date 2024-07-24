@@ -1778,3 +1778,4 @@ mxFloorplanDoorDoubleAction.prototype.background = function(c, x, y, w, h)
 
 mxCellRenderer.registerShape(mxFloorplanDoorDoubleAction.prototype.cst.DOOR_DOUBLE_ACTION, mxFloorplanDoorDoubleAction);
 
+ 

@@ -42,4 +42,4 @@ Draw.loadPlugin(function(ui) {
 	
 	graph.addListener(mxEvent.SIZE, refresh);
 	refresh();
-});
+}); 

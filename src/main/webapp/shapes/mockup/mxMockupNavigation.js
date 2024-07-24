@@ -843,3 +843,4 @@ mxShapeMockupNavigationAnchor.prototype.paintVertexShape = function(c, x, y, w, 
 
 mxCellRenderer.registerShape(mxShapeMockupNavigationAnchor.prototype.cst.ANCHOR, mxShapeMockupNavigationAnchor);
 
+ 

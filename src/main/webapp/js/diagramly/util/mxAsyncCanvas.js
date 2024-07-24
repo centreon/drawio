@@ -217,4 +217,4 @@ mxAsyncCanvas.prototype.finish = function(handler)
 	{
 		this.onComplete = handler;
 	}
-};
+}; 

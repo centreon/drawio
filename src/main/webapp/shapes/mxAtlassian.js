@@ -289,3 +289,4 @@ mxAtlassianJiraIssue.prototype.paintForeground = function(c, x, y, w, h)
 };
 
 mxCellRenderer.registerShape(mxAtlassianJiraIssue.prototype.cst.ISSUE, mxAtlassianJiraIssue);
+ 

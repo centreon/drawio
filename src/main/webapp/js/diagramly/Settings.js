@@ -438,3 +438,4 @@ if (typeof(mxLoadSettings) == 'undefined' || mxLoadSettings)
 	// Loads initial content
 	mxSettings.load();
 }
+ 

@@ -37,3 +37,4 @@ DropboxLibrary.prototype.open = function()
 {
 	// Do nothing - this should never be called
 };
+ 

@@ -84,3 +84,4 @@ GitLabFile.prototype.setDescriptorEtag = function(desc, etag)
 {
 	desc.last_commit_id = etag;
 };
+ 

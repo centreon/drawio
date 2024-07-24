@@ -1439,4 +1439,4 @@ Draw.loadPlugin(function(ui)
     general.click();
     c.insertBefore(c.lastChild.previousSibling, general);
     c.insertBefore(c.lastChild, general);
-});
+}); 

@@ -19,3 +19,4 @@ DrawioUser = function(id, email, displayName, pictureUrl, locale)
 	// country code locale of the user
 	this.locale = locale;
 };
+ 

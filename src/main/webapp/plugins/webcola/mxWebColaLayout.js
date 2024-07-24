@@ -408,3 +408,4 @@ mxWebColaLayout.prototype.updateGraph = function(isUndoable = false, initial = f
     }
   }
 }
+ 

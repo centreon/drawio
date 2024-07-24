@@ -259,3 +259,4 @@ mxShapeUMLActionParams.prototype.paintVertexShape = function(c, x, y, w, h)
 mxCellRenderer.registerShape(mxShapeUMLActionParams.prototype.cst.ACTION_PARAMS, mxShapeUMLActionParams);
 
 mxShapeUMLActionParams.prototype.constraints = null;
+ 

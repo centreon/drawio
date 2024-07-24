@@ -2227,3 +2227,4 @@ Graph.handleFactory[mxShapeLeanTimeline.prototype.cst.SHAPE_TIMELINE] = function
 
 	return handles;
 };
+ 

@@ -636,4 +636,4 @@ Draw.loadPlugin(function(ui) {
 
         ui.menus.addMenuItems(menu, ['fromSql'], parent);
     };
-});
+}); 

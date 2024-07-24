@@ -118,3 +118,4 @@ mxShapeNetworksCommLinkEdge.prototype.paintEdgeShape = function(c, pts)
 
 //Registers the comm link edge
 mxCellRenderer.registerShape('mxgraph.networks.comm_link_edge', mxShapeNetworksCommLinkEdge);
+ 

@@ -26,3 +26,4 @@ DesktopLibrary.prototype.save = function(revision, success, error)
 {
 	LocalFile.prototype.saveFile.apply(this, arguments);
 };
+ 

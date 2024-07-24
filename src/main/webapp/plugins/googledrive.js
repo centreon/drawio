@@ -15,3 +15,4 @@ Draw.loadPlugin(function(ui)
 	
 	isLocalStorage = false;
 });
+ 

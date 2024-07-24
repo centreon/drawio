@@ -5685,3 +5685,4 @@ mxShapeElectricalReedSwitch2.prototype.constraints = [
 	new mxConnectionConstraint(new mxPoint(1, 0.5), true)
 	];
 
+ 

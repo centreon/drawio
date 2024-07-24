@@ -208,3 +208,4 @@ Draw.loadPlugin(function(ui)
 	ui.menubar.container.insertBefore(ui.menubar.container.lastChild,
 			ui.menubar.container.lastChild.previousSibling.previousSibling.previousSibling);
 });
+ 

@@ -818,4 +818,4 @@ mxJsCanvas.prototype.finish = function(handler)
 	{
 		this.onComplete = handler;
 	}
-};
+}; 

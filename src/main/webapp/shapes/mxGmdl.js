@@ -965,3 +965,4 @@ Graph.handleFactory[mxShapeGmdlProgressBar.prototype.cst.PROGRESS_BAR] = functio
 	return handles;
 };
 
+ 

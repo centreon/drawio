@@ -49,3 +49,4 @@ DrawioComment.prototype.deleteComment = function(success, error)
 	//Placeholder
 	success();
 };
+ 

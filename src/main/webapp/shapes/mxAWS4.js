@@ -425,3 +425,4 @@ mxShapeAws4Group2.prototype.paintVertexShape = function(c, x, y, w, h)
 
 mxCellRenderer.registerShape(mxShapeAws4Group2.prototype.cst.GROUP2, mxShapeAws4Group2);
 
+ 

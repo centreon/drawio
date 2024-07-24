@@ -569,3 +569,4 @@
 		this.setCurrentSearchEntryLibrary();
 	};
 })();
+ 

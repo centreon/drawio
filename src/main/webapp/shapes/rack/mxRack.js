@@ -1431,4 +1431,4 @@ mxCellRenderer.registerShape(mxRackShelf2U.prototype.cst.SHAPE_RACK_SHELF_2U, mx
 mxCellRenderer.registerShape(mxRackShelf4U.prototype.cst.SHAPE_RACK_SHELF_4U, mxRackShelf4U);
 
 mxCellRenderer.registerShape(mxRackChannelBase.prototype.cst.SHAPE_RACK_CHANNEL_BASE, mxRackChannelBase);
-mxCellRenderer.registerShape(mxRackCabinetLeg.prototype.cst.SHAPE_RACK_CABINET_LEG, mxRackCabinetLeg);
+mxCellRenderer.registerShape(mxRackCabinetLeg.prototype.cst.SHAPE_RACK_CABINET_LEG, mxRackCabinetLeg); 

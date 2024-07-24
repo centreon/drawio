@@ -669,4 +669,4 @@ mxDualRuler.prototype.destroy = function()
 	mxGuide.prototype.move = this.origGuideMove;
 	mxGuide.prototype.destroy = this.origGuideDestroy;
 	this.ui.getDiagramContainerOffset = this.editorUiGetDiagContOffset;
-};
+}; 

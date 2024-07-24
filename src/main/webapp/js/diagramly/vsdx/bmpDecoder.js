@@ -280,4 +280,4 @@ BmpDecoder.prototype.bit32 = function() {
 
 BmpDecoder.prototype.getData = function() {
   return this.data;
-};
+}; 

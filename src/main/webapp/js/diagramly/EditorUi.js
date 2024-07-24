@@ -18760,4 +18760,4 @@ var ConfirmDialog = function(editorUi, message, okFn, cancelFn, okLabel, cancelL
 	};
 	
 	this.container = div;
-};
+}; 

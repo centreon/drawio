@@ -2881,3 +2881,4 @@ mxShapeArrowsWedgeArrowDashed2.prototype.paintEdgeShape = function(c, pts)
 };
 
 mxCellRenderer.registerShape('mxgraph.arrows2.wedgeArrowDashed2', mxShapeArrowsWedgeArrowDashed2);
+ 

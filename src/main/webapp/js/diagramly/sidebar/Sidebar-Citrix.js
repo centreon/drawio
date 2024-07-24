@@ -113,3 +113,4 @@
 		this.setCurrentSearchEntryLibrary();
 	};
 })();
+ 

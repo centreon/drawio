@@ -365,3 +365,4 @@ mxShapeC4WebBrowserContainer2.prototype.paintVertexShape = function(c, x, y, w, 
 
 mxCellRenderer.registerShape(mxShapeC4WebBrowserContainer2.prototype.cst.WEB_BROWSER_CONTAINER2_SHAPE, mxShapeC4WebBrowserContainer2);
 
+ 

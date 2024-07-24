@@ -1415,4 +1415,4 @@ GitLabClient.prototype.logout = function()
 	this.setToken(null);
 };
 
-})();
+})(); 

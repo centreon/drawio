@@ -82,3 +82,4 @@
 		this.setCurrentSearchEntryLibrary();
 	};
 })();
+ 

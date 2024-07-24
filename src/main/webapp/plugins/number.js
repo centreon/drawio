@@ -127,4 +127,4 @@ Draw.loadPlugin(function(ui) {
 	{
 		graph.refresh();
 	}
-});
+}); 

@@ -85,4 +85,4 @@ Draw.loadPlugin(function(ui) {
 //	    elt.firstChild.style.backgroundImage = 'url(https://www.draw.io/images/logo-small.gif)';
 //	    elt.firstChild.style.backgroundPosition = '2px 3px';
 	}
-});
+}); 

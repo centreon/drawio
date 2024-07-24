@@ -1150,3 +1150,4 @@ mxVsdxCanvas2D.prototype.fillAndStroke = function()
 	this.geoSec.appendChild(this.createCellElem("NoFill", "0"));
 	this.geoSec.appendChild(this.createCellElem("NoLine", "0"));
 };
+ 

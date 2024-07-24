@@ -834,3 +834,4 @@ function P2PCollab(ui, sync, channelId)
 		sync.file.fireEvent(new mxEventObject('realtimeStateChanged'));
 	};
 };
+ 

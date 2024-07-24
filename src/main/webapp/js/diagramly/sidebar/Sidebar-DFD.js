@@ -57,3 +57,4 @@
 		this.setCurrentSearchEntryLibrary();
 	};
 })();
+ 

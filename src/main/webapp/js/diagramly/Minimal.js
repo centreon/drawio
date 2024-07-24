@@ -1153,3 +1153,4 @@ EditorUi.initMinimalTheme = function()
 		}
 	};
 })();
+ 

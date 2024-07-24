@@ -2159,3 +2159,4 @@ Action.prototype.isSelected = function()
 {
 	return this.selectedCallback();
 };
+ 

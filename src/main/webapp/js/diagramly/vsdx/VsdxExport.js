@@ -1004,3 +1004,4 @@ VsdxExport.prototype.ARROWS_MAP = {
 	"ERone|1": 24, "ERone|0": 24, "ERmandOne|1": 25, "ERmandOne|0": 25, "ERmany|1": 27, "ERmany|0": 27, "ERoneToMany|1": 28, "ERoneToMany|0": 28,
 	"ERzeroToMany|1": 29, "ERzeroToMany|0": 29, "ERzeroToOne|1": 30, "ERzeroToOne|0": 30, "openAsync|1": 9, "openAsync|0": 9
 };
+ 

@@ -2694,3 +2694,4 @@ var LayersWindow = function(editorUi, x, y, w, h)
 	this.refreshLayers = refresh;
 	editorUi.installResizeHandler(this, true);
 };
+ 

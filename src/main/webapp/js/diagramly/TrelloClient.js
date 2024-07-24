@@ -708,3 +708,4 @@ TrelloClient.prototype.logout = function()
 	localStorage.removeItem('trello_token');
 	Trello.deauthorize();
 };
+ 

@@ -2061,3 +2061,4 @@ DrawioFileSync.prototype.destroy = function()
 		this.p2pCollab.destroy();
 	}
 };
+ 

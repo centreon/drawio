@@ -137,3 +137,4 @@
 		this.setCurrentSearchEntryLibrary();
 	};
 })();
+ 
