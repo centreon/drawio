@@ -726,7 +726,7 @@ Actions.prototype.init = function()
 		}
 
 		const resourceCentreonProps = ['type', 'resourceType', 'resourceId', 'displayLabel', 'displayParentName', 'useResourceName', 'label',
-			'resourceName', 'modelId', 'viewId', 'parentName', 'parentType', 'parentId', 'displayWeatherStatusBackgroundColor'];
+			'resourceName', 'modelId', 'viewId', 'parentName', 'parentType', 'parentId', 'useBackgroundStatusColor'];
 		const linkProps = ['type', 'linkType', 'parentName', 'parentType', 'parentId',
 			'resourceType', 'resourceId', 'resourceName', 'modelId','metric1Min',
 			'metric1Max',	'metric2Min', 'metric2Max', 'metricName1', 'metricName2', 'displayPercent'];
@@ -741,7 +741,7 @@ Actions.prototype.init = function()
 			'metricsColorStart', 'metricsColorEnd', 'parentName', 'parentType', 'parentId',
 			'resourceName', 'orientation',
 		];
-		const containerProps = ['type', 'modelId', 'viewId', 'imageName', 'centreonImageId', 'label', 'displayLabel', 'displayWeatherStatusBackgroundColor'];
+		const containerProps = ['type', 'modelId', 'viewId', 'imageName', 'centreonImageId', 'label', 'displayLabel', 'useBackgroundStatusColor'];
 		
 		let cellAttributes = [];
 
@@ -773,6 +773,8 @@ Actions.prototype.init = function()
 		if (cell.getAttribute('type') === 'CONTAINER') {
 			cellAttributes = createAttributes(containerProps);
 		}
+
+		console.log('setShowWizardShapeProperties', cellAttributes);
 
 		parent.postMessage(JSON.stringify({
 			mxObject: cellAttributes,
