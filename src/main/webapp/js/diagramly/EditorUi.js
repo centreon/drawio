@@ -15203,14 +15203,7 @@
 									graph.handleCentreonStyleChange(cell, cellStyle, value);
 								}
 
-								if(key == 'image')
-								{
-									cellStyle = cellStyle.replace(search, `${key}=${window.location.origin}${value};`);
-								}else {
-									cellStyle = cellStyle.replace(search, `${key}=${value};`);
-								}
-
-								
+								cellStyle = cellStyle.replace(search, `${key}=${value};`);
 							}
 						}
 						graph.getModel().setStyle(cell, cellStyle);
