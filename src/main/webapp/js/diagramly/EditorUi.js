@@ -10755,12 +10755,11 @@
 		{
 			// No dialog visible
 			var source = mxEvent.getSource(evt);
-			
 			if (graph.container != null && graph.isEnabled() && !graph.isMouseDown && !graph.isEditing() &&
 				this.dialog == null && source.nodeName != 'INPUT' && source.nodeName != 'TEXTAREA')
 			{
 				if (evt.keyCode == 224 /* FF */ || (!mxClient.IS_MAC && evt.keyCode == 17 /* Control */) ||
-					(mxClient.IS_MAC && (evt.keyCode == 91 || evt.keyCode == 93) /* Left/Right Meta */))
+						(mxClient.IS_MAC && (evt.keyCode == 91 || evt.keyCode == 93) /* Left/Right Meta */))
 				{
 					// Cannot use parentNode for check in IE
 					if (!restoreFocus)
@@ -10773,7 +10772,7 @@
 
 						graph.container.appendChild(textInput);
 						restoreFocus = true;
-						
+
 						textInput.focus();
 						document.execCommand('selectAll', false, null);
 
@@ -10783,8 +10782,43 @@
 					}
 				}
 			}
-		}));
 
+			// Get the closest ancestor with class names 'mxCellEditor' and 'geContentEditable'
+			var sourceEditable = source.closest('.mxCellEditor.geContentEditable');
+			if (sourceEditable) {
+				// Handle paste event for Ctrl+V or right-click+paste
+				mxEvent.addListener(sourceEditable, 'paste', mxUtils.bind(this, function(ev) {
+					if (
+						source.nodeName == 'DIV' &&
+						graph.container != null &&
+						graph.isEnabled() &&
+						graph.isEditing() &&
+						this.dialog == null &&
+						!graph.isCellLocked(graph.getDefaultParent())
+					) {
+
+						if (ev.clipboardData != null) {
+							// Clean up HTML tags and take only the string content
+							this.pasteCells(ev, sourceEditable, true, true, true);
+						}
+
+						if (!mxEvent.isConsumed(ev)) {
+							var x0 = graph.container.scrollLeft;
+							var y0 = graph.container.scrollTop;
+
+							window.setTimeout(mxUtils.bind(this, function() {
+								// Workaround for Safari 16 scroll after paste
+								graph.container.scrollLeft = x0;
+								graph.container.scrollTop = y0;
+
+								this.pasteCells(ev, textInput, false, true);
+							}), 0);
+						}
+					}
+				}), true);
+			}
+
+		}));
 		// Clears input and restores focus and selection
 		function clearInput()
 		{
@@ -10815,7 +10849,7 @@
 						graph.container.focus();
 					}
 					
-					textInput.parentNode.removeChild(textInput);
+					textInput.parentNode?.removeChild?.(textInput);
 					
 					// Workaround for lost cursor in focused element
 					if (this.dialog == null)
@@ -13245,7 +13279,7 @@
 	/**
 	 * Creates the format panel and adds overrides.
 	 */
-	EditorUi.prototype.pasteCells = function(evt, realElt, useEvent, pasteAsLabel)
+	EditorUi.prototype.pasteCells = function(evt, realElt, useEvent, pasteAsLabel, externalPaste=false)
 	{
 		if (!mxEvent.isConsumed(evt))
 		{
@@ -13290,9 +13324,8 @@
 					mxUtils.setTextContent(elt, data);
 				}
 			}
-			
+
 			var spans = elt.getElementsByTagName('span');
-		
 			if (spans != null && spans.length > 0 && spans[0].getAttribute('data-lucid-type') ===
 				'application/vnd.lucid.chart.objects')
 			{
@@ -13414,7 +13447,14 @@
 						}
 						else
 						{
-							this.pasteXml(xml, pasteAsLabel, compat, evt);
+							if (externalPaste) {
+								var parsePlain = new DOMParser().parseFromString(plain, 'text/html');
+  							plain = parsePlain?.body?.textContent || plain;
+								mxUtils.setTextContent(realElt, plain);
+							}
+							else {
+								this.pasteXml(xml, pasteAsLabel, compat, evt);
+							}
 						}
 
 						try
@@ -13440,8 +13480,9 @@
 				}
 			}
 		}
-		
-		realElt.innerHTML = '&nbsp;';
+		if (!externalPaste) {
+			realElt.innerHTML = '&nbsp;';
+		}
 	};
 
 	/**
