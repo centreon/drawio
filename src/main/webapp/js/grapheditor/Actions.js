@@ -725,7 +725,7 @@ Actions.prototype.init = function()
 			return;
 		}
 
-		const resourceCentreonProps = ['type', 'resourceType', 'resourceId', 'displayLabel', 'displayParentName', 'useResourceName', 'label',
+		const resourceCentreonProps = ['type', 'resourceType', 'resourceId', 'displayLabel', 'displayImage', 'displayParentName', 'useResourceName', 'label',
 			'resourceName', 'modelId', 'viewId', 'parentName', 'parentType', 'parentId', 'displayWeatherStatusBackgroundColor', 'useBackgroundStatusColor'];
 		const linkProps = ['type', 'linkType', 'parentName', 'parentType', 'parentId',
 			'resourceType', 'resourceId', 'resourceName', 'modelId','metric1Min',
@@ -741,7 +741,7 @@ Actions.prototype.init = function()
 			'metricsColorStart', 'metricsColorEnd', 'parentName', 'parentType', 'parentId',
 			'resourceName', 'orientation', 'useResourceName', 'displayLabel', 'displayParentName', 'label'
 		];
-		const containerProps = ['type', 'modelId', 'viewId', 'imageName', 'centreonImageId', 'label', 'displayLabel', 'displayWeatherStatusBackgroundColor', 'useBackgroundStatusColor'];
+		const containerProps = ['type', 'modelId', 'viewId', 'imageName', 'centreonImageId', 'label', 'displayLabel', 'displayImage', 'displayWeatherStatusBackgroundColor', 'useBackgroundStatusColor'];
 		
 		let cellAttributes = [];
 
