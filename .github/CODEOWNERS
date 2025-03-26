@@ -7,3 +7,6 @@ packag*.json        @centreon/owners-react
 
 src/main/java       @centreon/owners-java
 src/main/webapp     @centreon/owners-react
+
+.gitleaks.toml      @centreon/owners-security
+.gitleaksignore     @centreon/owners-security
