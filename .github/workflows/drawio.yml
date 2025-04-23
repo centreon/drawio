@@ -8,11 +8,6 @@ on:
   schedule:
     - cron: '0 1 2 * *'
   pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
-      - ready_for_review
     paths:
       - "**"
   push:
@@ -22,14 +17,12 @@ on:
       - "**"
 
 jobs:
-  veracode-analysis:
-    uses: ./.github/workflows/veracode-analysis.yml
+  checkmarx-analysis:
+    uses: ./.github/workflows/checkmarx-analysis.yml
     with:
       module_name: drawio
     secrets:
-      veracode_api_id: ${{ secrets.VERACODE_API_ID_BUILD }}
-      veracode_api_key: ${{ secrets.VERACODE_API_KEY_BUILD }}
-      veracode_srcclr_token: ${{ secrets.VERACODE_SRCCLR_TOKEN }}
-      jira_base_url: ${{ secrets.JIRA_BASE_URL }}
-      jira_user_email: ${{ secrets.XRAY_JIRA_USER_EMAIL }}
-      jira_api_token: ${{ secrets.XRAY_JIRA_TOKEN }}
+      base_uri: ${{ secrets.AST_RND_SCANS_BASE_URI }}
+      cx_tenant: ${{ secrets.AST_RND_SCANS_TENANT }}
+      cx_client_id: ${{ secrets.AST_RND_SCANS_CLIENT_ID }}
+      cx_client_secret: ${{ secrets.AST_RND_SCANS_CLIENT_SECRET }}
