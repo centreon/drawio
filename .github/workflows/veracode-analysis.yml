@@ -23,7 +23,7 @@ on:
 jobs:
   build:
     name: Binary preparation
-    runs-on: centreon-common
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Set routing mode
