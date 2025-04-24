@@ -9959,8 +9959,9 @@
 			this.keyHandler.bindAction(75, true, 'toggleShapes', true); // Ctrl+Shift+K
 			this.altShiftActions[83] = 'synchronize'; // Alt+Shift+S
 
-		    this.installImagePasteHandler();
-		    this.installNativeClipboardHandler();
+			// comment out paste image, paste and drop is handled by installNativeClipboardHandler, pasteCell, graph.container drop and importFiles
+			// this.installImagePasteHandler();
+			this.installNativeClipboardHandler();
 		};
 
 		// Updates realtime state icon
@@ -13149,7 +13150,7 @@
 	/**
 	 * Creates the format panel and adds overrides.
 	 */
-	EditorUi.prototype.pasteCells = function(evt, realElt, useEvent, pasteAsLabel, externalPaste=false)
+	EditorUi.prototype.pasteCells = function(evt, realElt, useEvent, pasteAsLabel, editableShapeExternalPaste=false)
 	{
 		if (!mxEvent.isConsumed(evt))
 		{
@@ -13317,13 +13318,24 @@
 						}
 						else
 						{
-							if (externalPaste) {
+							if (editableShapeExternalPaste) {
 								var parsePlain = new DOMParser().parseFromString(plain, 'text/html');
   							plain = parsePlain?.body?.textContent || plain;
 								mxUtils.setTextContent(realElt, plain);
 							}
-							else {
+							else if (this.isCompatibleString(xml) && xml.indexOf("<mxGraphModel") == 0) {
 								this.pasteXml(xml, pasteAsLabel, compat, evt);
+							}
+							else {
+								if (!mxEvent.isConsumed(evt)) {
+									// Deny Paste event
+									evt.stopPropagation();
+									evt.preventDefault();
+									this.showError(
+										mxResources.get("error"),
+										"Paste operation is not allowed"
+									);
+								}
 							}
 						}
 
@@ -13339,7 +13351,7 @@
 					else if (!useEvent)
 					{
 						var graph = this.editor.graph;
-					
+
 						graph.lastPasteXml = null;
 						graph.pasteCounter = 0;
 					}
@@ -13350,7 +13362,7 @@
 				}
 			}
 		}
-		if (!externalPaste) {
+		if (!editableShapeExternalPaste) {
 			realElt.innerHTML = '&nbsp;';
 		}
 	};
