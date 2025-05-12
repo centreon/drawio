@@ -1,12 +1,13 @@
-.github/**          @centreon/owners-pipelines
+.github/**                  @centreon/owners-pipelines
 
-*.js                @centreon/owners-react
-packag*.json        @centreon/owners-react
+*.js                        @centreon/owners-react
+packag*.json                @centreon/owners-react
 
-*.xml               @centreon/owners-java
+*.xml                       @centreon/owners-java
 
-src/main/java       @centreon/owners-java
-src/main/webapp     @centreon/owners-react
+src/main/java               @centreon/owners-java
+src/main/webapp             @centreon/owners-react
 
-.gitleaks.toml      @centreon/owners-security
-.gitleaksignore     @centreon/owners-security
+.gitleaks.toml              @centreon/owners-security
+.gitleaksignore             @centreon/owners-security
+**/checkmarx-analysis.yml   @centreon/owners-security
