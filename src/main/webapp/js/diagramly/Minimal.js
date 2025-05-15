@@ -1029,21 +1029,6 @@ EditorUi.initMinimalTheme = function()
 				}
 			}
 
-			if (appElt != null)
-			{
-				mxEvent.disableContextMenu(appElt);
-
-				mxEvent.addGestureListeners(appElt, mxUtils.bind(this, function(evt)
-				{
-					if (mxEvent.isShiftDown(evt) || mxEvent.isAltDown(evt) ||
-						mxEvent.isMetaDown(evt) || mxEvent.isControlDown(evt) ||
-						mxEvent.isPopupTrigger(evt))
-					{
-						ui.appIconClicked(evt);
-					}
-				}), null, null);
-			}
-	        
 			var langMenu = ui.menus.get('language');
 
 			if (langMenu != null && !mxClient.IS_CHROMEAPP &&
