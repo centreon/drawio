@@ -39,7 +39,7 @@ jobs:
           fi
 
           # Check forced full scan
-          if [[ "${{ vars.CHECKMARX_FORCED_FULL_SCAN }} == "yes ]] && FORCED_MODE=true || FORCED_MODE=false
+          if [[ "${{ vars.CHECKMARX_FORCED_FULL_SCAN }}" == "yes" ]] && FORCED_MODE=true || FORCED_MODE=false
 
           echo "forced_mode=$FORCED_MODE" >> $GITHUB_ENV
           echo "enable_analysis=$ENABLE_QG" >> $GITHUB_ENV
