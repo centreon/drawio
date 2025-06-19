@@ -20,7 +20,6 @@ on:
 jobs:
   pipeline-scan:
     name: Run a pipeline scan
-    needs: [build]
     runs-on: ubuntu-24.04
 
     steps:
@@ -38,10 +37,10 @@ jobs:
             ENABLE_QG="false"
             echo "Skipping analysis. Caused by dependabot PR"
           fi
-          
+
           # Check forced full scan
-          if [[ "${{ vars.CHECKMARX_FORCED_FULL_SCAN }} == "yes && FORCED_MODE=true || FORCED_MODE=false
-          
+          if [[ "${{ vars.CHECKMARX_FORCED_FULL_SCAN }} == "yes ]] && FORCED_MODE=true || FORCED_MODE=false
+
           echo "forced_mode=$FORCED_MODE" >> $GITHUB_ENV
           echo "enable_analysis=$ENABLE_QG" >> $GITHUB_ENV
           cat $GITHUB_ENV
