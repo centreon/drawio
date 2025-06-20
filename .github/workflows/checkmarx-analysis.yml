@@ -39,7 +39,7 @@ jobs:
           fi
 
           # Check forced full scan
-          FORCED_MODE=false
+          FORCED_MODE="--sast-incremental=true"
           if [[ "${{ vars.CHECKMARX_FORCED_FULL_SCAN }}" == "yes" ]]; then
             FORCED_MODE="--force-scan=true"
           fi
