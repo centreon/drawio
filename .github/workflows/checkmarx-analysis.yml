@@ -41,7 +41,7 @@ jobs:
           # Check forced full scan
           FORCED_MODE=false
           if [[ "${{ vars.CHECKMARX_FORCED_FULL_SCAN }}" == "yes" ]]; then
-            FORCED_MODE=true
+            FORCED_MODE="--force-scan=true"
           fi
 
           echo "forced_mode=$FORCED_MODE" >> $GITHUB_ENV
