@@ -62,4 +62,4 @@ jobs:
           cx_client_id: ${{ secrets.cx_client_id }}
           cx_client_secret: ${{ secrets.cx_client_secret }}
           source_dir: "./"
-          additional_params: --file-filter "!**/doc/**" --scan-types "sast,sca,api-security" --scan-incremental=${{ env.forced_mode }}
+          additional_params: --file-filter "!**/doc/**" --scan-types "sast,sca,api-security" --scan-incremental "${{ env.forced_mode }}"
