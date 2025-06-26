@@ -62,4 +62,4 @@ jobs:
           cx_client_id: ${{ secrets.cx_client_id }}
           cx_client_secret: ${{ secrets.cx_client_secret }}
           source_dir: "./"
-          additional_params: --scan-types "sast,sca,api-security" --sast-incremental=false
+          additional_params: --scan-types "sast,sca,api-security" --sast-incremental=true
