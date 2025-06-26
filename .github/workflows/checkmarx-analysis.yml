@@ -20,7 +20,7 @@ on:
 jobs:
   pipeline-scan:
     name: Run a pipeline scan
-    runs-on: ubuntu-24.04
+    runs-on: centreon-security
 
     steps:
       - name: routing
@@ -39,12 +39,12 @@ jobs:
           fi
 
           # Check forced full scan
-          FORCED_MODE="--sast-incremental=true"
-          if [[ "${{ vars.CHECKMARX_FORCED_FULL_SCAN }}" == "yes" ]]; then
-            FORCED_MODE="--force-scan=true"
+          SCAN_MODE="--sast-incremental"
+          if [[ "{{ github.event_name }}" == "schedule" || "${{ vars.CHECKMARX_FORCE_FULL_SCAN }}" == "yes" ]]; then
+            SCAN_MODE="--sast-incremental=false"
           fi
 
-          echo "forced_mode=$FORCED_MODE" >> $GITHUB_ENV
+          echo "scan_mode=$SCAN_MODE" >> $GITHUB_ENV
           echo "enable_analysis=$ENABLE_QG" >> $GITHUB_ENV
           cat $GITHUB_ENV
 
@@ -62,4 +62,4 @@ jobs:
           cx_client_id: ${{ secrets.cx_client_id }}
           cx_client_secret: ${{ secrets.cx_client_secret }}
           source_dir: "./"
-          additional_params: --scan-types "sast,sca,api-security" --sast-incremental=false
+          additional_params: --scan-types "sast,sca,api-security" "${{ env.scan_mode }}"
