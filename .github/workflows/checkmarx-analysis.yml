@@ -20,7 +20,6 @@ on:
 jobs:
   pipeline-scan:
     name: Run a pipeline scan
-    #runs-on: centreon-security
     runs-on: ubuntu-24.04
 
     steps:
