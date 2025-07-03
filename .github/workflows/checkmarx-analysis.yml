@@ -1,5 +1,4 @@
 name: Checkmarx scans
-
 on:
   workflow_call:
     inputs:
@@ -40,7 +39,7 @@ jobs:
 
           # Check forced full scan
           SCAN_MODE="--sast-incremental"
-          if [[ "{{ github.event_name }}" == "schedule" || "${{ vars.CHECKMARX_FORCE_FULL_SCAN }}" == "yes" ]]; then
+          if [[ "${{ github.event_name }}" == "schedule" || "${{ vars.CHECKMARX_FORCE_FULL_SCAN }}" == "yes" ]]; then
             SCAN_MODE="--sast-incremental=false"
           fi
 
