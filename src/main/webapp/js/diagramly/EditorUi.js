@@ -15177,8 +15177,6 @@
 						{
 							for(let j = 0; j < cellsMatrix[i].length; j++)
 							{
-								graph.setCellStyles(mxConstants.STYLE_IMAGE_BORDER, Editor.isDarkMode() ? '#ffffff' : '#000000', [cellsMatrix[i][j]]);
-
 								let pt = graph.getHeightxWidthInsertPoint(i, j);
 								let select = graph.importCells([cellsMatrix[i][j]], pt.x, pt.y, null);
 								graph.fireEvent(new mxEventObject('cellsInserted', 'cells', select));
