@@ -15160,6 +15160,14 @@
 							cellStyle = cellStyle.replace(searchEmptySvg, '');
 						}
 
+						// Use Resource icon from configuration
+						if(cell.getAttribute('type') === 'RESOURCE') {
+							const iconImage = data?.data?.iconImage;
+							if (iconImage) {
+								cellStyle = cellStyle.replace(/image=([^;]*);/g, `image=${iconImage};`);
+							}
+						}
+
 						graph.getModel().setStyle(cell, cellStyle);
 						return;
 					}
