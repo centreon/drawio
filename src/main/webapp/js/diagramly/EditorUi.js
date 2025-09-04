@@ -10162,73 +10162,199 @@
 		// Enables dropping files
 		if (Graph.fileSupport && (!this.editor.chromeless || this.editor.editable))
 		{
-      // Setup the dnd listeners
-      var dropElt = null;
+			// Setup the dnd listeners
+			var dropElt = null;
 
-      mxEvent.addListener(graph.container, "dragleave", function (evt) {
-        if (graph.isEnabled()) {
-          if (dropElt != null) {
-            dropElt.parentNode.removeChild(dropElt);
-            dropElt = null;
-          }
-
-          evt.stopPropagation();
-          evt.preventDefault();
-        }
-      });
-
-      mxEvent.addListener(
-        graph.container,
-        "dragover",
-        mxUtils.bind(this, function (evt) {
-          // IE 10 does not implement pointer-events so it can't have a drop highlight
-          if (
-            dropElt == null &&
-            (!mxClient.IS_IE || document.documentMode > 10)
-          ) {
-            dropElt = this.highlightElement(graph.container);
-          }
-
-          if (this.sidebar != null) {
-            this.sidebar.hideTooltip();
-          }
-
-          evt.stopPropagation();
-          evt.preventDefault();
-        })
-      );
-
-      mxEvent.addListener(
-        graph.container,
-        "drop",
-        mxUtils.bind(this, function (evt) {
-          if (dropElt != null) {
-            dropElt.parentNode.removeChild(dropElt);
-            dropElt = null;
-          }
-
-					// Check if the dropped content contains only text types
-					var source = mxEvent.getSource(evt);
-					var sourceEditable = source.closest('.mxCellEditor.geContentEditable');
-          if (graph.isEnabled() && sourceEditable) {
-						var hasOnlyText = evt.dataTransfer.types.every(function (type) {
-							return type === "text/plain" || type === "text/html";
-						});
-
-						if (hasOnlyText) {
-							return;
-						}
-          }
-
-					// Deny drop event
+			mxEvent.addListener(graph.container, 'dragleave', function(evt)
+			{
+				if (graph.isEnabled())
+				{
+					if (dropElt != null)
+				    {
+				    	dropElt.parentNode.removeChild(dropElt);
+				    	dropElt = null;
+				    }
+				    
 					evt.stopPropagation();
 					evt.preventDefault();
-					this.showError(mxResources.get("error"), "Drop is not allowed");
-					return;
-        }),
-        false
-      );
-    }
+				}
+			});
+			
+			mxEvent.addListener(graph.container, 'dragover', mxUtils.bind(this, function(evt)
+			{
+				// IE 10 does not implement pointer-events so it can't have a drop highlight
+				if (dropElt == null && (!mxClient.IS_IE || document.documentMode > 10))
+				{
+					dropElt = this.highlightElement(graph.container);
+				}
+				
+				if (this.sidebar != null)
+				{
+					this.sidebar.hideTooltip();
+				}
+
+				evt.stopPropagation();
+				evt.preventDefault();
+			}));
+			
+			mxEvent.addListener(graph.container, 'drop', mxUtils.bind(this, function(evt)
+			{
+			    if (dropElt != null)
+			    {
+			    	dropElt.parentNode.removeChild(dropElt);
+			    	dropElt = null;
+			    }
+			    
+				if (graph.isEnabled())
+				{
+				    var pt = mxUtils.convertPoint(graph.container, mxEvent.getClientX(evt), mxEvent.getClientY(evt));
+					var files = evt.dataTransfer.files;
+					var tr = graph.view.translate;
+					var scale = graph.view.scale;
+					var x = pt.x / scale - tr.x;
+					var y = pt.y / scale - tr.y;
+					
+				    if (files.length > 0)
+				    {
+						if (urlParams['embed'] != '1' && mxEvent.isShiftDown(evt))
+						{
+							// Closes current file if blank and no undoable changes
+							if (this.isBlankFile() && !this.canUndo() &&
+								this.getCurrentFile() != null)
+							{
+								this.fileLoaded(null);
+							}
+
+							this.openFiles(files, true);
+						}
+						else
+				    	{
+							if (mxEvent.isAltDown(evt))
+							{
+								x = null;
+								y = null;
+							}
+							
+							this.importFiles(files, x, y, this.maxImageSize, null, null, null,
+								null, mxEvent.isControlDown(evt), null, null,
+								mxEvent.isShiftDown(evt), evt);
+				    	}
+		    		}
+				    else
+				    {
+						if (mxEvent.isAltDown(evt))
+						{
+							x = 0;
+							y = 0;
+						}
+						
+				    	var uri = (mxUtils.indexOf(evt.dataTransfer.types, 'text/uri-list') >= 0) ?
+				    		evt.dataTransfer.getData('text/uri-list') : null;
+				    	var data = this.extractGraphModelFromEvent(evt, this.pages != null);
+				    	
+				    	if (data != null)
+				    	{
+				    		graph.setSelectionCells(this.importXml(data, x, y, true));
+				    	}
+				    	else if (mxUtils.indexOf(evt.dataTransfer.types, 'text/html') >= 0)
+					    {
+				    		var html = evt.dataTransfer.getData('text/html');
+				    		var div = document.createElement('div');
+				    		div.innerHTML = Graph.sanitizeHtml(html);
+				    		
+				    		// The default is based on the extension
+				    		var asImage = null;
+				    		
+				    		// Extracts single image
+				    		var imgs = div.getElementsByTagName('img');
+
+				    		if (imgs != null && imgs.length == 1)
+				    		{
+				    			html = imgs[0].getAttribute('src');
+				    			
+				    			if (html == null)
+				    			{
+				    				html = imgs[0].getAttribute('srcset');
+				    			}
+				    			
+				    			// Handles special case where the src attribute has no valid extension
+				    			// in which case the text would be inserted as text with a link
+				    			if (!(/\.(gif|jpg|jpeg|tiff|png|svg)$/i).test(html))
+				    			{
+				    				asImage = true;
+				    			}
+				    		}
+				    		else
+				    		{
+				    			// Extracts single link
+				    			var a = div.getElementsByTagName('a');
+
+				    			if (a != null && a.length == 1)
+				    			{
+				    				html = a[0].getAttribute('href');
+				    			}
+					    		else
+					    		{
+					    			// Extracts preformatted text
+					    			var pre = div.getElementsByTagName('pre');
+					    			
+					    			if (pre != null && pre.length == 1)
+					    			{
+					    				html = mxUtils.getTextContent(pre[0]);
+					    			}
+					    		}
+				    		}
+				    		
+				    		var resizeImages = true;
+				    		
+				    		var doInsert = mxUtils.bind(this, function()
+				    		{
+				    			graph.setSelectionCells(this.insertTextAt(html, x, y, true,
+				    				asImage, null, resizeImages, mxEvent.isControlDown(evt)));
+				    		});
+				    		
+				    		if (asImage && html != null && html.length > this.resampleThreshold)
+				    		{
+				    			this.confirmImageResize(function(doResize)
+		    					{
+		    						resizeImages = doResize;
+		    						doInsert();
+		    					}, mxEvent.isControlDown(evt));
+				    		}
+				    		else
+			    			{
+				    			doInsert();
+			    			}
+					    }
+				    	else if (uri != null && (/\.(gif|jpg|jpeg|tiff|png|svg)$/i).test(uri))
+						{
+			    			this.loadImage(decodeURIComponent(uri), mxUtils.bind(this, function(img)
+			    			{
+			    				var w = Math.max(1, img.width);
+		    					var h = Math.max(1, img.height);
+		    					var maxSize = this.maxImageSize;
+
+			    				var s = Math.min(1, Math.min(maxSize / Math.max(1, w)), maxSize / Math.max(1, h));
+
+			    				graph.setSelectionCell(graph.insertVertex(null, null, '', x, y, w * s, h * s,
+			    					'shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;' +
+			    					'verticalAlign=top;aspect=fixed;imageAspect=0;image=' + uri + ';'));
+			    			}), mxUtils.bind(this, function(img)
+			    			{
+			    				graph.setSelectionCells(this.insertTextAt(uri, x, y, true));
+			    			}));
+						}
+					    else if (mxUtils.indexOf(evt.dataTransfer.types, 'text/plain') >= 0)
+					    {
+					    	graph.setSelectionCells(this.insertTextAt(evt.dataTransfer.getData('text/plain'), x, y, true));
+					    }
+					}
+				}
+
+			    evt.stopPropagation();
+			    evt.preventDefault();
+			}), false);
+		}
 
 		graph.enableFlowAnimation = true;
 		this.initPages();
@@ -10500,55 +10626,90 @@
 
 		this.inlineSizeChanged();
 	};
-
+	
 	/**
 	 * Installs handler for pasting image from clipboard.
 	 */
-	EditorUi.prototype.installImagePasteHandler = function () {
-    if (!mxClient.IS_IE) {
-      var graph = this.editor.graph;
-
-      graph.container.addEventListener(
-        "paste",
-        mxUtils.bind(this, function (evt) {
-          if (!mxEvent.isConsumed(evt)) {
-            try {
-              // Check if the dropped content contains only text types
-              var source = mxEvent.getSource(evt);
-              var sourceEditable = source.closest(
-                ".mxCellEditor.geContentEditable"
-              );
-              if (graph.isEnabled() && sourceEditable) {
-                var hasOnlyText = evt.dataTransfer.types.every(function (type) {
-                  return type === "text/plain" || type === "text/html";
-                });
-
-                if (hasOnlyText) {
-                  return;
-                }
-              }
-              // Deny Paste event
-              evt.stopPropagation();
-              evt.preventDefault();
-              this.showError(
-                mxResources.get("error"),
-                "Paste operation is not allowed"
-              );
-            } catch (e) {
-              // On error, block the paste
-              mxEvent.consume(evt);
-              this.showError(
-                mxResources.get("error"),
-                "Paste operation failed"
-              );
-            }
-          }
-        }),
-        false
-      );
-    }
-  };
-
+	EditorUi.prototype.installImagePasteHandler = function()
+	{
+		if (!mxClient.IS_IE)
+		{
+			var graph = this.editor.graph;
+			
+			graph.container.addEventListener('paste', mxUtils.bind(this, function(evt)
+			{
+				if (!mxEvent.isConsumed(evt))
+				{
+					try
+					{
+						var data = (evt.clipboardData || evt.originalEvent.clipboardData);
+						var containsText = false;
+						
+						// Workaround for asynchronous paste event processing in textInput
+						// is to ignore this event if it contains text/html/rtf (see below).
+						// NOTE: Image is not pasted into textInput so can't listen there.
+						for (var i = 0; i < data.types.length; i++)
+						{	
+							if (data.types[i].substring(0, 5) === 'text/')
+							{
+								containsText = true;
+								break;
+							}
+						}
+						
+						if (!containsText)
+						{
+							var items = data.items;
+							
+							for (index in items)
+							{
+								var item = items[index];
+								
+								if (item.kind === 'file')
+								{
+									if (graph.isEditing())
+									{
+								    	this.importFiles([item.getAsFile()], 0, 0, this.maxImageSize, function(data, mimeType, x, y, w, h)
+								    	{
+								    		// Inserts image into current text box
+								    		graph.insertImage(data, w, h);
+								    	}, function()
+								    	{
+								    		// No post processing
+								    	}, function(file)
+								    	{
+								    		// Handles only images
+								    		return file.type.substring(0, 6) == 'image/';
+								    	}, function(queue)
+								    	{
+								    		// Invokes elements of queue in order
+								    		for (var i = 0; i < queue.length; i++)
+								    		{
+								    			queue[i]();
+								    		}
+								    	});
+									}
+									else
+									{
+										var pt = this.editor.graph.getInsertPoint();
+										this.importFiles([item.getAsFile()], pt.x, pt.y, this.maxImageSize);
+										mxEvent.consume(evt);
+									}
+									
+									break;
+								}
+							}
+						}
+					}
+					catch (e)
+					{
+						// ignore
+					}
+				}
+			}), false);
+		}
+	};
+	
 	/**
 	 * Installs the native clipboard support.
 	 */
@@ -10655,37 +10816,6 @@
 						}
 					}
 				}), true);
-
-				mxEvent.addListener(sourceEditable, 'drop', mxUtils.bind(this, function(ev) {
-					if (
-						source.nodeName == 'DIV' &&
-						graph.container != null &&
-						graph.isEnabled() &&
-						graph.isEditing() &&
-						this.dialog == null &&
-						!graph.isCellLocked(graph.getDefaultParent())
-					) {
-						if (ev.dataTransfer) {
-							ev.clipboardData = ev.dataTransfer;
-							// Clean up HTML tags and take only the string content
-							this.pasteCells(ev, sourceEditable, true, true, true);
-						}
-
-						if (!mxEvent.isConsumed(ev)) {
-							var x0 = graph.container.scrollLeft;
-							var y0 = graph.container.scrollTop;
-
-							window.setTimeout(mxUtils.bind(this, function() {
-								// Workaround for Safari 16 scroll after paste
-								graph.container.scrollLeft = x0;
-								graph.container.scrollTop = y0;
-
-								this.pasteCells(ev, textInput, false, true);
-							}), 0);
-						}
-
-					}
-				}), true);
 			}
 
 		}));
@@ -10773,7 +10903,7 @@
 				
 				if (evt.clipboardData != null)
 				{
-					this.pasteCells(evt, textInput, true, true, true);
+					this.pasteCells(evt, textInput, true, true);
 				}
 
 				if (!mxEvent.isConsumed(evt))
@@ -13162,13 +13292,13 @@
 				// as HTML while the data is only available via text/plain
 				var plain = evt.clipboardData.getData('text/plain');
 				var override = false;
-
+				
 				if (plain != null && plain.length > 0 && plain.substring(0, 18) == '%3CmxGraphModel%3E')
 				{
 					try
 					{
 						var tmp = decodeURIComponent(plain);
-
+						
 						if (this.isCompatibleString(tmp))
 						{
 							override = true;
@@ -13180,9 +13310,9 @@
 						// ignore
 					}
 				}
-
+			
 				var data = (!override) ? evt.clipboardData.getData('text/html') : null;
-
+				
 				if (data != null && data.length > 0)
 				{
 					elt = this.parseHtmlData(data);
@@ -13244,6 +13374,7 @@
 					mxUtils.trim((elt.innerText == null) ?
 					mxUtils.getTextContent(elt) : elt.innerText);
 				var compat = false;
+
 				// Workaround for junk after XML in VM
 				try
 				{
@@ -13279,7 +13410,6 @@
 						compat = true;
 						xml = tmp;
 					}
-
 				}
 				catch (e)
 				{
