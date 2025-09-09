@@ -534,7 +534,7 @@ Actions.prototype.init = function()
 				if(cellValue.hasAttribute('viewId')) {
 					const viewId = cellValue.getAttribute('viewId');
 					cellValue.removeAttribute('viewId');
-					cellValue.setAttribute('duplicateViewId', viewId);
+					cellValue.setAttribute('sourceViewId', viewId);
 				}
 
 				graph.getModel().setValue(cell, cellValue);
