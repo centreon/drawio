@@ -1,22 +1,30 @@
-name: drawio
+name: security-checks
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 
 on:
-  workflow_dispatch:
-  schedule:
-    - cron: '0 1 * * 1-5'
   pull_request:
+    branches:
+      - dev
   push:
     branches:
       - dev
+  workflow_dispatch:
+  schedule:
+    - cron: 0 1 * * 1-5
 
 jobs:
-  checkmarx-analysis:
-    uses: ./.github/workflows/checkmarx-analysis.yml
+  secrets_scan:
+    uses: centreon/security-tools/.github/workflows/gitleaks-analysis.yml@main
+
+  code_scan:
+    uses: centreon/security-tools/.github/workflows/checkmarx-analysis.yml@main
     with:
+      module_directory:
       module_name: drawio
+      exclude_list:
     secrets:
       base_uri: ${{ secrets.AST_RND_SCANS_BASE_URI }}
       cx_tenant: ${{ secrets.AST_RND_SCANS_TENANT }}
