@@ -219,7 +219,9 @@ Actions.prototype.init = function()
 						cellValue = cellValue.cloneNode(true);
 
 						if(cellValue.hasAttribute('viewId')) {
+							const viewId = cellValue.getAttribute('viewId');
 							cellValue.removeAttribute('viewId');
+							cellValue.setAttribute('sourceViewId', viewId);
 						}
 
 						graph.getModel().setValue(cells[i], cellValue);	
