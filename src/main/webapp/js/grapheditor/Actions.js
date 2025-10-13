@@ -213,6 +213,19 @@ Actions.prototype.init = function()
 				for (var i = 0; i < cells.length; i++)
 				{
 					cells[i].setAttribute('modelId', "");
+
+					if(cells[i].getAttribute('type') === 'CONTAINER') {
+						var cellValue = graph.getModel().getValue(cells[i]);
+						cellValue = cellValue.cloneNode(true);
+
+						if(cellValue.hasAttribute('viewId')) {
+							const viewId = cellValue.getAttribute('viewId');
+							cellValue.removeAttribute('viewId');
+							cellValue.setAttribute('sourceViewId', viewId);
+						}
+
+						graph.getModel().setValue(cells[i], cellValue);	
+					}
 				}
 
 				var includeEdges = true;
@@ -247,6 +260,19 @@ Actions.prototype.init = function()
 					
 					graph.cellsMoved(cells, x - bb.x, y - bb.y);
 				}
+
+				cells.forEach((cell) => {
+					if(cell.getAttribute('type') === 'CONTAINER') {
+						var cellValue = graph.getModel().getValue(cell);
+						cellValue = cellValue.cloneNode(true);
+
+						if(cellValue.hasAttribute('viewId')) {
+							cellValue.removeAttribute('viewId');
+						}
+
+						graph.getModel().setValue(cell, cellValue);	
+					}
+				})
 			}
 		};
 		
@@ -499,7 +525,25 @@ Actions.prototype.init = function()
 	{
 		try
 		{
-			graph.setSelectionCells(graph.duplicateCells());
+			const duplicateCells = graph.duplicateCells();
+			const cells = duplicateCells.map((cell) => {
+				if(cell.getAttribute('type') !== 'CONTAINER') {
+					return cell;
+				}
+				var cellValue = graph.getModel().getValue(cell);
+				cellValue = cellValue.cloneNode(true);
+
+				if(cellValue.hasAttribute('viewId')) {
+					const viewId = cellValue.getAttribute('viewId');
+					cellValue.removeAttribute('viewId');
+					cellValue.setAttribute('sourceViewId', viewId);
+				}
+
+				graph.getModel().setValue(cell, cellValue);
+				return cell;
+			})
+
+			graph.setSelectionCells(cells);
 			graph.scrollCellToVisible(graph.getSelectionCell());
 		}
 		catch (e)
