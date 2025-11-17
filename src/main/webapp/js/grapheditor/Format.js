@@ -2270,10 +2270,6 @@ ArrangePanel.prototype.addGeometry = function(container)
 	var constrainCheckbox = opt.getElementsByTagName('input')[0];
 	this.addKeyHandler(width, listener);
 	this.addKeyHandler(height, listener);
-
-
-
-	
 	
 	widthUpdate = this.addGeometryHandler(width, function(geo, value, cell)
 	{
