@@ -2273,7 +2273,7 @@ ArrangePanel.prototype.addGeometry = function(container)
 	
 	widthUpdate = this.addGeometryHandler(width, function(geo, value, cell)
 	{
-		const isBasicShape = cell.getAttribute('type') === 'SHAPE';
+
 		if (graph.isTableCell(cell))
 		{
 			graph.setTableColumnWidth(cell, value - geo.width, true);
@@ -2281,26 +2281,21 @@ ArrangePanel.prototype.addGeometry = function(container)
 			// Blocks processing in caller
 			return true;
 		}
-		else if (!isBasicShape && geo.width > 0 && value < 84)
-		{
-			geo.width = 84;
-		}
 		else if (geo.width > 0)
 		{
-		var value = Math.max(1, panel.fromUnit(value));
+			var value = Math.max(1, panel.fromUnit(value));
 			
 			if (constrainCheckbox.checked)
 			{
 				const h = Math.round((geo.height * value * 100) / geo.width) / 100;
-				geo.height = !isBasicShape && h < 84 ? 84 : h;
+				geo.height = graph.getValueByCell(cell, h);
 			}
 			
-			geo.width = value;
+			geo.width = graph.getValueByCell(cell, value);
 		}
 	});
 	heightUpdate = this.addGeometryHandler(height, function(geo, value, cell)
 	{
-		const isBasicShape = cell.getAttribute('type') === 'SHAPE';
 		if (graph.isTableCell(cell))
 		{
 			cell = graph.model.getParent(cell);
@@ -2313,10 +2308,6 @@ ArrangePanel.prototype.addGeometry = function(container)
 			// Blocks processing in caller
 			return true;
 		}
-		else if (!isBasicShape && geo.height > 0 && value < 84)
-		{
-			geo.height = 84;
-		}
 		else if (geo.height > 0)
 		{
 			var value = Math.max(1, panel.fromUnit(value));
@@ -2324,10 +2315,10 @@ ArrangePanel.prototype.addGeometry = function(container)
 			if (constrainCheckbox.checked)
 			{
 				const w = Math.round((geo.width  * value * 100) / geo.height) / 100;
-				geo.width =  !isBasicShape && w < 84 ? 84 : w;
+				geo.width =  graph.getValueByCell(cell, w);
 			}
 			
-			geo.height = value;
+			geo.height = graph.getValueByCell(cell, value);
 		}
 	});
 	

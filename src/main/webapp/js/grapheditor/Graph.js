@@ -1254,11 +1254,11 @@ Graph = function(container, model, renderHint, stylesheet, themes, standalone)
 
 				var geo = this.getCellGeometry(cell);
 
-				if(style && style === 'GEOMETRIC' && geo.width !== 20)
+				if(style && style === 'GEOMETRIC' && geo.width > 84)
 				{
-					this.setCellDimensions(cell, 20, 20);
+					this.setCellDimensions(cell, 20, 20); // or change it to 84, to see with romain
 				}
-				else if(style && style !== 'GEOMETRIC' && geo.width === 20)
+				else if(style && style !== 'GEOMETRIC' && geo.width <= 84)
 				{
 					this.setCellDimensions(cell, 84, 84);
 				}
@@ -11630,7 +11630,7 @@ if (typeof mxVertexHandler !== 'undefined')
 		{
 			if(value === 'GEOMETRIC' && !cellStyle.includes('style=GEOMETRIC;'))
 			{
-				this.setCellDimensions(cell, 20, 20);
+				this.setCellDimensions(cell, 20, 20);  // or change it to 84, to see with romain
 			}
 			else if(value !== 'GEOMETRIC' && cellStyle.includes('style=GEOMETRIC;'))
 			{
@@ -11645,6 +11645,42 @@ if (typeof mxVertexHandler !== 'undefined')
 			{
 				this.removeWeatherIconToResource(cell);
 			}
+		}
+
+		Graph.prototype.getValueByCell = function(cell, value)
+		{
+
+			const typeCell = cell.getAttribute('type');
+			const style = this.getCellStyle(cell)['style'];
+			
+			
+			
+			
+			const isWidget = typeCell === 'WIDGET';
+			if (isWidget && value < 84)
+			{
+				return 84;
+			}
+			
+			const isResourceOrContainer = (typeCell === 'RESOURCE' || typeCell === 'CONTAINER');
+			// [CENTREON] - added logic to limit the size to a minimum of 84h and 84w for all exept basic shapes
+			if (isResourceOrContainer && style && style !== 'GEOMETRIC' && value <= 84)
+			{
+				return 84;
+			}
+
+			if (isResourceOrContainer && style && style === 'GEOMETRIC' && value > 84)
+			{
+				return 84;
+			}
+
+			if(isResourceOrContainer && style && style === 'GEOMETRIC' && value < 20)
+			{
+				return 20;
+			}
+
+			return value;
+
 		}
 
 		Graph.prototype.addWeatherIconToResource = function(cell)
@@ -12791,10 +12827,6 @@ if (typeof mxVertexHandler !== 'undefined')
 			// [CENTREON] - added logic to disable the sizing for GEOMETRIC centreon RESOURCE
 			const typeCell = this.state.cell.getAttribute('type');
 			const style = this.graph.getCellStyle(this.state.cell)['style'];
-			if(typeCell === 'RESOURCE' && style && style === 'GEOMETRIC')
-			{
-				return;
-			}
 
 			var ct = new mxPoint(this.state.getCenterX(), this.state.getCenterY());
 			var alpha = mxUtils.toRadians(this.state.style[mxConstants.STYLE_ROTATION] || '0');
@@ -12819,16 +12851,9 @@ if (typeof mxVertexHandler !== 'undefined')
 				new mxPoint(0, 0), this.isConstrainedEvent(me),
 				this.isCenteredEvent(this.state, me));
 
-			// [CENTREON] - added logic to limit the size to a minimum of 84h and 84w for all exept basic shapes
-			if(typeCell !== 'SHAPE' && this.unscaledBounds.width < 84)
-			{
-				this.unscaledBounds.width = 84;
-			}
 
-			if(typeCell !== 'SHAPE' && this.unscaledBounds.height < 84)
-			{
-				this.unscaledBounds.height = 84;
-			}
+			this.unscaledBounds.width = this.graph.getValueByCell(this.state.cell, this.unscaledBounds.width);
+			this.unscaledBounds.height = this.graph.getValueByCell(this.state.cell, this.unscaledBounds.height);
 
 			
 			// Keeps vertex within maximum graph or parent bounds
