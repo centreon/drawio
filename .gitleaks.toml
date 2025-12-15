@@ -15,10 +15,17 @@ paths = [
   '''composer\.lock''',
   '''yarn\.lock''',
   '''\.gitleaks\.toml$''',
-  '''(.*?)(jpg|gif|doc|pdf|bin)$'''
+  '''(.*?)(jpg|gif|doc|pdf|bin)$''',
+  '''src\/main\/webapp\/js\/extensions\.min.js''',
+  '''src\/main\/webapp\/js\/app\.min\.js''',
+  '''src\/main\/webapp\/js\/diagramly\/Extensions\.js''',
+  '''src\/main\/webapp\/js\/integrate\.min\.js'''
+
 ]
 
 regexTarget = "match"
 regexes = [
-  '''ABCDEFG1234567890'''
+  '''ABCDEFG1234567890''',
+  '''0AmQEO36liL4FdDJLWVNMaVV2UmRKSnpXU09MYkdGbEE''',
+  '''jg02tc0onwmhlgm'''
 ]
