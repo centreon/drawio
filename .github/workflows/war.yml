@@ -9,8 +9,11 @@ on:
       - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
 jobs:
-  build:
+  dependency-scan:
+    uses: centreon/security-tools/.github/workflows/dependency-analysis.yml@main
 
+  build:
+    needs : [dependency-scan]
     runs-on: ubuntu-24.04
 
     steps:
