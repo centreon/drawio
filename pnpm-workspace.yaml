@@ -1,0 +1,4 @@
+packages:
+  - 'etc/dependencies'
+  - 'etc/propgen'
+  - 'src/main/webapp/math'
