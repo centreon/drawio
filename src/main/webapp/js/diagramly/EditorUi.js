@@ -9959,7 +9959,6 @@
 			this.keyHandler.bindAction(75, true, 'toggleShapes', true); // Ctrl+Shift+K
 			this.altShiftActions[83] = 'synchronize'; // Alt+Shift+S
 
-		    this.installImagePasteHandler();
 		    this.installNativeClipboardHandler();
 		};
 
@@ -10182,6 +10181,7 @@
 			
 			mxEvent.addListener(graph.container, 'dragover', mxUtils.bind(this, function(evt)
 			{
+				return;
 				// IE 10 does not implement pointer-events so it can't have a drop highlight
 				if (dropElt == null && (!mxClient.IS_IE || document.documentMode > 10))
 				{
@@ -10199,6 +10199,7 @@
 			
 			mxEvent.addListener(graph.container, 'drop', mxUtils.bind(this, function(evt)
 			{
+				return;
 			    if (dropElt != null)
 			    {
 			    	dropElt.parentNode.removeChild(dropElt);
@@ -10715,6 +10716,8 @@
 	 */
 	EditorUi.prototype.installNativeClipboardHandler = function()
 	{
+
+		// good first step return; // Disabled for the time being
 		var graph = this.editor.graph;
 
 		// Focused but invisible textarea during control or meta key events
@@ -10798,6 +10801,8 @@
 					) {
 
 						if (ev.clipboardData != null) {
+
+							console.log('paste event with clipboardData in cell editor');
 							// Clean up HTML tags and take only the string content
 							this.pasteCells(ev, sourceEditable, true, true, true);
 						}
@@ -10811,6 +10816,7 @@
 								graph.container.scrollLeft = x0;
 								graph.container.scrollTop = y0;
 
+								console.log('paste event without clipboardData in cell editor');
 								this.pasteCells(ev, textInput, false, true);
 							}), 0);
 						}
@@ -10901,10 +10907,6 @@
 				textInput.innerHTML = '&nbsp;';
 				textInput.focus();
 				
-				if (evt.clipboardData != null)
-				{
-					this.pasteCells(evt, textInput, true, true);
-				}
 
 				if (!mxEvent.isConsumed(evt))
 				{
@@ -13125,6 +13127,7 @@
 	 */
 	EditorUi.prototype.writeImageToClipboard = function(dataUrl, w, h, error)
 	{
+		console.log("writeImageToClipboard called", {dataUrl, w, h});
 		var blob = this.base64ToBlob(dataUrl.substring(dataUrl.indexOf(',') + 1), 'image/png');
 		var html = '<img src="' + dataUrl + '" width="' + w + '" height="' + h + '">';
 		var cbi = new ClipboardItem({'image/png': blob,
@@ -13490,6 +13493,7 @@
 	 */
 	EditorUi.prototype.addFileDropHandler = function(elts)
 	{
+		return;
 		// Installs drag and drop handler for files
 		if (Graph.fileSupport)
 		{

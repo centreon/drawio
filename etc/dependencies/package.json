@@ -9,7 +9,7 @@
 	},
 	"homepage": "https://github.com/jgraph/drawio",
 	"dependencies": {
-	  "jsZip": "3.10.1",
+	  "jszip": "3.10.1",
 	  "perfect-freehand": "1.0.16",
 	  "jquery": "3.6.0",
 	  "mermaid": "10.9.3",
@@ -17,8 +17,7 @@
 	  "crypto-js": "4.2.0",
 	  "dompurify": "2.5.8",
 	  "spin.js": "2.0.0",
-	  "roughjs": "4.4.1",
-	  "jscolor": "^3.8.0"
+	  "roughjs": "4.4.1"
 	}
   }
   
