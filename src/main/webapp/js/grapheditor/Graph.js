@@ -9987,9 +9987,20 @@ if (typeof mxVertexHandler !== 'undefined')
 				var lookup = this.createCellLookup(cells);
 				var clones = this.cloneCells(cells, false, cloneMap, true);
 
+				function clearModelId(cell)
+				{
+					if (cell.value && cell.value.setAttribute)
+					{
+						cell.setAttribute('modelId', '');
+					}
+					for (var j = 0; j < cell.getChildCount(); j++)
+					{
+						clearModelId(cell.getChildAt(j));
+					}
+				}
 				for (var i = 0; i < clones.length; i++)
 				{
-					clones[i].setAttribute('modelId', "");
+					clearModelId(clones[i]);
 				}
 
 				for (var i = 0; i < cells.length; i++)

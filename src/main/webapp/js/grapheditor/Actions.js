@@ -224,7 +224,13 @@ Actions.prototype.init = function()
 							cellValue.setAttribute('sourceViewId', viewId);
 						}
 
-						graph.getModel().setValue(cells[i], cellValue);	
+						graph.getModel().setValue(cells[i], cellValue);
+					}
+
+					// Recurse into children of grouped cells
+					if (cells[i].children && cells[i].children.length > 0)
+					{
+						pasteCellsHere(cells[i].children);
 					}
 				}
 
@@ -526,20 +532,35 @@ Actions.prototype.init = function()
 		try
 		{
 			const duplicateCells = graph.duplicateCells();
+
+			function stripContainerViewId(cell)
+			{
+				if (cell.getAttribute && cell.getAttribute('type') === 'CONTAINER')
+				{
+					var cellValue = graph.getModel().getValue(cell);
+					cellValue = cellValue.cloneNode(true);
+
+					if (cellValue.hasAttribute('viewId'))
+					{
+						const viewId = cellValue.getAttribute('viewId');
+						cellValue.removeAttribute('viewId');
+						cellValue.setAttribute('sourceViewId', viewId);
+					}
+
+					graph.getModel().setValue(cell, cellValue);
+				}
+
+				if (cell.children && cell.children.length > 0)
+				{
+					for (var j = 0; j < cell.children.length; j++)
+					{
+						stripContainerViewId(cell.children[j]);
+					}
+				}
+			}
+
 			const cells = duplicateCells.map((cell) => {
-				if(cell.getAttribute('type') !== 'CONTAINER') {
-					return cell;
-				}
-				var cellValue = graph.getModel().getValue(cell);
-				cellValue = cellValue.cloneNode(true);
-
-				if(cellValue.hasAttribute('viewId')) {
-					const viewId = cellValue.getAttribute('viewId');
-					cellValue.removeAttribute('viewId');
-					cellValue.setAttribute('sourceViewId', viewId);
-				}
-
-				graph.getModel().setValue(cell, cellValue);
+				stripContainerViewId(cell);
 				return cell;
 			})
 
