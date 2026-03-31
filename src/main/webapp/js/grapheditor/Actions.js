@@ -818,11 +818,12 @@ Actions.prototype.init = function()
 			cellAttributes = createAttributes(containerProps);
 		}
 
+		graph._centreonEditCell = cell;
 		parent.postMessage(JSON.stringify({
 			mxObject: cellAttributes,
 			mxStyle: cell.getStyle(),
 			event: 'setShowWizardShapeProperties',
-		}), '*');	
+		}), '*');
 
 	}, null, null,  Editor.ctrlKey + '+E');
 	this.addAction('editCentreonStyle', function()
