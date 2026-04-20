@@ -3535,6 +3535,7 @@ Sidebar.prototype.addClickHandler = function(elt, ds, cells, clickFn)
 	{
 		try
 		{
+			graph.setCellStyles(mxConstants.STYLE_IMAGE_BORDER, 'default', cells);
 			if (!mxEvent.isPopupTrigger(evt) && this.currentGraph == null &&
 				this.dragElement != null && this.dragElement.style.display == 'none')
 			{
