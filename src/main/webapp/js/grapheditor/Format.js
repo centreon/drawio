@@ -774,9 +774,7 @@ BaseFormatPanel.prototype.createStepper = function(input, update, step, height, 
  */
 BaseFormatPanel.prototype.createOption = function(label, isCheckedFn, setCheckedFn, listener, fn)
 {
-	labelLowerAndDash = label.replace(/\s+/g, '-').toLowerCase();
 	var div = document.createElement('div');
-	div.className = 'format-option-' + labelLowerAndDash;
 	div.style.padding = '3px 0px 3px 0px';
 	div.style.whiteSpace = 'nowrap';
 	div.style.textOverflow = 'ellipsis';
@@ -946,9 +944,6 @@ BaseFormatPanel.prototype.createColorOption = function(label, getColorFn, setCol
 	div.style.width = '200px';
 	div.style.height = '18px';
 
-	labelLowerAndDash = label.replace(/\s+/g, '-').toLowerCase();
-	div.className = 'BaseFormatPanel-colorOption-' + labelLowerAndDash;
-	
 	var cb = document.createElement('input');
 	cb.setAttribute('type', 'checkbox');
 	cb.style.margin = '1px 6px 0px 0px';
@@ -3375,11 +3370,13 @@ TextFormatPanel.prototype.addFont = function(container)
 		});
 	}, graph.shapeBackgroundColor);
 	bgPanel.style.fontWeight = 'bold';
+	bgPanel.classList.add('centreon-hide-color-option');
 
 	var borderPanel = this.createCellColorOption(mxResources.get('borderColor'),
 		mxConstants.STYLE_LABEL_BORDERCOLOR, 'default', null, null,
 		graph.shapeForegroundColor);
 	borderPanel.style.fontWeight = 'bold';
+	borderPanel.classList.add('centreon-hide-color-option');
 	
 	var defs = (ss.vertices.length >= 1) ?
 		graph.stylesheet.getDefaultVertexStyle() :

@@ -4189,6 +4189,7 @@
 	            });
 	            
 	            option.style.paddingTop = '5px';
+	            option.classList.add('centreon-hide-math-typesetting');
 	            div.appendChild(option);
 	            
 	            var help = ui.menus.createHelpLink('https://www.diagrams.net/doc/faq/math-typesetting');
