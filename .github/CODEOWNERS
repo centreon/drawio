@@ -1,5 +1,3 @@
-.github/**                  @centreon/owners-pipelines
-
 *.js                        @centreon/owners-react
 packag*.json                @centreon/owners-react
 
@@ -8,6 +6,12 @@ packag*.json                @centreon/owners-react
 src/main/java               @centreon/owners-java
 src/main/webapp             @centreon/owners-react
 
-.gitleaks.toml              @centreon/owners-security
-.gitleaksignore             @centreon/owners-security
-**/secu-*.yml               @centreon/owners-security
+# Pipelines Codeowners rules
+.github/**                    @centreon/owners-pipelines
+.yamlfix.toml                 @centreon/owners-pipelines
+
+# Security Codeowners rules
+.gitleaks.toml                @centreon/owners-security
+.gitleaksignore               @centreon/owners-security
+.githooks/pre-commit          @centreon/owners-security
+**/secu-*.yml                 @centreon/owners-security
