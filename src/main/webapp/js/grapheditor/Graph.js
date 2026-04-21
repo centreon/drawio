@@ -9987,20 +9987,30 @@ if (typeof mxVertexHandler !== 'undefined')
 				var lookup = this.createCellLookup(cells);
 				var clones = this.cloneCells(cells, false, cloneMap, true);
 
-				function clearModelId(cell)
+				function clearDuplicateAttributes(cell)
 				{
-					if (cell.value && cell.value.setAttribute)
-					{
-						cell.setAttribute('modelId', '');
+					cell.setAttribute('modelId', '');
+
+					if(cell.getAttribute('type') === 'CONTAINER') {
+						var cellValue = cell.value.cloneNode(true);
+
+						if(cellValue.hasAttribute('viewId')) {
+							const viewId = cellValue.getAttribute('viewId');
+							cellValue.removeAttribute('viewId');
+							cellValue.setAttribute('sourceViewId', viewId);
+						}
+
+						model.setValue(cell, cellValue);
 					}
+
 					for (var j = 0; j < cell.getChildCount(); j++)
 					{
-						clearModelId(cell.getChildAt(j));
+						clearDuplicateAttributes(cell.getChildAt(j));
 					}
 				}
 				for (var i = 0; i < clones.length; i++)
 				{
-					clearModelId(clones[i]);
+					clearDuplicateAttributes(clones[i]);
 				}
 
 				for (var i = 0; i < cells.length; i++)

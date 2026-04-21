@@ -205,37 +205,43 @@ Actions.prototype.init = function()
 	}, false, 'sprite-paste', Editor.ctrlKey + '+V');
 	this.addAction('pasteHere', function(evt)
 	{
+		function clearPastedAttributes(cell)
+		{
+			cell.setAttribute('modelId', "");
+
+			if(cell.getAttribute('type') === 'CONTAINER') {
+				var cellValue = graph.getModel().getValue(cell);
+				cellValue = cellValue.cloneNode(true);
+
+				if(cellValue.hasAttribute('viewId')) {
+					const viewId = cellValue.getAttribute('viewId');
+					cellValue.removeAttribute('viewId');
+					cellValue.setAttribute('sourceViewId', viewId);
+				}
+
+				graph.getModel().setValue(cell, cellValue);
+			}
+
+			if (cell.children)
+			{
+				for (var j = 0; j < cell.children.length; j++)
+				{
+					clearPastedAttributes(cell.children[j]);
+				}
+			}
+		}
+
 		function pasteCellsHere(cells)
 		{
 			if (cells != null)
 			{
-				
 				for (var i = 0; i < cells.length; i++)
 				{
-					cells[i].setAttribute('modelId', "");
-
-					if(cells[i].getAttribute('type') === 'CONTAINER') {
-						var cellValue = graph.getModel().getValue(cells[i]);
-						cellValue = cellValue.cloneNode(true);
-
-						if(cellValue.hasAttribute('viewId')) {
-							const viewId = cellValue.getAttribute('viewId');
-							cellValue.removeAttribute('viewId');
-							cellValue.setAttribute('sourceViewId', viewId);
-						}
-
-						graph.getModel().setValue(cells[i], cellValue);
-					}
-
-					// Recurse into children of grouped cells
-					if (cells[i].children && cells[i].children.length > 0)
-					{
-						pasteCellsHere(cells[i].children);
-					}
+					clearPastedAttributes(cells[i]);
 				}
 
 				var includeEdges = true;
-				
+
 				for (var i = 0; i < cells.length && includeEdges; i++)
 				{
 					includeEdges = includeEdges && graph.model.isEdge(cells[i]);
@@ -246,11 +252,11 @@ Actions.prototype.init = function()
 				var dx = t.x;
 				var dy = t.y;
 				var bb = null;
-				
+
 				if (cells.length == 1 && includeEdges)
 				{
 					var geo = graph.getCellGeometry(cells[0]);
-					
+
 					if (geo != null)
 					{
 						bb = geo.getTerminalPoint(true);
@@ -258,12 +264,12 @@ Actions.prototype.init = function()
 				}
 
 				bb = (bb != null) ? bb : graph.getBoundingBoxFromGeometry(cells, includeEdges);
-				
+
 				if (bb != null)
 				{
 					var x = Math.round(graph.snap(graph.popupMenuHandler.triggerX / s - dx));
 					var y = Math.round(graph.snap(graph.popupMenuHandler.triggerY / s - dy));
-					
+
 					graph.cellsMoved(cells, x - bb.x, y - bb.y);
 				}
 
@@ -276,7 +282,7 @@ Actions.prototype.init = function()
 							cellValue.removeAttribute('viewId');
 						}
 
-						graph.getModel().setValue(cell, cellValue);	
+						graph.getModel().setValue(cell, cellValue);
 					}
 				})
 			}
@@ -531,38 +537,7 @@ Actions.prototype.init = function()
 	{
 		try
 		{
-			const duplicateCells = graph.duplicateCells();
-
-			function stripContainerViewId(cell)
-			{
-				if (cell.getAttribute && cell.getAttribute('type') === 'CONTAINER')
-				{
-					var cellValue = graph.getModel().getValue(cell);
-					cellValue = cellValue.cloneNode(true);
-
-					if (cellValue.hasAttribute('viewId'))
-					{
-						const viewId = cellValue.getAttribute('viewId');
-						cellValue.removeAttribute('viewId');
-						cellValue.setAttribute('sourceViewId', viewId);
-					}
-
-					graph.getModel().setValue(cell, cellValue);
-				}
-
-				if (cell.children && cell.children.length > 0)
-				{
-					for (var j = 0; j < cell.children.length; j++)
-					{
-						stripContainerViewId(cell.children[j]);
-					}
-				}
-			}
-
-			const cells = duplicateCells.map((cell) => {
-				stripContainerViewId(cell);
-				return cell;
-			})
+			const cells = graph.duplicateCells();
 
 			graph.setSelectionCells(cells);
 			graph.scrollCellToVisible(graph.getSelectionCell());
