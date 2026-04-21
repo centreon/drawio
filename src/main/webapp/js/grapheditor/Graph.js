@@ -10003,15 +10003,12 @@ if (typeof mxVertexHandler !== 'undefined')
 						model.setValue(cell, cellValue);
 					}
 
-					for (var j = 0; j < cell.getChildCount(); j++)
+					if (cell.children)
 					{
-						clearDuplicateAttributes(cell.getChildAt(j));
+						cell.children.forEach(clearDuplicateAttributes);
 					}
 				}
-				for (var i = 0; i < clones.length; i++)
-				{
-					clearDuplicateAttributes(clones[i]);
-				}
+				clones.forEach(clearDuplicateAttributes);
 
 				for (var i = 0; i < cells.length; i++)
 				{

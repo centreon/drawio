@@ -224,10 +224,7 @@ Actions.prototype.init = function()
 
 			if (cell.children)
 			{
-				for (var j = 0; j < cell.children.length; j++)
-				{
-					clearPastedAttributes(cell.children[j]);
-				}
+				cell.children.forEach(clearPastedAttributes);
 			}
 		}
 
@@ -235,10 +232,7 @@ Actions.prototype.init = function()
 		{
 			if (cells != null)
 			{
-				for (var i = 0; i < cells.length; i++)
-				{
-					clearPastedAttributes(cells[i]);
-				}
+				cells.forEach(clearPastedAttributes);
 
 				var includeEdges = true;
 
