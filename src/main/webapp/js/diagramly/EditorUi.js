@@ -15259,6 +15259,7 @@
 						var graph = this.editor.graph;
 
 						var cell = graph.getSelectionCell() || graph._centreonEditCell;
+						graph._centreonEditCell = null;
 						var cellValue = graph.getModel().getValue(cell);
 						cellValue = cellValue.cloneNode(true);
 
