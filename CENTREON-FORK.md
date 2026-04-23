@@ -40,6 +40,23 @@ Specifically removed:
 Removed menu items for cloud storage, collaboration, and sharing features that
 are managed by Centreon's platform and irrelevant to the embedded editor.
 
+#### Exit flow rework
+
+The `exit` action was rewritten to use page-level unsaved tracking instead of
+the global `editor.modified` flag. On exit:
+
+1. Counts pages where `page.getSaved() === 'false'`
+2. If all pages are saved → exits immediately
+3. Otherwise → shows a confirm dialog with "Save and Exit" / "Proceed" (discard)
+
+The `save` handler no longer resets `editor.modified = false` after postMessage
+(handled via `urlParams['keepmodified'] = '1'`).
+
+#### Font dialog height
+
+Reduced the font dialog height from 180 to 100 when `Editor.enableWebFonts` is
+false, since the Google Fonts section is removed (see Dialogs.js).
+
 ### `src/main/webapp/js/diagramly/Minimal.js` (~35 lines)
 
 Tailored the "min" theme (compact layout with floating panels) toolbar:
@@ -328,11 +345,46 @@ Same `return;` guards added to `dragover`/`drop` handlers in the diagramly-layer
 EditorUi. Belt-and-suspenders approach since both grapheditor and diagramly
 layers register their own drag handlers.
 
+Also disables `addFileDropHandler` (returns early) and removes
+`installImagePasteHandler` from init to prevent clipboard image pasting.
+
 #### postMessage handling
 
 Receives messages from the Centreon parent application to load/save diagrams,
 switch pages, and update cell data. This is the inbound side of the IPC
 contract.
+
+#### Scroll/scale viewport persistence
+
+When saving (`getFileData`), the current viewport state is embedded in the
+mxGraphModel XML node:
+
+- `scale` — current zoom level
+- `scrollLeft`, `scrollTop` — scroll position
+- `marginTop`, `marginLeft` — background page shape offsets
+
+When loading (`setFileData`):
+
+1. Remembers the current page name before resetting
+2. Pre-parses the XML to extract scroll/scale from the matching page
+3. After loading, selects the previously active page by name
+4. Restores the scale and scroll position
+
+This preserves the editor's viewport across save/reload cycles.
+
+#### `model.prefix` removal on page switch
+
+The upstream `SelectPage.prototype.execute` sets
+`graph.model.prefix = Editor.guid() + '-'` on every page switch, adding a
+GUID prefix to all new cell IDs. The fork removes this so cell IDs stay
+consistent with what the Centreon backend expects.
+
+#### `ConfirmDialog` changes
+
+- Multi-line support: messages are split on literal `\n` sequences (escaped
+  in resource strings) to render multiple paragraphs
+- Dialog width increased from 340px to 400px
+- Button styling: `marginRight: 7px` on cancel, `marginLeft: 15px` on OK
 
 ### `src/main/webapp/js/diagramly/Editor.js` (~24 lines)
 
@@ -343,6 +395,16 @@ Configuration flags adjusted for embedded context:
 - `Editor.enableServiceWorker` disabled — the PWA service worker is irrelevant
   for an embedded iframe
 - Compression settings adjusted
+
+#### `mxCellRenderer.prototype.redraw` override
+
+Shows or hides cell labels based on the `displayLabel` XML attribute:
+
+- `displayLabel="false"` → `state.text.node.style.display = 'none'`
+- `displayLabel="true"` and currently hidden → restores display
+
+This allows Centreon to control label visibility per cell without changing
+the label text itself.
 
 ---
 
