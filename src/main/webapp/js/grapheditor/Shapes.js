@@ -6565,6 +6565,13 @@
 
 		mxEdgeHandler.prototype.createCustomHandles = function()
 		{
+			// Skip custom handles for Centreon links as the backend
+			// does not persist geometry changes for edges
+			if (this.state.cell.getAttribute('type') === 'LINK')
+			{
+				return null;
+			}
+
 			var name = this.state.style['shape'];
 			
 			if (mxCellRenderer.defaultShapes[name] == null &&
