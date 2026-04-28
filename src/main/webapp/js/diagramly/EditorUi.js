@@ -15237,6 +15237,8 @@
 							return;
 						}
 
+						// Unlike setDataProperties, no Centreon wizard that stores graph._centreonEditCell
+						// ever sends setStyleProperties, so graph.getSelectionCell() is sufficient here.
 						var cell = graph.getSelectionCell();
 						var cellStyle = graph.getModel().getStyle(cell);
 
@@ -15258,6 +15260,7 @@
 
 						var graph = this.editor.graph;
 
+						// Fallback to _centreonEditCell because opening the wizard shifts focus to the iframe, which clears the graph selection before setDataProperties is received.
 						var cell = graph.getSelectionCell() || graph._centreonEditCell;
 						graph._centreonEditCell = null;
 						var cellValue = graph.getModel().getValue(cell);
