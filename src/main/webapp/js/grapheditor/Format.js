@@ -2779,7 +2779,8 @@ ArrangePanel.prototype.addEdgeGeometry = function(container)
 		rect = ui.getSelectionState();
 		var cell = rect.cells[0];
 		
-		if (rect.style.shape == 'link' || rect.style.shape == 'flexArrow')
+		if ((rect.style.shape == 'link' || rect.style.shape == 'flexArrow') &&
+			(cell == null || cell.getAttribute('type') !== 'LINK'))
 		{
 			div.style.display = '';
 			
