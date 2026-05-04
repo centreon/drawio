@@ -1,5 +1,5 @@
 .hidden,
-div.format-option-mathematical-typesetting { 
+div.centreon-hide-math-typesetting {
   display: none !important;
 }
 
@@ -35,7 +35,6 @@ div.TextFormatPanel-addFont-stylePanel-ContentEditing {
   display: none;
 }
 
-div.BaseFormatPanel-colorOption-background-color,
-div.BaseFormatPanel-colorOption-border-color {
+div.centreon-hide-color-option {
   display: none;
 }
