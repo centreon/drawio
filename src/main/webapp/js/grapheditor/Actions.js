@@ -762,7 +762,7 @@ Actions.prototype.init = function()
 		const resourceCentreonProps = ['type', 'resourceType', 'resourceId', 'displayLabel', 'displayImage', 'displayParentName', 'useResourceName', 'label',
 			'resourceName', 'modelId', 'viewId', 'parentName', 'parentType', 'parentId', 'displayWeatherStatusBackgroundColor', 'useBackgroundStatusColor'];
 		const linkProps = ['type', 'linkType', 'parentName', 'parentType', 'parentId',
-			'resourceType', 'resourceId', 'resourceName', 'modelId','metric1Min',
+			'resourceType', 'resourceId', 'resourceName', 'resource2Id', 'resource2Name', 'modelId', 'metric1Min',
 			'metric1Max',	'metric2Min', 'metric2Max', 'metricName1', 'metricName2', 'displayPercent'];
 		const mediaProps = ['type', 'mediaType', 'newTab', 'elementUrl',
 			'imageName', 'centreonImageId', 'label'];
@@ -808,11 +808,12 @@ Actions.prototype.init = function()
 			cellAttributes = createAttributes(containerProps);
 		}
 
+		graph._centreonEditCell = cell;
 		parent.postMessage(JSON.stringify({
 			mxObject: cellAttributes,
 			mxStyle: cell.getStyle(),
 			event: 'setShowWizardShapeProperties',
-		}), '*');	
+		}), '*');
 
 	}, null, null,  Editor.ctrlKey + '+E');
 	this.addAction('editCentreonStyle', function()
