@@ -4191,14 +4191,20 @@ StyleFormatPanel.prototype.init = function()
 	{
 		const CellType = ['RESOURCE', 'CONTAINER'];
 		let hasCentreonResource = false;
+		let hideCentreonResourceFill = false;
 		let hasCentreonWidget = false;
 
 		for (var i = 0; i < cells.length; i++)
 		{
 			const typeCell = cells[i].getAttribute('type');
-			if(!hasCentreonResource && CellType.includes(typeCell))
+			if(CellType.includes(typeCell))
 			{
 				hasCentreonResource = true;
+				if(!hideCentreonResourceFill &&
+					cells[i].getAttribute('useBackgroundStatusColor') === 'true')
+				{
+					hideCentreonResourceFill = true;
+				}
 			}
 
 			if(!hasCentreonWidget && typeCell === 'WIDGET' && cells[i].getAttribute('widgetType') === 'OUTPUT')
@@ -4207,7 +4213,7 @@ StyleFormatPanel.prototype.init = function()
 				hasCentreonWidget = useBackgroundStatusColor;
 			}
 
-			if(hasCentreonWidget && hasCentreonResource)
+			if(hasCentreonWidget && hasCentreonResource && hideCentreonResourceFill)
 			{
 				break;
 			}
@@ -4219,7 +4225,7 @@ StyleFormatPanel.prototype.init = function()
 			this.container.appendChild(this.addSvgStyles(this.createPanel('StyleFormatPanel-addSvgStyles')));
 		}
 
-		if (ss.fill && !hasCentreonResource && !hasCentreonWidget )
+		if (ss.fill && !hideCentreonResourceFill && !hasCentreonWidget )
 		{
 			this.container.appendChild(this.addFill(this.createPanel('StyleFormatPanel-addFill')));
 		}
