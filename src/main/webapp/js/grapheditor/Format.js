@@ -4201,7 +4201,8 @@ StyleFormatPanel.prototype.init = function()
 			{
 				hasCentreonResource = true;
 				if(!hideCentreonResourceFill &&
-					cells[i].getAttribute('useBackgroundStatusColor') === 'true')
+					(cells[i].getAttribute('useBackgroundStatusColor') === 'true' ||
+					graph.getCellStyle(cells[i])['style'] === 'GEOMETRIC'))
 				{
 					hideCentreonResourceFill = true;
 				}

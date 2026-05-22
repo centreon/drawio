@@ -11649,10 +11649,28 @@ if (typeof mxVertexHandler !== 'undefined')
 			if(value === 'GEOMETRIC' && !cellStyle.includes('style=GEOMETRIC;'))
 			{
 				this.setCellDimensions(cell, 20, 20);  // or change it to 84, to see with romain
+				// GEOMETRIC paints the status color and ignores the user's
+				// fill. Clear imageBackground (what drawio actually renders)
+				// but copy its current value onto fillColor so the picked
+				// color is preserved and can be restored when the style is
+				// switched back.
+				var imageBg = this.getCellStyle(cell)[mxConstants.STYLE_IMAGE_BACKGROUND];
+				if(imageBg != null)
+				{
+					this.setCellStyles(mxConstants.STYLE_FILLCOLOR, imageBg, [cell]);
+					this.setCellStyles(mxConstants.STYLE_IMAGE_BACKGROUND, null, [cell]);
+				}
 			}
 			else if(value !== 'GEOMETRIC' && cellStyle.includes('style=GEOMETRIC;'))
 			{
 				this.setCellDimensions(cell, 84, 84);
+				// Restore the saved fill onto imageBackground so drawio
+				// renders it.
+				var fillColor = this.getCellStyle(cell)[mxConstants.STYLE_FILLCOLOR];
+				if(fillColor != null)
+				{
+					this.setCellStyles(mxConstants.STYLE_IMAGE_BACKGROUND, fillColor, [cell]);
+				}
 			}
 			
 			if(value === 'WEATHER' && !cellStyle.includes('style=WEATHER;'))
