@@ -11649,30 +11649,12 @@ if (typeof mxVertexHandler !== 'undefined')
 			if(value === 'GEOMETRIC' && !cellStyle.includes('style=GEOMETRIC;'))
 			{
 				this.setCellDimensions(cell, 20, 20);  // or change it to 84, to see with romain
-				// GEOMETRIC paints the status color and ignores the user's
-				// fill. Clear imageBackground (what drawio actually renders)
-				// but copy its current value onto fillColor so the picked
-				// color is preserved and can be restored when the style is
-				// switched back.
-				var imageBg = this.getCellStyle(cell)[mxConstants.STYLE_IMAGE_BACKGROUND];
-				if(imageBg != null)
-				{
-					this.setCellStyles(mxConstants.STYLE_FILLCOLOR, imageBg, [cell]);
-					this.setCellStyles(mxConstants.STYLE_IMAGE_BACKGROUND, null, [cell]);
-				}
 			}
 			else if(value !== 'GEOMETRIC' && cellStyle.includes('style=GEOMETRIC;'))
 			{
 				this.setCellDimensions(cell, 84, 84);
-				// Restore the saved fill onto imageBackground so drawio
-				// renders it.
-				var fillColor = this.getCellStyle(cell)[mxConstants.STYLE_FILLCOLOR];
-				if(fillColor != null)
-				{
-					this.setCellStyles(mxConstants.STYLE_IMAGE_BACKGROUND, fillColor, [cell]);
-				}
 			}
-			
+
 			if(value === 'WEATHER' && !cellStyle.includes('style=WEATHER;'))
 			{
 				this.addWeatherIconToResource(cell);
@@ -11680,6 +11662,56 @@ if (typeof mxVertexHandler !== 'undefined')
 			else if(value !== 'WEATHER' && cellStyle.includes('style=WEATHER;'))
 			{
 				this.removeWeatherIconToResource(cell);
+			}
+
+			// Reconcile the fill against the new style. fillColor is the
+			// persisted slot; imageBackground is what drawio renders for
+			// image shapes. The fill is hidden whenever the renderer paints
+			// the status color over it: GEOMETRIC always, and ICON/WEATHER
+			// when their respective "apply status color to background" flag
+			// is on (useBackgroundStatusColor for ICON,
+			// displayWeatherStatusBackgroundColor for WEATHER).
+			this.updateCentreonResourceFill(cell, value);
+		}
+
+		Graph.prototype.updateCentreonResourceFill = function(cell, newStyle)
+		{
+			var cellType = cell.getAttribute('type');
+			if(cellType !== 'RESOURCE' && cellType !== 'CONTAINER')
+			{
+				return;
+			}
+
+			if(newStyle == null)
+			{
+				newStyle = this.getCellStyle(cell)['style'];
+			}
+
+			var shouldHideFill = newStyle === 'GEOMETRIC' ||
+				(newStyle === 'WEATHER'
+					? cell.getAttribute('displayWeatherStatusBackgroundColor') === 'true'
+					: cell.getAttribute('useBackgroundStatusColor') === 'true');
+
+			var cellStyleObj = this.getCellStyle(cell);
+			var currentImageBg = cellStyleObj[mxConstants.STYLE_IMAGE_BACKGROUND];
+
+			if(shouldHideFill && currentImageBg != null)
+			{
+				// Save current imageBackground onto fillColor so the picked
+				// color survives a round-trip, then clear imageBackground so
+				// drawio stops painting it.
+				this.setCellStyles(mxConstants.STYLE_FILLCOLOR, currentImageBg, [cell]);
+				this.setCellStyles(mxConstants.STYLE_IMAGE_BACKGROUND, null, [cell]);
+			}
+			else if(!shouldHideFill && currentImageBg == null)
+			{
+				// Restore imageBackground from the saved fillColor so drawio
+				// renders the picked color again.
+				var fillColor = cellStyleObj[mxConstants.STYLE_FILLCOLOR];
+				if(fillColor != null)
+				{
+					this.setCellStyles(mxConstants.STYLE_IMAGE_BACKGROUND, fillColor, [cell]);
+				}
 			}
 		}
 

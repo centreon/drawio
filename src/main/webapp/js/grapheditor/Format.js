@@ -4200,11 +4200,17 @@ StyleFormatPanel.prototype.init = function()
 			if(CellType.includes(typeCell))
 			{
 				hasCentreonResource = true;
-				if(!hideCentreonResourceFill &&
-					(cells[i].getAttribute('useBackgroundStatusColor') === 'true' ||
-					graph.getCellStyle(cells[i])['style'] === 'GEOMETRIC'))
+				if(!hideCentreonResourceFill)
 				{
-					hideCentreonResourceFill = true;
+					var centreonStyle = graph.getCellStyle(cells[i])['style'];
+					var statusBgAttr = centreonStyle === 'WEATHER'
+						? 'displayWeatherStatusBackgroundColor'
+						: 'useBackgroundStatusColor';
+					if(centreonStyle === 'GEOMETRIC' ||
+						cells[i].getAttribute(statusBgAttr) === 'true')
+					{
+						hideCentreonResourceFill = true;
+					}
 				}
 			}
 
