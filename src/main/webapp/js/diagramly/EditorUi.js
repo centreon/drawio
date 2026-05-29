@@ -15248,6 +15248,10 @@
 								if(key === 'style')
 								{
 									graph.handleCentreonStyleChange(cell, cellStyle, value);
+									// handleCentreonStyleChange writes through the model
+									// (setCellStyles); re-read the cell's style so the
+									// final setStyle below preserves those changes.
+									cellStyle = graph.getModel().getStyle(cell);
 								}
 
 								cellStyle = cellStyle.replace(search, `${key}=${value};`);
@@ -15307,6 +15311,12 @@
 						}
 
 						graph.getModel().setStyle(cell, cellStyle);
+
+						// Wrapper attributes may have changed the effective
+						// "apply status color to background" state; reconcile
+						// fillColor/imageBackground accordingly.
+						graph.updateCentreonResourceFill(cell);
+
 						return;
 					}
 					else if (data.action === 'addShape') {
