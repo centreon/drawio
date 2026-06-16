@@ -280,6 +280,21 @@ RESOURCE cell snaps back to 84 minimum).
 Various draw.io style options that conflict with Centreon's managed appearance
 are removed or simplified.
 
+#### Text attributes disabled while editing a label inline
+
+`TextFormatPanel.addFont` returns early when `graph.cellEditor.isContentEditing()`,
+so the Text tab shows no attribute controls while a label is being edited inline.
+In content-editing mode draw.io's text controls (font family, bold/italic,
+alignment, line-height, …) apply via `document.execCommand` and write inline HTML
+into the label — markup that has no dedicated column on the Centreon side and
+would be persisted into the `label` value. Text styling is instead done with the
+shape selected, where the same controls write cell-level style properties
+(`fontFamily`, `fontStyle`, `align`, `fontColor`, …).
+
+This replaces an earlier workaround that hid only individual content-editing
+controls via the `TextFormatPanel-addFont-stylePanel-ContentEditing` CSS class
+(removed from `styles/centreon.css`).
+
 ### `src/main/webapp/js/diagramly/Pages.js` (~160 lines)
 
 #### `DiagramPage` prototype extensions
