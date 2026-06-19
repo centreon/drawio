@@ -2881,7 +2881,15 @@ TextFormatPanel.prototype.addFont = function(container)
 	var editor = ui.editor;
 	var graph = editor.graph;
 	var ss = ui.getSelectionState();
-	
+
+	// Centreon: hide text-attribute controls while editing a label inline.
+	// In content-editing mode they write inline HTML into the label, which must
+	// not be persisted; styling is done with the shape selected instead.
+	if (graph.cellEditor.isContentEditing())
+	{
+		return;
+	}
+
 	var title = this.createTitle(mxResources.get('font'));
 	title.style.paddingLeft = '14px';
 	title.style.paddingTop = '10px';
@@ -2895,12 +2903,6 @@ TextFormatPanel.prototype.addFont = function(container)
 	stylePanel.style.marginLeft = '-2px';
 	stylePanel.style.borderWidth = '0px';
 	stylePanel.className = 'geToolbarContainer TextFormatPanel-addFont-stylePanel';
-	
-	
-	if (graph.cellEditor.isContentEditing())
-	{
-		stylePanel.className += '-ContentEditing';
-	}
 
 	if (graph.cellEditor.isContentEditing())
 	{
