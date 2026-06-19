@@ -2882,13 +2882,9 @@ TextFormatPanel.prototype.addFont = function(container)
 	var graph = editor.graph;
 	var ss = ui.getSelectionState();
 
-	// SUS: Centreon - while editing a label inline, suppress all text-attribute
-	// controls. In content-editing mode draw.io's controls write inline HTML into
-	// the label (e.g. <p style="line-height">, <font face>), which must never be
-	// persisted. Text styling is done with the shape selected, where the same
-	// controls write cell-level style instead. The content-editing branches below
-	// are therefore unreachable by design; they are kept to minimize divergence
-	// from upstream draw.io v20.5.3.
+	// Centreon: hide text-attribute controls while editing a label inline.
+	// In content-editing mode they write inline HTML into the label, which must
+	// not be persisted; styling is done with the shape selected instead.
 	if (graph.cellEditor.isContentEditing())
 	{
 		return;
