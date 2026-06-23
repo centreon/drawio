@@ -102,6 +102,7 @@ EditorUi = function(editor, container, lightbox)
 			'startArrow', 'startFill', 'startSize', 'endArrow', 'endFill', 'endSize'];
 		var vertexStyleIgnored = false;
 		var edgeStyleIgnored = false;
+		var settingDefaultStyle = false;
 		
 		// Note: Everything that is not in styles is ignored (styles is augmented below)
 		this.setDefaultStyle = function(cell)
@@ -137,10 +138,12 @@ EditorUi = function(editor, container, lightbox)
 					graph.currentVertexStyle = {}
 				}
 	
+				settingDefaultStyle = true;
 				this.fireEvent(new mxEventObject('styleChanged',
 					'keys', keys, 'values', values,
 					'cells', [cell]));
-				
+				settingDefaultStyle = false;
+
 				// Blocks update of default style with style changes
 				// once the it was set using this function
 				if (graph.getModel().isEdge(cell))
@@ -154,6 +157,7 @@ EditorUi = function(editor, container, lightbox)
 			}
 			catch (e)
 			{
+				settingDefaultStyle = false;
 				this.handleError(e);
 			}
 		};
@@ -761,64 +765,70 @@ EditorUi = function(editor, container, lightbox)
 			
 			var keys = evt.getProperty('keys');
 			var values = evt.getProperty('values');
-	
-			for (var i = 0; i < keys.length; i++)
-			{
-				var common = mxUtils.indexOf(valueStyles, keys[i]) >= 0;
 
-				// Ignores transparent stroke colors
-				if (keys[i] != 'strokeColor' || (values[i] != null && values[i] != 'none'))
+			// Only update the current style when explicitly setting the default style.
+			// This prevents editing properties on an existing object from contaminating
+			// the defaults applied to subsequently created objects.
+			if (settingDefaultStyle)
+			{
+				for (var i = 0; i < keys.length; i++)
 				{
-					// Special case: Edge style and shape
-					if (mxUtils.indexOf(connectStyles, keys[i]) >= 0)
+					var common = mxUtils.indexOf(valueStyles, keys[i]) >= 0;
+
+					// Ignores transparent stroke colors
+					if (keys[i] != 'strokeColor' || (values[i] != null && values[i] != 'none'))
 					{
-						if (edge || mxUtils.indexOf(alwaysEdgeStyles, keys[i]) >= 0)
+						// Special case: Edge style and shape
+						if (mxUtils.indexOf(connectStyles, keys[i]) >= 0)
 						{
-							if (values[i] == null)
+							if (edge || mxUtils.indexOf(alwaysEdgeStyles, keys[i]) >= 0)
 							{
-								delete graph.currentEdgeStyle[keys[i]];
+								if (values[i] == null)
+								{
+									delete graph.currentEdgeStyle[keys[i]];
+								}
+								else
+								{
+									graph.currentEdgeStyle[keys[i]] = values[i];
+								}
 							}
-							else
+							// Uses style for vertex if defined in styles
+							else if (vertex && mxUtils.indexOf(styles, keys[i]) >= 0)
 							{
-								graph.currentEdgeStyle[keys[i]] = values[i];
+								if (values[i] == null)
+								{
+									delete graph.currentVertexStyle[keys[i]];
+								}
+								else
+								{
+									graph.currentVertexStyle[keys[i]] = values[i];
+								}
 							}
 						}
-						// Uses style for vertex if defined in styles
-						else if (vertex && mxUtils.indexOf(styles, keys[i]) >= 0)
+						else if (mxUtils.indexOf(styles, keys[i]) >= 0)
 						{
-							if (values[i] == null)
+							if (vertex || common)
 							{
-								delete graph.currentVertexStyle[keys[i]];
+								if (values[i] == null)
+								{
+									delete graph.currentVertexStyle[keys[i]];
+								}
+								else
+								{
+									graph.currentVertexStyle[keys[i]] = values[i];
+								}
 							}
-							else
+
+							if (edge || common || mxUtils.indexOf(alwaysEdgeStyles, keys[i]) >= 0)
 							{
-								graph.currentVertexStyle[keys[i]] = values[i];
-							}
-						}
-					}
-					else if (mxUtils.indexOf(styles, keys[i]) >= 0)
-					{
-						if (vertex || common)
-						{
-							if (values[i] == null)
-							{
-								delete graph.currentVertexStyle[keys[i]];
-							}
-							else
-							{
-								graph.currentVertexStyle[keys[i]] = values[i];
-							}
-						}
-						
-						if (edge || common || mxUtils.indexOf(alwaysEdgeStyles, keys[i]) >= 0)
-						{
-							if (values[i] == null)
-							{
-								delete graph.currentEdgeStyle[keys[i]];
-							}
-							else
-							{
-								graph.currentEdgeStyle[keys[i]] = values[i];
+								if (values[i] == null)
+								{
+									delete graph.currentEdgeStyle[keys[i]];
+								}
+								else
+								{
+									graph.currentEdgeStyle[keys[i]] = values[i];
+								}
 							}
 						}
 					}
