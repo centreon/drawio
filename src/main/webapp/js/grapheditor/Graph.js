@@ -9277,9 +9277,6 @@ if (typeof mxVertexHandler !== 'undefined')
 						tmp.setAttribute('label', value);
 					}
 
-					// MON-23599: editing a RESOURCE label by hand stops it from following the
-					// resource name. Otherwise the engine keeps useResourceName=true and overwrites
-					// the custom label with the live resource name on the next render.
 					if (tmp.getAttribute('type') == 'RESOURCE' &&
 						tmp.getAttribute('useResourceName') == 'true')
 					{
