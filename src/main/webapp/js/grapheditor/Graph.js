@@ -9276,7 +9276,13 @@ if (typeof mxVertexHandler !== 'undefined')
 					{
 						tmp.setAttribute('label', value);
 					}
-					
+
+					if (tmp.getAttribute('type') == 'RESOURCE' &&
+						tmp.getAttribute('useResourceName') == 'true')
+					{
+						tmp.setAttribute('useResourceName', 'false');
+					}
+
 					value = tmp;
 				}
 
