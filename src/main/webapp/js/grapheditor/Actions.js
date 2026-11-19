@@ -763,7 +763,7 @@ Actions.prototype.init = function()
 			'resourceName', 'modelId', 'viewId', 'parentName', 'parentType', 'parentId', 'displayWeatherStatusBackgroundColor', 'useBackgroundStatusColor'];
 		const linkProps = ['type', 'linkType', 'parentName', 'parentType', 'parentId',
 			'resourceType', 'resourceId', 'resourceName', 'resource2Id', 'resource2Name', 'modelId', 'metric1Min',
-			'metric1Max',	'metric2Min', 'metric2Max', 'metricName1', 'metricName2', 'displayPercent'];
+			'metric1Max',	'metric2Min', 'metric2Max', 'metricName1', 'metricName2', 'displayPercent', 'displayLabel'];
 		const mediaProps = ['type', 'mediaType', 'newTab', 'elementUrl',
 			'imageName', 'centreonImageId', 'label'];
 		const widgetProps = [
